@@ -31,23 +31,25 @@ class ServiceLink implements ServiceInterface{
 
 	}
 
-
 	public function findAll(){
-
+		return Link::all();
 	}
 
+	public function findAllByWebsiteId($id){
+		return Link::Where(['website_id' => $id])->get();
+	}
 
 	public function findOneById($var){
 
 	}
 
 
-	public function findOneByName($var){
+	public function findOneByName($name){
 
 	}
 
 
-	public function numRowByName($var){
+	public function numRowByName($name){
 		
 	}
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateScansTable extends Migration
+class CreateModulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateScansTable extends Migration
      */
     public function up()
     {
-        Schema::create('scans', function (Blueprint $table) {
+        Schema::create('modules', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('date');
-            $table->integer('website_id')->unsigned();
-            $table->foreign('website_id')->references('id')->on('websites');
-            $table->integer('scan_key')->unsigned()->unique();
+            $table->integer('scan_id')->unsigned();
+            $table->foreign('scan_id')->references('id')->on('scans');
+            $table->boolean('sql')->default(0);
+            $table->boolean('xss')->default(0);;
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateScansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scans');
+        Schema::dropIfExists('modules');
     }
 }

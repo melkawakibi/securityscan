@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.35)
 # Database: scandb
-# Generation Time: 2017-05-18 15:14:37 +0000
+# Generation Time: 2017-05-23 15:14:54 +0000
 # ************************************************************
 
 
@@ -35,6 +35,15 @@ CREATE TABLE `customers` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+LOCK TABLES `customers` WRITE;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+
+INSERT INTO `customers` (`id`, `name`, `comanyname`, `date`, `created_at`, `updated_at`)
+VALUES
+	(1,'ruben','rubenbv','2017-01-01','2017-01-01 00:00:00','2017-01-01 00:00:00');
+
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table headers
@@ -45,7 +54,7 @@ DROP TABLE IF EXISTS `headers`;
 CREATE TABLE `headers` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` varchar(400) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `value` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `website_id` int(10) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -54,6 +63,24 @@ CREATE TABLE `headers` (
   CONSTRAINT `headers_website_id_foreign` FOREIGN KEY (`website_id`) REFERENCES `websites` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+LOCK TABLES `headers` WRITE;
+/*!40000 ALTER TABLE `headers` DISABLE KEYS */;
+
+INSERT INTO `headers` (`id`, `name`, `value`, `website_id`, `created_at`, `updated_at`)
+VALUES
+	(592,'Date','Tue, 23 May 2017 15:11:48 GMT',62,'2017-05-23 15:11:48','2017-05-23 15:11:48'),
+	(593,'Content-Type','text/html;charset=utf-8',62,'2017-05-23 15:11:48','2017-05-23 15:11:48'),
+	(594,'Transfer-Encoding','chunked',62,'2017-05-23 15:11:48','2017-05-23 15:11:48'),
+	(595,'Connection','keep-alive',62,'2017-05-23 15:11:48','2017-05-23 15:11:48'),
+	(596,'Vary','Accept-Encoding',62,'2017-05-23 15:11:48','2017-05-23 15:11:48'),
+	(597,'Expires','Tue, 23 May 2017 15:11:49 GMT',62,'2017-05-23 15:11:48','2017-05-23 15:11:48'),
+	(598,'Link','<https://justbetter.nl/>; rel=shortlink',62,'2017-05-23 15:11:48','2017-05-23 15:11:48'),
+	(599,'Last-Modified','Mon, 24 Apr 2017 06:42:22 GMT',62,'2017-05-23 15:11:48','2017-05-23 15:11:48'),
+	(600,'Server','cloudflare-nginx',62,'2017-05-23 15:11:48','2017-05-23 15:11:48'),
+	(601,'CF-RAY','3638f32a1b3d2c66-AMS',62,'2017-05-23 15:11:48','2017-05-23 15:11:48');
+
+/*!40000 ALTER TABLE `headers` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table links
@@ -65,7 +92,7 @@ CREATE TABLE `links` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `methode` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `website_id` int(10) unsigned DEFAULT NULL,
+  `website_id` int(10) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -73,6 +100,32 @@ CREATE TABLE `links` (
   CONSTRAINT `links_website_id_foreign` FOREIGN KEY (`website_id`) REFERENCES `websites` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+LOCK TABLES `links` WRITE;
+/*!40000 ALTER TABLE `links` DISABLE KEYS */;
+
+INSERT INTO `links` (`id`, `methode`, `url`, `website_id`, `created_at`, `updated_at`)
+VALUES
+	(856,'GET','https://justbetter.nl',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(857,'GET','https://justbetter.nl/expertise/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(858,'GET','https://justbetter.nl/cases/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(859,'GET','https://justbetter.nl/klanten/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(860,'GET','https://justbetter.nl/over-ons/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(861,'GET','https://justbetter.nl/vacatures/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(862,'GET','https://justbetter.nl/contact/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(863,'GET','https://www.facebook.com/justbetteronline/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(864,'GET','https://www.linkedin.com/company/justbetter',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(865,'GET','https://github.com/just-better',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(866,'GET','https://justbetter.nl/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(867,'GET','https://justbetter.nl/feed/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(868,'GET','https://justbetter.nl/comments/feed/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(869,'GET','https://fonts.googleapis.com/css?family=Open+Sans%3A400%2C300%2C400italic%2C700%7CHind%3A500%2C300%2C400&subset=latin&ver=1493038815',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(870,'GET','https://justbetter.nl/wp-json/',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(871,'GET','https://justbetter.nl/wp/xmlrpc.php?rsd',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(872,'GET','https://justbetter.nl/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fjustbetter.nl%2F',62,'2017-05-23 15:11:49','2017-05-23 15:11:49'),
+	(873,'GET','https://justbetter.nl/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fjustbetter.nl%2F&format=xml',62,'2017-05-23 15:11:49','2017-05-23 15:11:49');
+
+/*!40000 ALTER TABLE `links` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table migrations
@@ -98,10 +151,30 @@ VALUES
 	(4,'2017_05_17_071708_create_rapports_table',1),
 	(5,'2017_05_17_071739_create_scans_table',1),
 	(6,'2017_05_17_071900_create_headers_table',1),
-	(7,'2017_05_17_113356_create_scan_details_table',1);
+	(7,'2017_05_17_113356_create_scan_details_table',1),
+	(8,'2017_05_19_105046_create_modules_table',1);
 
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+# Dump of table modules
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `modules`;
+
+CREATE TABLE `modules` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `scan_id` int(10) unsigned NOT NULL,
+  `sql` tinyint(1) NOT NULL DEFAULT '0',
+  `xss` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `modules_scan_id_foreign` (`scan_id`),
+  CONSTRAINT `modules_scan_id_foreign` FOREIGN KEY (`scan_id`) REFERENCES `scans` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 
 # Dump of table rapports
@@ -156,8 +229,6 @@ DROP TABLE IF EXISTS `scans`;
 
 CREATE TABLE `scans` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `thread` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `date` date NOT NULL,
   `website_id` int(10) unsigned NOT NULL,
   `scan_key` int(10) unsigned NOT NULL,
@@ -189,6 +260,15 @@ CREATE TABLE `websites` (
   CONSTRAINT `websites_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+LOCK TABLES `websites` WRITE;
+/*!40000 ALTER TABLE `websites` DISABLE KEYS */;
+
+INSERT INTO `websites` (`id`, `base_url`, `server`, `date`, `customer_id`, `created_at`, `updated_at`)
+VALUES
+	(62,'https://www.justbetter.nl','cloudflare-nginx','2017-05-23',1,'2017-05-23 15:11:48','2017-05-23 15:11:48');
+
+/*!40000 ALTER TABLE `websites` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 

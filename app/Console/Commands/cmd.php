@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use App\Main;
 
 class cmd extends Command
@@ -12,7 +13,9 @@ class cmd extends Command
      *
      * @var string
      */
-    protected $signature = 'scan {url}';
+    protected $signature = 'scan {url} 
+                            {--s : SQL module} 
+                            {--x : XSS module}';
 
     /**
      * The console command description.
@@ -38,16 +41,11 @@ class cmd extends Command
      */
     public function handle()
     {
-        if(!preg_match("[https://]", $this->argument('url'))){
-            $url = "https://" . $this->argument('url');
-        }else if(!preg_match("[http://]", $this->argument('url'))){
-            $url = "http://" . $this->argument('url');
-        }else if(!preg_match("[http://www.]", $this->argument('url'))){
-            $url = "http://www." . $this->argument('url');
-        }else{
-            $url = $this->argument('url');
-        }
+        
+        $url = $this->argument('url');
 
-        $main = new Main($url);
+        $options = $this->options();
+
+        new Main($url, $options);
     }
 }

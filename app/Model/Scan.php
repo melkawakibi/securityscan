@@ -25,8 +25,12 @@ class Scan extends Model
         return $this->hasOne('App\Model\Website', 'foreign_key');
     }
 
-    public function scandetail(){
+    public function scandetails(){
         return $this->hasMany('App\Model\ScanDetail');
+    }
+
+    public function modules(){
+        return $this->hasMany('App\Model\Module');
     }
 
 }
