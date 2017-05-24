@@ -18,6 +18,7 @@ class Main{
 	public function __construct($url, $options){
 
 		if(filter_var($url, FILTER_VALIDATE_URL)){
+			echo 'Creating target: ' . $url . PHP_EOL;
 			$this->url = $url;
 		}else{
 			echo 'invalid url, try again' . PHP_EOL;
@@ -51,7 +52,7 @@ class Main{
 	public function scan(){
 
 		if($this->sql instanceof SQL){
-			$this->sql->attackGET();
+			//$this->sql->attackGET();
 		}
 
 	}

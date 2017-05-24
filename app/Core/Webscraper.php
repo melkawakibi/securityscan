@@ -15,6 +15,7 @@ class Webscraper{
 	private $response;
 	private $links;
 	private $formLinks;
+	private $formParams;
 	private $serviceWebsite;
 	private $serviceLink;
 	private $url;
@@ -25,6 +26,7 @@ class Webscraper{
 		$this->client->setClient(new GuzzleClient());
 		$this->links = array();
 		$this->formLinks = array();
+		$this->formParams = array();
 		$this->serviceWebsite = new ServiceWebsite();
 		$this->serviceLink = new ServiceLink();
 		
@@ -64,6 +66,14 @@ class Webscraper{
 
 	public function makeRequest($url){
 		$this->request = $this->client->request('GET', $url);
+	}
+
+	public function formParams(){
+		$this->request->filter('input')->each(function ($node) {
+		    array_push($this->formParams, $node->attr('name'));
+		});
+
+		return $this->formParams;
 	}
 
 	public function getUri(){
@@ -268,8 +278,14 @@ class Webscraper{
 					//save form links
 					foreach ($this->formLinks() as $key => $value) {
 						
-						 $this->serviceLink->create("POST", $value, $website[0]->id);
+						 $link = $this->serviceLink->create("POST", $value, $website[0]->id);
 
+						 //save params
+						 foreach ($this->formParams() as $key => $param) {
+
+						 	$this->serviceLink->createParams($param, $link->id);
+						 
+						 }
 					}
 				}
 			}

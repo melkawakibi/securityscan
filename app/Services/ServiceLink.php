@@ -3,11 +3,17 @@
 namespace App\Services;
 
 use App\Model\Link;
+use App\Traits\ParamTrait;
+use Illuminate\Support\Facades\DB;
 
 class ServiceLink implements ServiceInterface{
 
-	public function __construct(){
+	use ParamTrait;
 
+	private $link;
+
+	public function __construct(){
+		$this->link = new Link;
 	}
 
 	public function create($methode, $url, $id){
@@ -28,7 +34,8 @@ class ServiceLink implements ServiceInterface{
 		}
 
 		$link->save();
-
+		
+		return $link;
 	}
 
 	public function findAll(){
@@ -39,8 +46,8 @@ class ServiceLink implements ServiceInterface{
 		return Link::Where(['website_id' => $id])->get();
 	}
 
-	public function findOneById($var){
-
+	public function findOneById($id){
+		return Link::Where(['id' => $id])->get();
 	}
 
 

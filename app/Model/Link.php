@@ -21,8 +21,8 @@ class Link extends Model
         'id','website_id',
     ];
 
-    public function website(){
-    	return $this->hasOne('App\Model\Website', 'foreign_key');
+    public function params(){
+        return $this->hasMany('App\Model\Param');
     }
 
 }

@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\cmd',
+        'App\Console\Commands\deletedata',
     ];
 
     /**

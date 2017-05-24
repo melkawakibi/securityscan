@@ -26,6 +26,7 @@ class ServiceWebsite implements ServiceInterface{
 
 		$website->save();
 
+		return $website;
 	}
 
 	//Find all websites

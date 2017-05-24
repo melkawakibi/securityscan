@@ -16,6 +16,8 @@ trait HeaderTrait{
 
 		$header->save();
 
+		return $header;
+
 	}
 	
 }
