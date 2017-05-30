@@ -7,18 +7,9 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Log;
 use App\Services\ServiceWebsite;
 use App\Services\ServiceLink;
+use App\Model\ClientService;
 
 class Webscraper{
-
-	private $request;
-	private $client;
-	private $response;
-	private $links;
-	private $formLinks;
-	private $formParams;
-	private $serviceWebsite;
-	private $serviceLink;
-	private $url;
 
 	public function __construct(){
 
@@ -32,130 +23,121 @@ class Webscraper{
 		
 	}
 
-	public function setup($url){
+	public function setup($url, $credentials){
 		$this->url = $url;
-		$this->makeRequest($url);
-		$this->processWebsite();
+		$request = $this->makeRequest($url);
+		$cs = new ClientService($request, $this->client);
+		$this->processWebsite($url, $this->links($request, $cs), $this->formLinks($request, $cs), $this->paramsPOST($request), $cs);
+		$this->nextPages($url);
 	}
 
-	public function links(){
-		$this->request->filter('a')->each(function ($node) {
+	public function makeRequest($url){
+		return $this->client->request('GET', $url);
+	}
+
+	public function links($request, $cs){
+
+		$request->filter('a')->each(function ($node) {
 		    array_push($this->links, $node->attr('href'));
 		});
 
-		$this->request->filter('link')->each(function ($node) {
+		$request->filter('link')->each(function ($node) {
 		    array_push($this->links, $node->attr('href'));
 		});
 
-		$this->links = $this->filterOutInvalid($this->links);
+		$this->links = $this->filterOutInvalid($this->links, $cs);
 		$this->links = $this->filterOutDuplicates($this->links);
 
 		return $this->links;
 	}
 
-	public function formLinks(){
-		$this->request->filter('form')->each(function ($node) {
+	public function formLinks($request, $cs){
+
+		$request->filter('form')->each(function ($node) {
 		    array_push($this->formLinks, $node->attr('action'));
 		});
 
-		$this->formLinks = $this->filterOutInvalid($this->formLinks);
+		$this->formLinks = $this->filterOutInvalid($this->formLinks, $cs);
 		$this->formLinks = $this->filterOutDuplicates($this->formLinks);
 
 		return $this->formLinks;
 	}
 
-	public function makeRequest($url){
-		$this->request = $this->client->request('GET', $url);
-	}
+	public function paramsPOST($request){
 
-	public function formParams(){
-		$this->request->filter('input')->each(function ($node) {
+		$request->filter('input[type=text]')->each(function ($node) {
+		    array_push($this->formParams, $node->attr('name'));
+		});
+
+		$request->filter('input[type=password]')->each(function ($node) {
 		    array_push($this->formParams, $node->attr('name'));
 		});
 
 		return $this->formParams;
 	}
 
-	public function getUri(){
-		return $this->request->getUri();
+	public function paramsGET($request){
+		
+		//TODO
+
 	}
 
-	public function getBaseUri(){
-		return parse_url($this->getUri(), PHP_URL_HOST);
-	}
+	public function nextPages($url){
 
-	public function getScheme(){
-		return parse_url($this->getUri(), PHP_URL_SCHEME);
-	}
+		$website = $this->serviceWebsite->findOneByName($url);
+		$links = $this->serviceLink->findAllByWebsiteId($website[0]->id);
 
-	public function getPort(){
-		return parse_url($this->getUri(), PHP_URL_PORT);
-	}
-
-	public function getResonse(){
-		return $this->client->getResponse();
-	}
-
-	public function getStatus(){
-		return $this->getResonse()->getStatus();
-	}
-
-	public function getHeaders(){
-		return $this->getResonse()->getHeaders();
-	}
-
-	public function getServer(){
-
-		foreach ($this->getHeaders() as $key => $value) {
-
-			if($key === 'Server' || $key === 'server'){
-				return $value[0];
-			}else{
-				$server = "No-server-found";
-			}
-		}
-
-		return $server;
-	}
-
-	public function getContent(){
-		return $this->getResonse()->getContent();
-	}
-
-	public function filterOutInvalid($links){
 
 		foreach ($links as $key => $link) {
 
-			Log::info('--------------links------------------');
-			Log::info($link . PHP_EOL);
-			Log::info('--------------links------------------');
+			LOG::info("URL: " . $link);
+
+			//create request
+			$request = $this->makeRequest($link->url);
+
+			//create model
+			$cs = new ClientService($request, $this->client);
+
+			LOG::info("URL: " . $cs->getUri());
+
+			$pageLinks = $this->links($cs->getRequest(), $cs);
+			$pageFormLinks = $this->formLinks($cs->getRequest(), $cs);
+			$pageParams = $this->paramsPOST($cs->getRequest());
+
+			$this->processWebsite($link->url, $pageLinks, $pageFormLinks, $pageParams, $cs);
+
+		}
+	}
+
+
+	public function filterOutInvalid($links, $client){
+
+		foreach ($links as $key => $link) {
 
 
 			$scheme = parse_url($link, PHP_URL_SCHEME);
 
 			//check if scheme is empty, if so contunue
 			if(empty($scheme)){
-					Log::info('sheme 1');
-					Log::info($this->getScheme());
+			
 
 					//get path
 					$path = parse_url($link, PHP_URL_PATH);
-					Log::info('Path: ' . $path);
 
 					$newlink = '';
 
 					//check which scheme to append
-					if(preg_match('/^(https?)/', $this->getScheme())){
-						Log::info('sheme 2');
+					if(preg_match('/^(https?)/', $client->getScheme())){
+	
 
-						$port = (!empty($this->getPort()) ? ':' . $this->getPort() : '');
-						Log::info($port);
+						$port = (!empty($client->getPort()) ? ':' . $client->getPort() : '');
 
-						$path  = ( $path[0] === '/' ? substr($path, 1) : $path);
-						Log::info($port);
+						if(!empty($path[0])){
+							$path  = ( $path[0] === '/' ? substr($path, 1) : $path);
+						}
 
-						$newlink = 	$this->getScheme() . '://' . $this->getBaseUri() . $port . '/' . $path;	
-						Log::info($newlink);
+						$newlink = 	$client->getScheme() . '://' . $client->getBaseUri() . $port . '/' . $path;	
+	
 					}
 
 					//get path extension
@@ -169,15 +151,14 @@ class Webscraper{
 
 	 						$ext = $parts['extension'];
 
-							Log::info($ext);
+
 
 							//check if correct extension, if not unset else append url to array list
 		            		if($ext === 'css' || $ext === 'png' || $ext === 'ico' || $ext === 'svg' || $ext === 'json' || $ext === 'xml') {
-		            			Log::info('extension 1');
-		            			Log::info('unsset 1');
+
 		            			unset($links[$key]);
 		        			}else{
-		        				Log::info('push');
+
 		        				array_push($links, $newlink);
 		        			}
 	        			}
@@ -185,7 +166,7 @@ class Webscraper{
 
         			//second check if old link still is set, at this point we don't need the old link anymore so unset
         			if(isset($links[$key])){
-        				Log::info('unsset 2');
+
         				unset($links[$key]);
         			}
 			}else{
@@ -201,8 +182,7 @@ class Webscraper{
 
 						//scheme is not empty check if extension is correct otherwise unset
 						if($ext === 'css' || $ext === 'png' || $ext === 'ico' || $ext === 'svg' || $ext === 'json' || $ext === 'xml') {
-							Log::info('extension 2');
-							Log::info('unsset 3');
+
 		            		unset($links[$key]);
 		            	}
 	            	}
@@ -210,7 +190,6 @@ class Webscraper{
 			}
 		}
 
-		Log::info($links);
 
 		foreach ($links as $key => $link) {
 			if(!preg_match('/^(https?)/', $link)){
@@ -226,64 +205,80 @@ class Webscraper{
 		return array_unique($array);
 	}
 
-	public function processWebsite(){
+	public function processWebsite($url, $links, $formLinks, $params, $client){
 
 		//initialize
-		$this->server = $this->getServer();
-		 
+		$server = $client->getServer();
+
+		LOG::info($url);
+
 		try{
 
 	 		//Check if website already exists
-	 		if(!$this->serviceWebsite->numRowByName($this->url)){
+	 		if(!$this->serviceWebsite->numRowByName($url)){
 
 	 			//safe website
-				$this->serviceWebsite->create($this->url, $this->server);
+				$this->serviceWebsite->create($url, $server);
 
 				//get id website
-				$website = $this->serviceWebsite->findOneByName($this->url);
+				$website = $this->serviceWebsite->findOneByName($url);
 
-				if(!empty($this->getHeaders())){
+				if(!empty($client->getHeaders())){
 					
 					//save headers
-					foreach ($this->getHeaders() as $key => $values) {
+					foreach ($client->getHeaders() as $key => $values) {
 						foreach ($values as $value) {
-							$this->serviceWebsite->createHeaders($key, $value, $website[0]->id);
+
+							if(strlen($value) < 191){
+								$this->serviceWebsite->createHeaders($key, $value, $website[0]->id);
+							}
 						}
 					}
 				}
 
 			}else{
 				//get id website
-				$website = $this->serviceWebsite->findOneByName($this->url);
+				$website = $this->serviceWebsite->findOneByName($url);
 			}
 
-			$links = $this->serviceLink->findAllByWebsiteId($website[0]->id);
+			$storedLinks = $this->serviceLink->findAllByWebsiteId($website[0]->id);
+
+			//LOG::info($storedLinks);
 
 			//check if data links already exist for this websits
-			if(empty($links[0])){
+			if(empty($storedLinks[0])){
 
-				if(!empty($this->links())){
+				//LOG::info("No storedLinks");
+
+				if(!empty($links)){
 
 					//save links
-					foreach ($this->links() as $key => $value) {
+					foreach ($links as $key => $value) {
 
-						$this->serviceLink->create("GET", $value, $website[0]->id);
+						if(strlen($value) < 191){
 
+							$this->serviceLink->create("GET", $value, $website[0]->id);
+						}
 					}
-
 				}
 
-				if(!empty($this->formLinks())){
+				if(!empty($formLinks)){
+
+					LOG::info($formLinks);
 
 					//save form links
-					foreach ($this->formLinks() as $key => $value) {
+					foreach ($formLinks as $key => $value) {
+
+						LOG::info('Form links: ' . $value);
 						
 						 $link = $this->serviceLink->create("POST", $value, $website[0]->id);
 
 						 //save params
-						 foreach ($this->formParams() as $key => $param) {
+						 foreach ($this->formParams as $key => $param) {
+
 
 						 	$this->serviceLink->createParams($param, $link->id);
+
 						 
 						 }
 					}
@@ -293,17 +288,6 @@ class Webscraper{
 		}catch(Exception $e){
 			Log::info($e->getMessage());
 		}
-	}
-
-	public function printInfoWebsite(){
-		 Log::info('url: ' . $this->getUri());
-		 Log::info('Base url: ' . $this->getBaseUri());
-		 Log::info('status: ' . $this->getStatus());
-		 Log::info('server: ' . $this->getServer());
-		 Log::info('Date: ' . Carbon::now());
-		 Log::info('headers: ' . print_r($this->getHeaders(), TRUE));
-		 Log::info('links: ' . print_r($this->links(), TRUE));
-		 Log::info('form links: ' . print_r($this->formLinks(), TRUE));
 	}
 	
 }

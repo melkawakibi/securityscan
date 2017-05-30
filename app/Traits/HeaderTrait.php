@@ -19,5 +19,26 @@ trait HeaderTrait{
 		return $header;
 
 	}
-	
+
+	public function findAll(){
+		return Header::all();
+	}
+
+	public function findAllByWebsiteId($id){
+		return Header::Where(['website_id' => $id])->get();
+	}
+
+	public function findOneById($id){
+		return Header::Where(['id' => $id])->get();
+	}
+
+
+	public function findOneByName($name){
+
+	}
+
+
+	public function numRowByName($name){
+			
+	}
 }

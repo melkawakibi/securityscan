@@ -25,11 +25,13 @@ class Main{
 			exit();
 		}
 
+		$credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
+
 		//initiate scraper
 		$this->scraper = new Scraper;
-		$this->scraper->setup($this->url);
+		$this->scraper->setup($this->url, $credentials);
 		$this->prepare($options);
-		$this->scan();
+		//$this->scan();
 
 	}
 
@@ -52,7 +54,7 @@ class Main{
 	public function scan(){
 
 		if($this->sql instanceof SQL){
-			//$this->sql->attackGET();
+			$this->sql->attackGET();
 		}
 
 	}

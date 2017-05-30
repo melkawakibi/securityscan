@@ -14,6 +14,8 @@ class cmd extends Command
      * @var string
      */
     protected $signature = 'scan {url} 
+                            {--u= : username} 
+                            {--p= : password} 
                             {--s : SQL module} 
                             {--x : XSS module}';
 
