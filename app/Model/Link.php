@@ -18,7 +18,7 @@ class Link extends Model
     ];
 
     protected $guarded = [
-        'id','website_id',
+        'id', 'website_id',
     ];
 
     public function params(){

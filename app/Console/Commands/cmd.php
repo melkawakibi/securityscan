@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 use App\Main;
 
 class cmd extends Command
@@ -43,7 +45,16 @@ class cmd extends Command
      */
     public function handle()
     {
+
+        $path = storage_path('logs');
         
+        $file = fopen($path . "/laravel.log","w");
+
+        if($file !== false){
+            ftruncate($file, 0);
+            fclose($file);
+        }
+
         $url = $this->argument('url');
 
         $options = $this->options();

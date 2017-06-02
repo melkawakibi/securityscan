@@ -19,6 +19,10 @@ class ClientService{
 		return $this->request->getUri();
 	}
 
+	public function getPath(){
+		return parse_url($this->getUri(), PHP_URL_PATH);
+	}
+
 	public function getBaseUri(){
 		return parse_url($this->getUri(), PHP_URL_HOST);
 	}
@@ -30,7 +34,6 @@ class ClientService{
 	public function getPort(){
 		return parse_url($this->getUri(), PHP_URL_PORT);
 	}
-
 
 	public function getResonse(){
 		return $this->client->getResponse();

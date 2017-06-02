@@ -17,18 +17,28 @@ class Webscraper{
 		$this->client->setClient(new GuzzleClient());
 		$this->links = array();
 		$this->formLinks = array();
-		$this->formParams = array();
+		$this->paramsGET = array();
+		$this->paramsPOST = array();
 		$this->serviceWebsite = new ServiceWebsite();
 		$this->serviceLink = new ServiceLink();
 		
 	}
 
 	public function setup($url, $credentials){
+
 		$this->url = $url;
 		$request = $this->makeRequest($url);
 		$cs = new ClientService($request, $this->client);
-		$this->processWebsite($url, $this->links($request, $cs), $this->formLinks($request, $cs), $this->paramsPOST($request), $cs);
-		$this->nextPages($url);
+		$this->links($request, $cs);
+		$this->formLinks($request, $cs);
+		$this->paramsPOST($request);
+		$this->paramsGET($request);
+		$this->processWebsite($url, $cs);
+
+		if($this->checkIfLoginExist()){
+			$this->login($request, $credentials);
+		}
+
 	}
 
 	public function makeRequest($url){
@@ -63,30 +73,86 @@ class Webscraper{
 		return $this->formLinks;
 	}
 
+	public function paramsGET($request){
+		
+		$request->filter('a')->each(function ($node) {
+		    array_push($this->paramsGET, $node->attr('href'));
+		});
+
+		if(!empty($this->paramsGET)){
+			$this->filterGetUrl($this->paramsGET);
+		}
+
+		return $this->paramsGET;
+
+	}
+
 	public function paramsPOST($request){
 
 		$request->filter('input[type=text]')->each(function ($node) {
-		    array_push($this->formParams, $node->attr('name'));
+		    array_push($this->paramsPOST, $node->attr('name'));
 		});
 
 		$request->filter('input[type=password]')->each(function ($node) {
-		    array_push($this->formParams, $node->attr('name'));
+		    array_push($this->paramPOST, $node->attr('name'));
 		});
 
-		return $this->formParams;
+		return $this->paramsPOST;
 	}
 
-	public function paramsGET($request){
-		
-		//TODO
+	public function filterGetUrl($urls){
+
+		$queries = array();
+
+		//Get all key value pairs
+		foreach ($urls as $key => $value) {
+			if(strpos($value, "?") !== false){
+				$query = explode("?", $value);
+				array_push($queries, $query[1]);
+			}
+		}
+
+		//get all params
+		foreach ($queries as $key => $value) {
+			if(strpos($value, "=") !== false){
+				$param = explode("=", $value);
+				array_push($this->paramsGET, $param[0]);
+			}
+		}
+
+		unset($urls);
+	}
+
+	public function login($request, $credentials){
+
+		$request = $this->client->click($request->selectLink('login')->link());
+		$form = $request->selectButton('Submit')->form();
+		$form['username'] = 'user';
+		$form['pass'] = 'pass';
+
+		$request = $this->client->submit($form);
+
+		$request = $this->makeRequest($this->url);
+
+		LOG::info($request->html());
 
 	}
 
-	public function nextPages($url){
+	public function checkIfLoginExist(){
+		foreach ($this->links as $value) {
+			if(strpos($value, 'login') !== false){
+				return true;		
+			}
+		}
+
+		return false;
+	}
+
+
+	public function searchLinks($url){
 
 		$website = $this->serviceWebsite->findOneByName($url);
 		$links = $this->serviceLink->findAllByWebsiteId($website[0]->id);
-
 
 		foreach ($links as $key => $link) {
 
@@ -110,7 +176,7 @@ class Webscraper{
 	}
 
 
-	public function filterOutInvalid($links, $client){
+	public function filterOutInvalid($links, $cs){
 
 		foreach ($links as $key => $link) {
 
@@ -127,16 +193,16 @@ class Webscraper{
 					$newlink = '';
 
 					//check which scheme to append
-					if(preg_match('/^(https?)/', $client->getScheme())){
+					if(preg_match('/^(https?)/', $cs->getScheme())){
 	
 
-						$port = (!empty($client->getPort()) ? ':' . $client->getPort() : '');
+						$port = (!empty($cs->getPort()) ? ':' . $cs->getPort() : '');
 
 						if(!empty($path[0])){
 							$path  = ( $path[0] === '/' ? substr($path, 1) : $path);
 						}
 
-						$newlink = 	$client->getScheme() . '://' . $client->getBaseUri() . $port . '/' . $path;	
+						$newlink = 	$cs->getScheme() . '://' . $cs->getBaseUri() . $port . '/' . $path;	
 	
 					}
 
@@ -190,7 +256,6 @@ class Webscraper{
 			}
 		}
 
-
 		foreach ($links as $key => $link) {
 			if(!preg_match('/^(https?)/', $link)){
 				unset($links[$key]);
@@ -205,88 +270,98 @@ class Webscraper{
 		return array_unique($array);
 	}
 
-	public function processWebsite($url, $links, $formLinks, $params, $client){
+	public function processWebsite($url, $cs){
 
 		//initialize
-		$server = $client->getServer();
-
-		LOG::info($url);
+		$server = $cs->getServer();
 
 		try{
 
 	 		//Check if website already exists
 	 		if(!$this->serviceWebsite->numRowByName($url)){
 
-	 			//safe website
-				$this->serviceWebsite->create($url, $server);
+	 				//save website
+					$this->serviceWebsite->create($url, $server);
 
-				//get id website
-				$website = $this->serviceWebsite->findOneByName($url);
+					//get id website
+					$website = $this->serviceWebsite->findOneByName($url);
 
-				if(!empty($client->getHeaders())){
+					if(!empty($cs->getHeaders())){
 					
-					//save headers
-					foreach ($client->getHeaders() as $key => $values) {
-						foreach ($values as $value) {
+						//save headers
+						foreach ($cs->getHeaders() as $key => $values) {
+							foreach ($values as $value) {
 
-							if(strlen($value) < 191){
-								$this->serviceWebsite->createHeaders($key, $value, $website[0]->id);
+								if(strlen($value) < 191){
+									$this->serviceWebsite->createHeaders($key, $value, $website[0]->id);
+								}
 							}
 						}
 					}
-				}
+
+					$this->processLinks($website);
 
 			}else{
-				//get id website
-				$website = $this->serviceWebsite->findOneByName($url);
-			}
-
-			$storedLinks = $this->serviceLink->findAllByWebsiteId($website[0]->id);
-
-			//LOG::info($storedLinks);
-
-			//check if data links already exist for this websits
-			if(empty($storedLinks[0])){
-
-				//LOG::info("No storedLinks");
-
-				if(!empty($links)){
-
-					//save links
-					foreach ($links as $key => $value) {
-
-						if(strlen($value) < 191){
-
-							$this->serviceLink->create("GET", $value, $website[0]->id);
-						}
-					}
-				}
-
-				if(!empty($formLinks)){
-
-					LOG::info($formLinks);
-
-					//save form links
-					foreach ($formLinks as $key => $value) {
-
-						LOG::info('Form links: ' . $value);
-						
-						 $link = $this->serviceLink->create("POST", $value, $website[0]->id);
-
-						 //save params
-						 foreach ($this->formParams as $key => $param) {
 
 
-						 	$this->serviceLink->createParams($param, $link->id);
 
-						 
-						 }
-					}
-				}
 			}
 
 		}catch(Exception $e){
 			Log::info($e->getMessage());
+		}
+	}
+
+	public function processLinks($website){
+
+		$storedLinks = $this->serviceLink->findAllByWebsiteId($website[0]->id);
+		//LOG::info($storedLinks);
+
+		//check if data links already exist for this websits
+		if(empty($storedLinks[0])){
+
+			if(!empty($this->links)){
+
+				//save links
+				foreach ($this->links as $key => $value) {
+					
+					if(strlen($value) < 191){
+
+						$link = $this->serviceLink->create("GET", $value, $website[0]->id);
+
+						if(!empty($this->paramsGET)){
+
+							//save params
+							 foreach ($this->paramsGET as $key => $param) {
+
+							 	$this->serviceLink->createParams($param, $link->id);
+
+							 }
+						}
+					}
+				}
+			}
+
+			if(!empty($this->formLinks)){
+
+				//save form links
+				foreach ($this->formLinks as $key => $value) {
+
+					//LOG::info('Form links: ' . $value);
+					
+					 $link = $this->serviceLink->create("POST", $value, $website[0]->id);
+
+					 if(!empty($this->paramsPOST)){
+
+						 //save params
+						 foreach ($this->paramsPOST as $key => $param) {
+
+						 	$this->serviceLink->createParams($param, $link->id);
+
+						 }
+					}
+				}
+			}
 		}
 	}
 	

@@ -16,7 +16,7 @@ class ServiceLink implements ServiceInterface{
 		$this->link = new Link;
 	}
 
-	public function create($methode, $url, $id){
+	public function create($methode, $url, $wid){
 		
 		$link = new Link;
 
@@ -24,12 +24,12 @@ class ServiceLink implements ServiceInterface{
 			case 'GET':
 				$link->methode = $methode;
 				$link->url = $url;
-				$link->website_id = $id;
+				$link->website_id = $wid;
 				break;
 			case 'POST':
 				$link->methode = $methode;
 				$link->url = $url;
-				$link->website_id = $id;
+				$link->website_id = $wid;
 				break;
 		}
 

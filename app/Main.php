@@ -26,10 +26,11 @@ class Main{
 		}
 
 		$credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
-
+		
 		//initiate scraper
 		$this->scraper = new Scraper;
 		$this->scraper->setup($this->url, $credentials);
+
 		$this->prepare($options);
 		//$this->scan();
 
