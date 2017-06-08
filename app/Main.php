@@ -17,6 +17,8 @@ class Main{
 
 	public function __construct($url, $options){
 
+
+
 		if(filter_var($url, FILTER_VALIDATE_URL)){
 			echo 'Creating target: ' . $url . PHP_EOL;
 			$this->url = $url;
@@ -32,7 +34,6 @@ class Main{
 		$this->scraper->setup($this->url, $credentials);
 
 		$this->prepare($options);
-		//$this->scan();
 
 	}
 

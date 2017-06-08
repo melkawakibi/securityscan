@@ -10,10 +10,8 @@ class ServiceLink implements ServiceInterface{
 
 	use ParamTrait;
 
-	private $link;
-
 	public function __construct(){
-		$this->link = new Link;
+
 	}
 
 	public function create($methode, $url, $wid){

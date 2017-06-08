@@ -7,20 +7,21 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Log;
 use App\Services\ServiceWebsite;
 use App\Services\ServiceLink;
+use App\Services\LoginService;
 use App\Model\ClientService;
 
 class Webscraper{
 
 	public function __construct(){
 
-		$this->client = new Client();
+		$this->client = new Client;
 		$this->client->setClient(new GuzzleClient());
 		$this->links = array();
 		$this->formLinks = array();
 		$this->paramsGET = array();
 		$this->paramsPOST = array();
-		$this->serviceWebsite = new ServiceWebsite();
-		$this->serviceLink = new ServiceLink();
+		$this->serviceWebsite = new ServiceWebsite;
+		$this->serviceLink = new ServiceLink;
 		
 	}
 
@@ -28,18 +29,18 @@ class Webscraper{
 
 		$this->url = $url;
 		$request = $this->makeRequest($url);
-		$cs = new ClientService($request, $this->client);
-		$this->links($request, $cs);
-		$this->formLinks($request, $cs);
+		$this->cs = new ClientService($request, $this->client);
+		$this->links($request, $this->cs);
+		$this->formLinks($request, $this->cs);
 		$this->paramsPOST($request);
 		$this->paramsGET($request);
-		$this->processWebsite($url, $cs);
+		$this->processWebsite($url, $this->cs);
 
-		if($this->checkIfLoginExist()){
-			$this->login($request, $credentials);
-		}
-
+		$this->serviceLogin = new LoginService($request, $this->client, $credentials, $this->links);
+		$this->serviceLogin->login($request);
 	}
+
+
 
 	public function makeRequest($url){
 		return $this->client->request('GET', $url);
@@ -55,10 +56,9 @@ class Webscraper{
 		    array_push($this->links, $node->attr('href'));
 		});
 
-		$this->links = $this->filterOutInvalid($this->links, $cs);
-		$this->links = $this->filterOutDuplicates($this->links);
+		$this->filterOutInvalid($cs);
+		$this->filterOutDuplicates();
 
-		return $this->links;
 	}
 
 	public function formLinks($request, $cs){
@@ -67,10 +67,9 @@ class Webscraper{
 		    array_push($this->formLinks, $node->attr('action'));
 		});
 
-		$this->formLinks = $this->filterOutInvalid($this->formLinks, $cs);
-		$this->formLinks = $this->filterOutDuplicates($this->formLinks);
+		$this->filterOutInvalid($cs);
+		$this->filterOutDuplicates();
 
-		return $this->formLinks;
 	}
 
 	public function paramsGET($request){
@@ -80,11 +79,8 @@ class Webscraper{
 		});
 
 		if(!empty($this->paramsGET)){
-			$this->filterGetUrl($this->paramsGET);
+			$this->filterGetUrl();
 		}
-
-		return $this->paramsGET;
-
 	}
 
 	public function paramsPOST($request){
@@ -94,23 +90,24 @@ class Webscraper{
 		});
 
 		$request->filter('input[type=password]')->each(function ($node) {
-		    array_push($this->paramPOST, $node->attr('name'));
+		    array_push($this->paramsPOST, $node->attr('name'));
 		});
 
-		return $this->paramsPOST;
 	}
 
-	public function filterGetUrl($urls){
+	private function filterGetUrl(){
 
 		$queries = array();
 
 		//Get all key value pairs
-		foreach ($urls as $key => $value) {
+		foreach ($this->paramsGET  as $key => $value) {
 			if(strpos($value, "?") !== false){
 				$query = explode("?", $value);
 				array_push($queries, $query[1]);
 			}
 		}
+
+		$this->paramsGET = array();
 
 		//get all params
 		foreach ($queries as $key => $value) {
@@ -120,65 +117,55 @@ class Webscraper{
 			}
 		}
 
-		unset($urls);
 	}
 
-	public function login($request, $credentials){
 
-		$request = $this->client->click($request->selectLink('login')->link());
-		$form = $request->selectButton('Submit')->form();
-		$form['username'] = 'user';
-		$form['pass'] = 'pass';
+	private function mergeLinks(){
+		
+		$array = array();
+		
+		foreach ($this->formLinks as $value) {
+			array_push($array, $value);
+		}
 
-		$request = $this->client->submit($form);
-
-		$request = $this->makeRequest($this->url);
-
-		LOG::info($request->html());
-
-	}
-
-	public function checkIfLoginExist(){
 		foreach ($this->links as $value) {
-			if(strpos($value, 'login') !== false){
-				return true;		
-			}
+			array_push($array, $value);
 		}
 
-		return false;
+		return $array;
 	}
 
 
-	public function searchLinks($url){
+	// private function searchLinks($url){
 
-		$website = $this->serviceWebsite->findOneByName($url);
-		$links = $this->serviceLink->findAllByWebsiteId($website[0]->id);
+	// 	$website = $this->serviceWebsite->findOneByName($url);
+	// 	$links = $this->serviceLink->findAllByWebsiteId($website[0]->id);
 
-		foreach ($links as $key => $link) {
+	// 	foreach ($links as $key => $link) {
 
-			LOG::info("URL: " . $link);
+	// 		LOG::info("URL: " . $link);
 
-			//create request
-			$request = $this->makeRequest($link->url);
+	// 		//create request
+	// 		$request = $this->makeRequest($link->url);
 
-			//create model
-			$cs = new ClientService($request, $this->client);
+	// 		//create model
+	// 		$cs = new ClientService($request, $this->client);
 
-			LOG::info("URL: " . $cs->getUri());
+	// 		LOG::info("URL: " . $cs->getUri());
 
-			$pageLinks = $this->links($cs->getRequest(), $cs);
-			$pageFormLinks = $this->formLinks($cs->getRequest(), $cs);
-			$pageParams = $this->paramsPOST($cs->getRequest());
+	// 		$pageLinks = $this->links($cs->getRequest(), $cs);
+	// 		$pageFormLinks = $this->formLinks($cs->getRequest(), $cs);
+	// 		$pageParams = $this->paramsPOST($cs->getRequest());
 
-			$this->processWebsite($link->url, $pageLinks, $pageFormLinks, $pageParams, $cs);
+	// 		$this->processWebsite($link->url, $pageLinks, $pageFormLinks, $pageParams, $cs);
 
-		}
-	}
+	// 	}
+	// }
 
 
-	public function filterOutInvalid($links, $cs){
+	private function filterOutInvalid($cs){
 
-		foreach ($links as $key => $link) {
+		foreach ($this->links as $key => $link) {
 
 
 			$scheme = parse_url($link, PHP_URL_SCHEME);
@@ -222,18 +209,18 @@ class Webscraper{
 							//check if correct extension, if not unset else append url to array list
 		            		if($ext === 'css' || $ext === 'png' || $ext === 'ico' || $ext === 'svg' || $ext === 'json' || $ext === 'xml') {
 
-		            			unset($links[$key]);
+		            			unset($this->links[$key]);
 		        			}else{
 
-		        				array_push($links, $newlink);
+		        				array_push($this->links, $newlink);
 		        			}
 	        			}
         			}
 
         			//second check if old link still is set, at this point we don't need the old link anymore so unset
-        			if(isset($links[$key])){
+        			if(isset($this->links[$key])){
 
-        				unset($links[$key]);
+        				unset($this->links[$key]);
         			}
 			}else{
 
@@ -249,28 +236,26 @@ class Webscraper{
 						//scheme is not empty check if extension is correct otherwise unset
 						if($ext === 'css' || $ext === 'png' || $ext === 'ico' || $ext === 'svg' || $ext === 'json' || $ext === 'xml') {
 
-		            		unset($links[$key]);
+		            		unset($this->links[$key]);
 		            	}
 	            	}
         		}
 			}
 		}
 
-		foreach ($links as $key => $link) {
+		foreach ($this->links as $key => $link) {
 			if(!preg_match('/^(https?)/', $link)){
-				unset($links[$key]);
+				unset($this->links[$key]);
 			}
 		}
 
-		return $links;
-
 	}
 
-	public function filterOutDuplicates($array){
-		return array_unique($array);
+	private function filterOutDuplicates(){
+		return array_unique($this->links);
 	}
 
-	public function processWebsite($url, $cs){
+	private function processWebsite($url, $cs){
 
 		//initialize
 		$server = $cs->getServer();
@@ -303,8 +288,9 @@ class Webscraper{
 
 			}else{
 
+				$website = $this->serviceWebsite->findOneByName($url);
 
-
+				$this->processLinks($website);
 			}
 
 		}catch(Exception $e){
@@ -314,10 +300,9 @@ class Webscraper{
 
 	public function processLinks($website){
 
+		//TODO array_diff or array_unique merge array
 		$storedLinks = $this->serviceLink->findAllByWebsiteId($website[0]->id);
-		//LOG::info($storedLinks);
 
-		//check if data links already exist for this websits
 		if(empty($storedLinks[0])){
 
 			if(!empty($this->links)){

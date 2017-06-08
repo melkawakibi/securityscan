@@ -15,6 +15,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Process\PhpProcess;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Client simulates a browser.
@@ -284,6 +285,8 @@ abstract class Client
         }
 
         $uri = $this->getAbsoluteUri($uri);
+
+        //LOG::info($uri);
 
         $server = array_merge($this->server, $server);
 
@@ -555,9 +558,12 @@ abstract class Client
             }
 
             $uri = $path.$uri;
+
         }
 
-        return preg_replace('#^(.*?//[^/]+)\/.*$#', '$1', $currentUri).$uri;
+        LOG::info($currentUri);
+
+        return preg_replace('#^(.*?//[^/]+)\/.*$#', '$1', $currentUri). '/' .$uri;
     }
 
     /**
