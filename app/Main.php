@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Core\Webscraper as Scraper;
+use App\Core\Crawler as Crawler;
 use App\Core\Modules\SQLModule as SQL;
 use App\Model\Website;
 use Illuminate\Support\Facades\Log;
@@ -17,8 +17,6 @@ class Main{
 
 	public function __construct($url, $options){
 
-
-
 		if(filter_var($url, FILTER_VALIDATE_URL)){
 			echo 'Creating target: ' . $url . PHP_EOL;
 			$this->url = $url;
@@ -27,13 +25,19 @@ class Main{
 			exit();
 		}
 
-		$credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
-		
+		$credentials = null;
+
+		if(!empty($options['u'])){
+			$credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
+		}
+
 		//initiate scraper
-		$this->scraper = new Scraper;
-		$this->scraper->setup($this->url, $credentials);
+		$this->crawler= new Crawler;
+		$this->crawler->setup($this->url);
+		$this->crawler->crawl($credentials);
 
 		$this->prepare($options);
+		$this->scan();
 
 	}
 
@@ -56,7 +60,7 @@ class Main{
 	public function scan(){
 
 		if($this->sql instanceof SQL){
-			$this->sql->attackGET();
+			$this->sql->attack();
 		}
 
 	}

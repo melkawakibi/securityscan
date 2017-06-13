@@ -18,9 +18,11 @@ class LoginService{
 		$this->links = $links;
 		$this->inputfields = array();
 		$this->formValues = array();
+		$this->loginForms = array();
 	}
 
 	public function login($request){
+
 
 		if($this->checkIfFormExists($request) && $this->checkIfLoginForm($request)){
 			
@@ -32,9 +34,13 @@ class LoginService{
 			
 			$this->cs = new ClientService($this->request, $this->client);
 
+			return true;
+
 		}else{
 
 			$this->request = $this->redirectToLogin($request);
+
+			LOG::info($this->request->getUri());
 
 			if($this->checkIfFormExists($this->request) && $this->checkIfLoginForm($this->request)){
 				
@@ -49,8 +55,12 @@ class LoginService{
 				$this->request = $this->client->request('GET', $this->request->getUri());
 
 				$this->cs = new ClientService($this->request, $this->client);
-			
-				LOG::info($this->cs->getContent());
+				
+				return true;
+
+			}else{
+
+				return false;
 			}
 		}
 	}
@@ -58,24 +68,35 @@ class LoginService{
 	public function checkIfFormExists($request){
 
 		try {
-		    if($request->filter('form')->form()){
-		    	return true;
-			}
+
+			return $request->filter('form')->count();
+
 		} catch (\InvalidArgumentException $e) {
 			
 		}
 
 	}
 
-	public function checkIfLoginForm($request){
-		
+	public function getLoginForms($request){
 
-		$this->request->filter('input[type=text]')->each(function ($node) {
+		$forms = $request->filter('form');
+
+		foreach($forms as $key => $value) {
+
+   			$this->loginForms[] = array(spl_object_hash($value) => $value->textContent);
+
+		}
+
+		return $this->loginForms;
+	}
+
+	public function checkIfLoginForm($request){
+
+		$request->filter('input[type=text]')->each(function ($node) {
 
 			if(preg_match('/user/', $node->attr('name')) || preg_match('/pass/', $node->attr('name'))){
 					array_push($this->inputfields, $node->attr('name'));	
 			}
-
 		});
 
 		if(!empty($this->inputfields)){
@@ -89,6 +110,7 @@ class LoginService{
 	public function checkIfLoginExist(){
 
 		foreach ($this->links as $value) {
+
 			if(strpos($value, 'login') !== false){
 				return true;		
 			}
@@ -101,12 +123,19 @@ class LoginService{
 		
 		if($this->checkIfLoginExist($request)){
 			return $this->request = $this->client->click($this->request->selectLink('login')->link());
+		}else{
+			//TODO handle this request if redirect fails.
+			return $request;
 		}
 	}
 
 	public function setupLogin($request){
 
 		$this->getFormValues($request);
+
+		// foreach ($this->formValues as $key => $value) {
+		// 	echo $value.PHP_EOL;
+		// }
 
 		$formSubmit = $this->request->selectButton($this->formValues[0])->form();
 		$formSubmit[$this->formValues[1]] = $this->credentials['username'];
@@ -116,15 +145,33 @@ class LoginService{
 	}
 
 	public function getFormValues($request){
+		
+		$this->forms = $this->getLoginForms($request);
+
+		for($i = 0; $i < sizeof($this->forms); $i++){
+			foreach ($this->forms[$i] as $key => $value) {
+				var_dump($value);
+			}
+			
+		}
 
 		if($this->checkIfLoginForm($request)){
 
-			$this->request->filter('input[type=submit]')->each(function ($node) {
-				array_push($this->formValues, $node->attr('value'));
+			$this->request->filter('input[type=text]')->each(function ($node) {
+				if($this->inputfields[0] === $node->attr('name') && $this->inputfields[1] === $node->attr('name')){
+
+						array_push($this->formValues, $node->attr('name'));
+
+				}
 			});
 
-			$this->request->filter('input[type=text]')->each(function ($node) {
-				array_push($this->formValues, $node->attr('name'));
+			$this->request->filter('input[type=submit]')->each(function ($node) {
+				
+					//var_dump(spl_object_hash($node));
+
+					array_push($this->formValues, $node->attr('value'));
+				
+				
 			});
 
 			$this->request->filter('input[type=password]')->each(function ($node) {

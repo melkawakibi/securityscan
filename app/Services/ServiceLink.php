@@ -6,7 +6,7 @@ use App\Model\Link;
 use App\Traits\ParamTrait;
 use Illuminate\Support\Facades\DB;
 
-class ServiceLink implements ServiceInterface{
+class ServiceLink{
 
 	use ParamTrait;
 
@@ -54,8 +54,8 @@ class ServiceLink implements ServiceInterface{
 	}
 
 
-	public function numRowByName($name){
-		
+	public function numRowByUrl($url){
+		return Link::Where(['url' => $url])->get()->count();
 	}
 
 }

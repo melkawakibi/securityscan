@@ -3,11 +3,10 @@
 namespace App\Services;
 
 use App\Model\Website;
-use App\Services\ServiceInterface;
 use App\Traits\HeaderTrait;
 use Carbon\Carbon;
 
-class ServiceWebsite implements ServiceInterface{
+class ServiceWebsite{
 
 	use HeaderTrait;
 
@@ -40,17 +39,17 @@ class ServiceWebsite implements ServiceInterface{
 		
 	}
 
-	//Find website by name
-	public function findOneByName($name){
+	//Find website by url
+	public function findOneByUrl($url){
 
-		return Website::Where(['base_url' => $name])->get();
+		return Website::Where(['base_url' => $url])->get();
 
 	}
 
-	//returns num rows by name
-	public function numRowByName($name){
+	//returns num rows by url
+	public function numRowByUrl($url){
 
-		return Website::Where(['base_url' => $name])->get()->count();
+		return Website::Where(['base_url' => $url])->get()->count();
 
 	}
 
