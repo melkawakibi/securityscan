@@ -2,14 +2,14 @@
 
 namespace App\Core;
 
-use Goutte\Client;
+use Goutte\Client as GoutteClient;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Log;
 use App\Model\Field;
-use App\Services\ServiceWebsite;
-use App\Services\ServiceLink;
+use App\DB\WebsiteDB;
+use App\DB\LinkDB;
+use App\Model\Client;
 use App\Services\LoginService;
-use App\Services\ClientService;
 
 class Crawler{
 
@@ -21,19 +21,19 @@ class Crawler{
 
 	public function __construct(){
 
-		$this->client = new Client;
+		$this->client = new GoutteClient;
 		$this->client->setClient(new GuzzleClient());
 		$this->links = array();
 		$this->formLinks = array();
-		$this->serviceWebsite = new ServiceWebsite;
-		$this->serviceLink = new ServiceLink;
+		$this->serviceWebsite = new WebsiteDB;
+		$this->serviceLink = new LinkDB;
 		
 	}
 
 	public function setup($url){
 		$this->url = $url;
 		$this->request = $this->makeRequest($url);
-		$this->cs = new ClientService($this->request, $this->client);
+		$this->cs = new Client($this->request, $this->client);
 	}
 
 	public function makeRequest($url){
@@ -344,28 +344,32 @@ class Crawler{
 			//save form links
 			foreach ($this->formLinks as $key => $value) {
 
-					$link = $this->serviceLink->create("POST", $value, $website[0]->id);
+					if(!$this->serviceLink->numRowByUrl($value)){
 
-					$forms = $this->getForms();
+						$link = $this->serviceLink->create("POST", $value, $website[0]->id);
 
-					if(!empty($forms)){
 
-						foreach ($forms as $form) {
+						$forms = $this->getForms();
 
-							$fields = $form->all();
+						if(!empty($forms)){
 
-								if(!empty($fields)){
+							foreach ($forms as $form) {
 
-								if($form->getUri() === $link->url){
+								$fields = $form->all();
 
-									foreach ($fields as $field) {
+									if(!empty($fields)){
 
-										$fieldObj = new Field($field);
+									if($form->getUri() === $link->url){
 
-										$type = $fieldObj->getType();
+										foreach ($fields as $field) {
 
-										if($type === 'text' || $type=== 'password'){
-											$this->serviceLink->createParams($field->getName(), $link->id);	
+											$fieldObj = new Field($field);
+
+											$type = $fieldObj->getType();
+
+											if($type === 'text' || $type=== 'password'){
+												$this->serviceLink->createParams($field->getName(), $link->id);	
+											}
 										}
 									}
 								}

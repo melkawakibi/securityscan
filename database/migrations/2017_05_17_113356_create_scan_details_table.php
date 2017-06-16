@@ -17,13 +17,14 @@ class CreateScanDetailsTable extends Migration
             $table->increments('id');
             $table->integer('scan_id')->unsigned();
             $table->foreign('scan_id')->references('id')->on('scans');
-            $table->integer('f_scan_key')->unsigned();
+            $table->bigInteger('f_scan_key')->unsigned();
             $table->foreign('f_scan_key')->references('scan_key')->on('scans');
-            $table->string('type');
-            $table->string('message');
-            $table->string('sql_inj');
-            $table->string('thread');
-            $table->integer('thread_level');
+            $table->string('module_name');
+            $table->string('risk');
+            $table->string('parameter');
+            $table->string('attack');
+            $table->string('wasc_id');
+            $table->string('execution_time');
             $table->timestamps();
         });
     }

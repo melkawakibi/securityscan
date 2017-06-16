@@ -11,7 +11,7 @@ use App\DB\ScanDB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
 
-class SQLModule{
+class XSSModule{
 
 	private $client;
 	private $baseUrl;
@@ -51,11 +51,11 @@ class SQLModule{
 			$this->defaultAttack();
 		}
 
-		$this->properties['module_name'] = 'sql';
+		$this->properties['module_name'] = 'xss';
 
 		//These are variable value, I keep them static for now
 		$this->properties['risk'] = 'high';
-		$this->properties['wasc_id'] = '19';
+		$this->properties['wasc_id'] = '8';
 
 		$this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
 	}
@@ -70,7 +70,7 @@ class SQLModule{
 
 				if($link->methode === 'GET'){
 
-					$lines = file(public_path() . '/resources/payload/sqlblind-injection.txt');
+					$lines = file(public_path() . '/resources/payload/xss.txt');
 					
 					foreach($lines as $line){
 						if($link->id === $param->link_id){
@@ -86,7 +86,7 @@ class SQLModule{
 
 		$response = $res->getBody();
 
-		if(strpos($response, 'You have an error in your SQL syntax;')){
+		if(strpos($response, '<script>alert(1);</script>')){
 			return true;
 		}else if($response){
 			return false;
@@ -101,7 +101,7 @@ class SQLModule{
 
 	public function defaultAttack(){
 
-		$lines = file(public_path() . '/resources/payload/sqlblind-injection-default.txt');
+		$lines = file(public_path() . '/resources/payload/xss-default.txt');
 		
 		foreach($lines as $line){
 
@@ -109,7 +109,7 @@ class SQLModule{
 
 		}
 
-		echo 'default SQLI attack'.PHP_EOL;
+		echo 'default XSS attack'.PHP_EOL;
 		foreach ($this->defaultlinks as $key => $value) {
 
 			//place this before any script you want to calculate time
@@ -137,8 +137,8 @@ class SQLModule{
 				$this->properties['execution_time'] = $execution_time;
 
 				if($this->responseAnalyse($res)){
-					echo 'This webpage is vulnerable for SQL injections'.PHP_EOL;
-					echo Lang::get('description.SQLi').PHP_EOL.PHP_EOL;
+					echo '	'.PHP_EOL;
+					echo Lang::get('description.XSS').PHP_EOL.PHP_EOL;
 				}
 
 				Log::info('Time: ' . $execution_time);
@@ -155,7 +155,7 @@ class SQLModule{
 
 	public function linkAttack($links){
 
-		echo 'SQLI attack'.PHP_EOL;
+		echo 'XSS attack'.PHP_EOL;
 		foreach ($this->uriArray as $key => $value) {
 
 			//place this before any script you want to calculate time
@@ -184,8 +184,8 @@ class SQLModule{
 				$this->properties['execution_time'] = $execution_time;
 
 				if($this->responseAnalyse($res)){
-					echo 'This webpage is vulnerable for SQL injections'.PHP_EOL;
-					echo Lang::get('description.SQLi').PHP_EOL.PHP_EOL;
+					echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
+					echo Lang::get('description.XSS').PHP_EOL.PHP_EOL;
 				}
 
 				Log::info('Time: ' . $execution_time);

@@ -17,6 +17,7 @@ class CreateModulesTable extends Migration
             $table->increments('id');
             $table->integer('scan_id')->unsigned();
             $table->foreign('scan_id')->references('id')->on('scans');
+            $table->boolean('default')->default(0);
             $table->boolean('sql')->default(0);
             $table->boolean('xss')->default(0);;
             $table->timestamps();

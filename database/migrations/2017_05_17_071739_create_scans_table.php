@@ -18,7 +18,7 @@ class CreateScansTable extends Migration
             $table->date('date');
             $table->integer('website_id')->unsigned();
             $table->foreign('website_id')->references('id')->on('websites');
-            $table->integer('scan_key')->unsigned()->unique();
+            $table->bigInteger('scan_key')->unsigned()->unique();
             $table->timestamps();
         });
     }

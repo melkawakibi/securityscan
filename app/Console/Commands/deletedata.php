@@ -44,6 +44,9 @@ class deletedata extends Command
         DB::table('params')->delete();    
         DB::table('headers')->delete();
         DB::table('links')->delete();
+        DB::table('scan_details')->delete();
+        DB::table('modules')->delete();
+        DB::table('scans')->delete();
         DB::table('websites')->delete();
     }
 }

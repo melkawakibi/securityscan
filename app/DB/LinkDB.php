@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\DB;
 
 use App\Model\Link;
 use App\Traits\ParamTrait;
 use Illuminate\Support\Facades\DB;
 
-class ServiceLink{
+class LinkDB{
 
 	use ParamTrait;
 

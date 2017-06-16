@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\DB;
 
 use App\Model\Website;
 use App\Traits\HeaderTrait;
 use Carbon\Carbon;
 
-class ServiceWebsite{
+class WebsiteDB{
 
 	use HeaderTrait;
 

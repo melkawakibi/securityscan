@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
-use App\Model\ClientService;
+use App\Model\Client;
+use Illuminate\Support\Facades\Log;
 
 class LoginService{
 

