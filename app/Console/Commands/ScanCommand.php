@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 use App\Main;
 
-class cmd extends Command
+class ScanCommand extends Command
 {
     /**
      * The name and signature of the console command.

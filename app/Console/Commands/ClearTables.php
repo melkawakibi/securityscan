@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Main;
 
-class deletedata extends Command
+class ClearTabels extends Command
 {
     /**
      * The name and signature of the console command.
