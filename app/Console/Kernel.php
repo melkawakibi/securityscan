@@ -13,8 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\cmd',
-        'App\Console\Commands\deletedata',
+        'App\Console\Commands\ScanCommand',
+        'App\Console\Commands\ClearTables',
     ];
 
     /**

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Main;
 
-class ClearTabels extends Command
+class ClearTables extends Command
 {
     /**
      * The name and signature of the console command.

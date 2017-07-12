@@ -10,7 +10,7 @@
  */
 
 namespace Symfony\Component\BrowserKit;
-use Illuminate\Support\Facades\Log;
+
 /**
  * CookieJar.
  *

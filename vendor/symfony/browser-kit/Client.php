@@ -15,7 +15,6 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Process\PhpProcess;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Client simulates a browser.
@@ -286,8 +285,6 @@ abstract class Client
 
         $uri = $this->getAbsoluteUri($uri);
 
-        //LOG::info($uri);
-
         $server = array_merge($this->server, $server);
 
         if (isset($server['HTTPS'])) {
@@ -471,13 +468,14 @@ abstract class Client
 
         if (-1 !== $this->maxRedirects) {
             if ($this->redirectCount > $this->maxRedirects) {
+                $this->redirectCount = 0;
                 throw new \LogicException(sprintf('The maximum number (%d) of redirections was reached.', $this->maxRedirects));
             }
         }
 
         $request = $this->internalRequest;
 
-        if (in_array($this->internalResponse->getStatus(), array(302, 303))) {
+        if (in_array($this->internalResponse->getStatus(), array(301, 302, 303))) {
             $method = 'GET';
             $files = array();
             $content = null;
@@ -558,12 +556,9 @@ abstract class Client
             }
 
             $uri = $path.$uri;
-
         }
 
-        LOG::info($currentUri);
-
-        return preg_replace('#^(.*?//[^/]+)\/.*$#', '$1', $currentUri). '/' .$uri;
+        return preg_replace('#^(.*?//[^/]+)\/.*$#', '$1', $currentUri).$uri;
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace App;
 
-use App\Core\Crawler as Crawler;
 use App\Core\Modules\SQLModule as SQL;
 use App\Core\Modules\XSSModule as XSS;
+use App\Core\Spider;
 use App\Model\Website;
 use App\DB\ScanDB;
 use App\DB\WebsiteDB;
@@ -25,61 +25,65 @@ class Main{
 			exit();
 		}
 
-		$credentials = null;
+		$spider = new Spider($this->url); 
 
-		if(!empty($options['u'])){
-			$credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
-		}
+		$spider->start();
 
-		//initialte module variables
-		$this->sql = '';
-		$this->xss = '';
+		// $credentials = null;
 
-		//database setup
-		$this->scandb = new ScanDB;
-		$this->websitedb = new WebsiteDB;
+		// if(!empty($options['u'])){
+		// 	$credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
+		// }
 
-		//initiate scraper
-		$this->crawler= new Crawler;
-		$this->crawler->setup($this->url);
-		$this->crawler->crawl($credentials);
+		// //initialte module variables
+		// $this->sql = '';
+		// $this->xss = '';
 
-		$this->prepare($options);
-		$this->scan();
+		// //database setup
+		// $this->scandb = new ScanDB;
+		// $this->websitedb = new WebsiteDB;
 
-	}
+		// //initiate scraper
+		// $this->crawler= new Crawler;
+		// $this->crawler->setup($this->url);
+		// $this->crawler->crawl($credentials);
 
-	public function prepare($options){
-
-		if($options['s']){
-			$this->sql = new SQL($this->url);
-		}
-
-		if($options['x']){
-			$this->xss = new XSS($this->url);
-		}
-
-		$website = $this->websitedb->findOneByUrl($this->url);
-
-		$uniqueId = rand().(string) $website[0]->id;
-
-		//save scan to database
-		$this->scan = $this->scandb->create($website[0]->id, $uniqueId);
-
-		$this->scandb->createModule($this->scan->id, $options);
+		// $this->prepare($options);
+		// $this->scan();
 
 	}
 
-	public function scan(){
+	// public function prepare($options){
 
-		if($this->sql instanceof SQL){
-			$this->sql->attack($this->scan);
-		}
+	// 	if($options['s']){
+	// 		$this->sql = new SQL($this->url);
+	// 	}
 
-		if($this->xss instanceof XSS){
-			$this->xss->attack($this->scan);
-		}
+	// 	if($options['x']){
+	// 		$this->xss = new XSS($this->url);
+	// 	}
 
-	}
+	// 	$website = $this->websitedb->findOneByUrl($this->url);
+
+	// 	$uniqueId = rand().(string) $website[0]->id;
+
+	// 	//save scan to database
+	// 	$this->scan = $this->scandb->create($website[0]->id, $uniqueId);
+
+	// 	$this->scandb->createModule($this->scan->id, $options);
+
+	// }
+
+	// public function scan(){
+
+	// 	if($this->sql instanceof SQL){
+	// 		$this->sql->attack($this->scan);
+	// 	}
+
+	// 	if($this->xss instanceof XSS){
+	// 		$this->xss->attack($this->scan);
+	// 	}
+
+	// }
 
 }
