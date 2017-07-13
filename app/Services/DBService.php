@@ -8,6 +8,7 @@ use App\Core\Utils;
 
 use App\DB\WebsiteDB;
 use App\DB\LinkDB;
+use App\DB\ScanDB;
 
 use \stdClass as Object;
 
@@ -15,10 +16,14 @@ class DBService
 {
 
 	private $serviceWebsite;
+	private $serviceLink;
+	private $serviceScan;
 
 	public function __construct()
 	{
 		$this->serviceWebsite = new WebsiteDB;
+		$this->serviceLink = new LinkDB;
+		$this->serviceScan = new ScanDB;
 	}
 
 
@@ -31,13 +36,14 @@ class DBService
 			$website->url = $baseUrl;
 			$website->server = $headerInfo->getServer();
 
-			//Check if website exists
-			//If so is it updated? Yes, update record
+			if(!$this->serviceWebsite->numRowByUrl($baseUrl)){
 
-			$website = $this->serviceWebsite->create($website);
+				//Check if website exists
+				//If so is it updated? Yes, update record
+				$website = $this->serviceWebsite->create($website);
 
-			$this->storeHeader($headers, $website->id);
-		
+				$this->storeHeader($headers, $website->id);
+			}
 		}
 	}
 
