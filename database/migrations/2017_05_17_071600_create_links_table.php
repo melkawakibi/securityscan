@@ -17,6 +17,9 @@ class CreateLinksTable extends Migration
             $table->increments('id');
             $table->string('methode');
             $table->string('url');
+            $table->string('refering_url');
+            $table->boolean('is_redirect');
+            $table->integer('depth');
             $table->integer('website_id')->unsigned();
             $table->foreign('website_id')->references('id')->on('websites');
             $table->timestamps();

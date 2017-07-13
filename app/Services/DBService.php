@@ -18,6 +18,7 @@ class DBService
 	private $serviceWebsite;
 	private $serviceLink;
 	private $serviceScan;
+	private $id;
 
 	public function __construct()
 	{
@@ -27,7 +28,7 @@ class DBService
 	}
 
 
-	public function storeWebsite($baseUrl, $url, $headers)
+	public function store($baseUrl, $url, $headers, $links)
 	{
 		$headerInfo = new HeaderInfo($headers);
 
@@ -43,6 +44,19 @@ class DBService
 				$website = $this->serviceWebsite->create($website);
 
 				$this->storeHeader($headers, $website->id);
+
+			}
+
+		}
+
+		if($this->serviceWebsite->numRowByUrl($baseUrl)){
+
+			$website = $this->serviceWebsite->findOneByUrl($baseUrl);
+
+			foreach ($links as $key => $link) {
+
+				$this->storeLinks($link, $website[0]->id);
+
 			}
 		}
 	}
@@ -61,10 +75,42 @@ class DBService
 	}
 
 
-	public function storeLinks($links)
+	public function storeLinks($link)
 	{
 
+		$link = (object) $link;
 
+		$link = $this->serviceLink->create($link, $website->id);
+
+	}
+
+	public function storeParams($forms)
+	{
+
+		if(!empty($forms)){
+
+			foreach ($forms as $form) {
+
+				$fields = $form->all();
+
+					if(!empty($fields)){
+
+					if($form->getUri() === $link->url){
+
+						foreach ($fields as $field) {
+
+							$fieldObj = new Field($field);
+
+							$type = $fieldObj->getType();
+
+							if($type === 'text' || $type=== 'password'){
+								
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 }

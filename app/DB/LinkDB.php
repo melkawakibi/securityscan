@@ -7,6 +7,8 @@ use App\Traits\ParamTrait;
 use App\Traits\HeaderLinkTrait;
 use Illuminate\Support\Facades\DB;
 
+use App\Core\Utils;
+
 class LinkDB{
 
 	use ParamTrait, HeaderLinkTrait;
@@ -15,8 +17,12 @@ class LinkDB{
 
 	}
 
-	public function create($methode, $url, $wid){
+	public function create($linkObj, $wid){
 		
+		$linkCode = $linkObj->linkcode;
+
+		$b = Utils::searchCriteria($linkcode, array('form', 'method', 'post'));
+
 		$link = new Link;
 
 		switch ($methode) {
@@ -53,7 +59,6 @@ class LinkDB{
 	public function findOneByName($name){
 
 	}
-
 
 	public function numRowByUrl($url){
 		return Link::Where(['url' => $url])->get()->count();

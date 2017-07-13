@@ -28,5 +28,7 @@ class Link extends Model
     public function headers(){
         return $this->hasMany('App\Model\HeaderLink');
     }
-
+    
+    
+    
 }

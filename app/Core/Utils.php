@@ -54,6 +54,36 @@ class Utils
 
 	}
 
+	public function searchCriteria($inputValue, $findValues)
+	{
+		if(is_array($findValues)){
+			$i = 0;
+			foreach ($findValues as $values) {
+
+				if(is_array($values)){
+					$position = searchCriteria($inputValue, $values); 
+				}else{
+					 $postition = strpos($inputValue, $values);
+
+
+					 if($postition !== false)
+					 {
+					 	$i++;
+					 }
+
+					 if(count($findValues) == $i){
+					 	return true;
+					 }
+				}
+
+			}
+
+			return false;
+			
+		} else {
+			return strpos($inputValue, $findValues);
+		}
+	}
 
 
 }

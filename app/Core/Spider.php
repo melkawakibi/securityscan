@@ -63,7 +63,9 @@ class Spider extends PHPCrawler
 
 		$this->headers = Utils::headerToArray($pageInfo->header);
 
-		$this->DBService->storeWebsite($this->url, $pageInfo->url, $this->headers);
+		$links = $pageInfo->links_found;
+
+		$this->DBService->store($this->url, $pageInfo->url, $this->headers, $links);
 
 		$this->client->setContent($pageInfo->content);
 		$this->client->setStatusCode($pageInfo->http_status_code);
@@ -77,10 +79,26 @@ class Spider extends PHPCrawler
 
 		$crawler = $this->client->request('GET', $url);
 
-		$crawler->filter('a')->each(function (Crawler $node, $i){
-			//echo $node->attr('href');
+	}
+
+
+	public function getForms(){
+
+		$this->submits = array();
+		$this->forms = array();
+
+		$this->request->filter('input[type=submit]')->each(function($node){
+
+			array_push($this->submits, $node->attr('value'));
+
 		});
 
+		foreach ($this->submits as $key => $value) {
+			//echo $value.PHP_EOL;
+			$this->forms[] = $this->request->selectButton($value)->form();
+		}
+
+		return $this->forms;
 	}
 
 }
