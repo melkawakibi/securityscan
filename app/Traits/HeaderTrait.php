@@ -7,16 +7,20 @@ use App\Model\Header;
 trait HeaderTrait{
 
 	//Create headers
-	public function createHeaders($url, $value, $id){
+	public function createHeaders($headers, $id){
 
-		$header = new Header;
-		$header->name = $url;
-		$header->value = $value;
-		$header->website_id = $id;
+		if($headers !== null){
+			$header = new Header;
+			$header->name = $headers[0];
+			$header->value = $headers[1];
+			$header->website_id = $id;
 
-		$header->save();
+			$header->save();
 
-		return $header;
+			return $header;
+		}else{
+			return '';
+		}
 
 	}
 
@@ -32,13 +36,4 @@ trait HeaderTrait{
 		return Header::Where(['id' => $id])->get();
 	}
 
-
-	public function findOneByName($name){
-
-	}
-
-
-	public function numRowByName($name){
-			
-	}
 }

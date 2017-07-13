@@ -15,11 +15,11 @@ class WebsiteDB{
 	}
 
 	//Create website
-	public function create($url, $server){
+	public function create($websiteObj){
 
 		$website = new Website;
-		$website->base_url = $url;
-		$website->server = $server;
+		$website->base_url = $websiteObj->url;
+		$website->server = $websiteObj->server;
 		$website->date = Carbon::now();
 		$website->customer_id = 1;
 

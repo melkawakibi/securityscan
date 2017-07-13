@@ -9,9 +9,7 @@ use PHPCrawlerResponseHeader;
 use App\Core\BaseClient;
 use Symfony\Component\DomCrawler\Crawler;
 
-use App\DB\WebsiteDB;
-use App\DB\LinkDB;
-use App\Services\LoginService;
+use App\Services\DBService;
 
 use Illuminate\Support\Facades\Log;
 
@@ -20,6 +18,7 @@ class Spider extends PHPCrawler
 
 	private $url;
 	private $client;
+	private $DBService;
 
 	private $headers = array();
 
@@ -27,6 +26,8 @@ class Spider extends PHPCrawler
 		parent::__construct();
 
 		$this->client = new BaseClient();
+		$this->DBService = new DBService;
+
 		$this->url = $url;
 
 	}
@@ -57,9 +58,12 @@ class Spider extends PHPCrawler
 
 	}
 
+
 	public function handleDocumentInfo(PHPCrawlerDocumentInfo $pageInfo){
 
-		$this->headers = $this->headerToArray($pageInfo->header);
+		$this->headers = Utils::headerToArray($pageInfo->header);
+
+		$this->DBService->storeWebsite($this->url, $pageInfo->url, $this->headers);
 
 		$this->client->setContent($pageInfo->content);
 		$this->client->setStatusCode($pageInfo->http_status_code);
@@ -74,16 +78,9 @@ class Spider extends PHPCrawler
 		$crawler = $this->client->request('GET', $url);
 
 		$crawler->filter('a')->each(function (Crawler $node, $i){
-			echo $node->attr('href');
+			//echo $node->attr('href');
 		});
 
 	}
-
-	public function headerToArray($header){
-
-		return explode("\n", $header);
-
-	}
-
 
 }

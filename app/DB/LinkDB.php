@@ -4,11 +4,12 @@ namespace App\DB;
 
 use App\Model\Link;
 use App\Traits\ParamTrait;
+use App\Traits\HeaderLinkTrait;
 use Illuminate\Support\Facades\DB;
 
 class LinkDB{
 
-	use ParamTrait;
+	use ParamTrait, HeaderLinkTrait;
 
 	public function __construct(){
 
