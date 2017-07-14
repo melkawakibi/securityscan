@@ -100,36 +100,18 @@ class DBService
 			$link = $this->serviceLink->create($link, $id);
 
 			$this->storeHeader($headers, $link->id, $this->isBaseHeader);
-
 		}
 
 	}
 
-	public function storeParams($forms)
+	public function storeParams($params)
 	{
 
-		if(!empty($forms)){
-
-			foreach ($forms as $form) {
-
-				$fields = $form->all();
-
-					if(!empty($fields)){
-
-					if($form->getUri() === $link->url){
-
-						foreach ($fields as $field) {
-
-							$fieldObj = new Field($field);
-
-							$type = $fieldObj->getType();
-
-							if($type === 'text' || $type=== 'password'){
-								
-							}
-						}
-					}
-				}
+		foreach ($params as $key => $param) 
+		{
+			$param = (object) $param;
+			if(!$this->serviceLink->numRowByParamAndLinkId($param->id, $param->param)){
+				$this->serviceLink->createParams($param->id, $param->param);
 			}
 		}
 	}

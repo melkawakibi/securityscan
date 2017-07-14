@@ -7,7 +7,8 @@ use App\Model\HeaderLink;
 trait HeaderLinkTrait{
 
 	//Create headers
-	public function createHeaderLinks($headers, $id){
+	public function createHeaderLinks($headers, $id)
+	{
 
 		if($headers !== null){
 			$header = new HeaderLink;
@@ -23,15 +24,18 @@ trait HeaderLinkTrait{
 		}
 	}
 
-	public function findAll(){
+	public function findAll()
+	{
 		return HeaderLink::all();
 	}
 
-	public function findAllByWebsiteId($id){
+	public function findAllByWebsiteId($id)
+	{
 		return HeaderLink::Where(['link_id' => $id])->get();
 	}
 
-	public function findOneById($id){
+	public function findOneById($id)
+	{
 		return HeaderLink::Where(['id' => $id])->get();
 	}
 

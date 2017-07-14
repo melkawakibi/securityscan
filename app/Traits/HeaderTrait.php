@@ -7,7 +7,8 @@ use App\Model\Header;
 trait HeaderTrait{
 
 	//Create headers
-	public function createHeaders($headers, $id){
+	public function createHeaders($headers, $id)
+	{
 
 		if($headers !== null){
 			$header = new Header;
@@ -24,15 +25,18 @@ trait HeaderTrait{
 
 	}
 
-	public function findAll(){
+	public function findAll()
+	{
 		return Header::all();
 	}
 
-	public function findAllByWebsiteId($id){
+	public function findAllByWebsiteId($id)
+	{
 		return Header::Where(['website_id' => $id])->get();
 	}
 
-	public function findOneById($id){
+	public function findOneById($id)
+	{
 		return Header::Where(['id' => $id])->get();
 	}
 

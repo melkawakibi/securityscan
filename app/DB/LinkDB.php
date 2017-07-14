@@ -67,6 +67,10 @@ class LinkDB{
 		return Link::Where(['website_id' => $id])->get();
 	}
 
+	public function findAllByLinkUrl($url){
+		return Link::Where(['url' => $url])->get();
+	}
+
 	public function findOneById($id){
 		return Link::Where(['id' => $id])->get();
 	}

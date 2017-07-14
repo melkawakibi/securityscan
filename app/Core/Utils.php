@@ -87,9 +87,36 @@ class Utils
 		}
 	}
 
-	public function filterUrlPatterns()
+	public static function filterGetUrl($url)
 	{
-		
+
+		$params = array();
+
+		if(strpos($url, "?") !== false){
+			$queryLine = explode("?", $url);
+			
+			if(strpos($queryLine[1], "&") !== false){
+				$queries = explode("&", $queryLine[1]);
+
+				foreach ($queries as $key => $query) {
+					
+					if(strpos($query, "=") !== false){
+						$param = explode("=", $query);
+						array_push($params, $param[0]);
+					}	
+				}
+			}else{
+
+				if(strpos($queryLine[1], "=") !== false){
+					$param = explode("=", $queryLine[1]);
+					array_push($params, $param[0]);
+				}
+			}
+		}else{
+			return null;
+		}
+
+		return $params;
 	}
 
 

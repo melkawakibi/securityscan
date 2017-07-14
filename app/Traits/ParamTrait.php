@@ -7,7 +7,7 @@ use App\Model\Param;
 trait ParamTrait{
 
 	//Create headers
-	public function createParams($value, $id){
+	public function createParams($id, $value){
 
 		$param = new Param;
 		$param->params = $value;
@@ -32,9 +32,10 @@ trait ParamTrait{
 	}
 
 
-	public function findOneByName($name){
-
+	public function numRowByParamAndLinkId($linkId, $param){
+		return Param::Where(['link_id' => $linkId, 'params' => $param])->get()->count();
 	}
+
 
 	public function numRowByName($param){
 		return Param::Where(['params' => $param])->get()->count();	
