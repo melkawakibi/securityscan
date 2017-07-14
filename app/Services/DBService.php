@@ -19,17 +19,20 @@ class DBService
 	private $serviceLink;
 	private $serviceScan;
 	private $id;
+	private $isBaseHeader;
 
 	public function __construct()
 	{
 		$this->serviceWebsite = new WebsiteDB;
 		$this->serviceLink = new LinkDB;
 		$this->serviceScan = new ScanDB;
+		$this->isBaseHeader = false;
 	}
 
 
 	public function store($baseUrl, $url, $headers, $links)
 	{
+
 		$headerInfo = new HeaderInfo($headers);
 
 		if($baseUrl === $url){
@@ -43,7 +46,9 @@ class DBService
 				//If so is it updated? Yes, update record
 				$website = $this->serviceWebsite->create($website);
 
-				$this->storeHeader($headers, $website->id);
+				$this->isBaseHeader = true;
+
+				$this->storeHeader($headers, $website->id, $this->isBaseHeader);
 
 			}
 
@@ -55,32 +60,48 @@ class DBService
 
 			foreach ($links as $key => $link) {
 
-				$this->storeLinks($link, $website[0]->id);
+				$this->storeLinks($link, $website[0]->id, $headers);
 
 			}
 		}
 	}
 
-	public function storeHeader($headers, $id)
+	public function storeHeader($headers, $id, $isBaseHeader)
 	{
+		$this->isBaseHeader = false;
 
-		foreach ($headers as $key => $array) 
-		{
+		if($isBaseHeader){
+			foreach ($headers as $key => $array) 
+			{
 
-			$array = Utils::arrayBuilder($array);
-			$this->serviceWebsite->createHeaders($array, $id);
+				$array = Utils::arrayBuilder($array);
+				$this->serviceWebsite->createHeaders($array, $id);
 
+			}
+		}else{
+
+			foreach ($headers as $key => $array) 
+			{
+				$array = Utils::arrayBuilder($array);
+				$this->serviceLink->createHeaderLinks($array, $id);
+
+			}
 		}
 
 	}
 
-
-	public function storeLinks($link)
+	public function storeLinks($link, $id, $headers)
 	{
 
 		$link = (object) $link;
 
-		$link = $this->serviceLink->create($link, $website->id);
+		if(!$this->serviceLink->numRowByUrl($link->url_rebuild)){
+
+			$link = $this->serviceLink->create($link, $id);
+
+			$this->storeHeader($headers, $link->id, $this->isBaseHeader);
+
+		}
 
 	}
 

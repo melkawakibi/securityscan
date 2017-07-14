@@ -7,17 +7,20 @@ use App\Model\HeaderLink;
 trait HeaderLinkTrait{
 
 	//Create headers
-	public function createHeaderLinks($url, $value, $id){
+	public function createHeaderLinks($headers, $id){
 
-		$header = new HeaderLink;
-		$header->name = $url;
-		$header->value = $value;
-		$header->link_id = $id;
+		if($headers !== null){
+			$header = new HeaderLink;
+			$header->name = $headers[0];
+			$header->value = $headers[1];
+			$header->link_id = $id;
 
-		$header->save();
+			$header->save();
 
-		return $header;
-
+			return $header;
+		}else{
+			return '';
+		}
 	}
 
 	public function findAll(){

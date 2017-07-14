@@ -17,24 +17,40 @@ class LinkDB{
 
 	}
 
-	public function create($linkObj, $wid){
-		
+	public function create($linkObj, $id){
+
 		$linkCode = $linkObj->linkcode;
 
-		$b = Utils::searchCriteria($linkcode, array('form', 'method', 'post'));
+		$isPost = Utils::searchCriteria($linkCode, array('form', 'method', 'post'));
+
+		if($isPost){
+
+			$methode = 'POST';
+
+		}else{
+
+			$methode = 'GET';
+
+		}
 
 		$link = new Link;
 
 		switch ($methode) {
 			case 'GET':
 				$link->methode = $methode;
-				$link->url = $url;
-				$link->website_id = $wid;
+				$link->url = $linkObj->url_rebuild;
+				$link->refering_url = $linkObj->refering_url;
+				$link->is_redirect = $linkObj->is_redirect_url;
+				$link->depth = $linkObj->url_link_depth;
+				$link->website_id = $id;
 				break;
 			case 'POST':
 				$link->methode = $methode;
-				$link->url = $url;
-				$link->website_id = $wid;
+				$link->url = $linkObj->url_rebuild;
+				$link->refering_url = $linkObj->refering_url;
+				$link->is_redirect = $linkObj->is_redirect_url;
+				$link->depth = $linkObj->url_link_depth;
+				$link->website_id = $id;
 				break;
 		}
 

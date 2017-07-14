@@ -7,7 +7,8 @@ namespace App\Core;
 class Utils
 {
 
-	public static function headerToArray($header){
+	public static function headerToArray($header)
+	{
 
 		$indexed = explode("\n", $header);
 		$headers = array();
@@ -20,7 +21,8 @@ class Utils
 
 	}
 
-	public static function arrayBuilder($array){
+	public static function arrayBuilder($array)
+	{
 
 		$value = "";
 		if(count($array) > 2){
@@ -54,7 +56,7 @@ class Utils
 
 	}
 
-	public function searchCriteria($inputValue, $findValues)
+	public static function searchCriteria($inputValue, $findValues)
 	{
 		if(is_array($findValues)){
 			$i = 0;
@@ -83,6 +85,11 @@ class Utils
 		} else {
 			return strpos($inputValue, $findValues);
 		}
+	}
+
+	public function filterUrlPatterns()
+	{
+		
 	}
 
 

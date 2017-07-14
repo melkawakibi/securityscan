@@ -38,7 +38,9 @@ class Spider extends PHPCrawler
 
 		$this->addContentTypeReceiveRule("#text/html#"); 
 
-		$this->addURLFilterRule("#\.(jpg|jpeg|gif|png|css|js)$# i"); 
+		$this->addURLFilterRule("#\.(jpg|jpeg|gif|png)$# i"); 
+
+		$this->addURLFilterRule("#\.(css|js)$# i"); 
 	}
 
 	public function start(){
@@ -65,13 +67,15 @@ class Spider extends PHPCrawler
 
 		$links = $pageInfo->links_found;
 
-		$this->DBService->store($this->url, $pageInfo->url, $this->headers, $links);
-
 		$this->client->setContent($pageInfo->content);
 		$this->client->setStatusCode($pageInfo->http_status_code);
 		$this->client->setHeaders($this->headers);
 
-	 	$this->parseHTMLDocument($pageInfo->url, $pageInfo->content);
+
+		$this->parseHTMLDocument($pageInfo->url, $pageInfo->content);
+
+		$this->DBService->store($this->url, $pageInfo->url, $this->headers, $links);
+
 
 	}
 
@@ -80,7 +84,6 @@ class Spider extends PHPCrawler
 		$crawler = $this->client->request('GET', $url);
 
 	}
-
 
 	public function getForms(){
 
