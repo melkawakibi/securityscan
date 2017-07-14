@@ -66,6 +66,7 @@ class Spider extends PHPCrawler
 
 	public function handleDocumentInfo(PHPCrawlerDocumentInfo $pageInfo)
 	{
+		$this->headers = Utils::headerToArray($pageInfo->header);
 
 		$links = $pageInfo->links_found;
 

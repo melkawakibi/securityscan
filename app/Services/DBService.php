@@ -68,7 +68,6 @@ class DBService
 
 	public function storeHeader($headers, $id, $isBaseHeader)
 	{
-		$this->isBaseHeader = false;
 
 		if($isBaseHeader){
 			foreach ($headers as $key => $array) 
@@ -98,6 +97,8 @@ class DBService
 		if(!$this->serviceLink->numRowByUrl($link->url_rebuild)){
 
 			$link = $this->serviceLink->create($link, $id);
+
+			$this->isBaseHeader = false;
 
 			$this->storeHeader($headers, $link->id, $this->isBaseHeader);
 		}
