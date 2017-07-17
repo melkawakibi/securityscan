@@ -72,11 +72,20 @@ class Spider extends PHPCrawler
 
 		$this->crawler->createCrawler($pageInfo);
 
+		//Store all general information
 		$this->DBService->store($this->url, $pageInfo->url, $this->headers, $links);
 
-		$paramPOST = $this->crawler->getFormsParams($pageInfo->url);
+		//Store all params
+		$this->handelParams($pageInfo->url);
+	}
 
-		$this->DBService->storeParams($paramPOST);
+	public function handelParams($url)
+	{
+		$paramPOST = $this->crawler->getFormsParams($url);
+
+		$paramGET = $this->crawler->getURIParams($url);
+
+		$this->DBService->storeParams($paramPOST, $paramGET);
 	}
 
 

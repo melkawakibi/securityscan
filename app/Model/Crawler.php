@@ -18,7 +18,8 @@ class Crawler
 	private $serviceLink;
 	private $submits = array();
 	private $forms = array();
-	private $params = array();
+	private $paramPOST = array();
+	private $paramGET = array();
 
 	public function __construct()
 	{
@@ -72,7 +73,7 @@ class Crawler
 								$type = $fieldObj->getType();
 
 								if($type === 'text' || $type === 'password'){
-									array_push($this->params, ['id' => $link[0]->id, 'param' => $field->getName()]);
+									array_push($this->paramPOST, ['id' => $link[0]->id, 'param' => $field->getName()]);
 								}
 							}
 						}
@@ -81,7 +82,33 @@ class Crawler
 			}
 		}
 
-		return $this->params;
+		return $this->paramPOST;
+
+	}
+
+
+	public function getURIParams($url){
+
+		$params = Utils::filterGetUrl($url);
+
+		if(!empty($params)){
+
+			$link = $this->serviceLink->findAllByLinkUrl($url);
+
+			if(!is_null($link)){
+				
+				foreach ($params as $param) {
+
+					$param = (object) $param;
+
+					if(!empty($param)){
+						array_push($this->paramGET, ['id' => $link[0]->id, 'param' => $param->scalar]);
+					}
+				}
+			}
+		}
+
+		return $this->paramGET;
 
 	}
 

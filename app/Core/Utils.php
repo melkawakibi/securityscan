@@ -50,8 +50,6 @@ class Utils
 			$array = null;
 		}
 
-		var_dump($array);
-
 		return $array;
 
 	}

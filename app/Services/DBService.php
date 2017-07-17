@@ -105,12 +105,22 @@ class DBService
 
 	}
 
-	public function storeParams($params)
+	public function storeParams($post, $get)
 	{
 
-		foreach ($params as $key => $param) 
-		{
+		foreach ($get as $key => $param){
+
 			$param = (object) $param;
+
+			if(!$this->serviceLink->numRowByParamAndLinkId($param->id, $param->param)){
+				$this->serviceLink->createParams($param->id, $param->param);
+			}
+		}
+
+		foreach ($post as $key => $param){
+			
+			$param = (object) $param;
+
 			if(!$this->serviceLink->numRowByParamAndLinkId($param->id, $param->param)){
 				$this->serviceLink->createParams($param->id, $param->param);
 			}
