@@ -19,7 +19,8 @@ class Spider extends PHPCrawler
 	private $client;
 	private $DBService;
 	private $crawler;
-	private $followRobot;
+	private $follow_robot;
+	private $is_enabled_robot;
 
 	private $headers = array();
 
@@ -40,14 +41,15 @@ class Spider extends PHPCrawler
 		$this->setURL($this->url);
 
 		if($options['r'] === 'y'){
-			$this->obeyRobotsTxt(TRUE);
-			$this->followRobot = "On";
+			$this->follow_robot = $this->obeyRobotsTxt(TRUE);
+			$this->is_enabled_robot = "On";
 		}else if($options['r'] === 'n'){
-			$this->obeyRobotsTxt(FALSE);
-			$this->followRobot = "Off";
+			$this->follow_robot = $this->obeyRobotsTxt(FALSE);
+			$this->is_enabled_robot = "Off";
 		}else{
 			//default
-			$this->followRobot = FALSE;
+			$this->follow_robot = FALSE;
+			$this->is_enabled_robot = "Off";
 		}
 
 		$this->addContentTypeReceiveRule("#text/html#"); 
@@ -61,7 +63,7 @@ class Spider extends PHPCrawler
 	{
 
 		echo 'Starting spider' . PHP_EOL;
-		echo 'Follow Robot.txt: ' . $this->followRobot.PHP_EOL;
+		echo 'Follow Robot.txt: ' . $this->is_enabled_robot.PHP_EOL;
 
 		//Start crawling
 		$this->go();
@@ -86,7 +88,7 @@ class Spider extends PHPCrawler
 		$this->crawler->createCrawler($pageInfo);
 
 		//Store all general information
-		$this->DBService->store($this->url, $pageInfo->url, $this->headers, $links);
+		$this->DBService->store($this->url, $this->follow_robot, $pageInfo->url, $this->headers, $links);
 
 		//Store all params
 		$this->handelParams($pageInfo->url);

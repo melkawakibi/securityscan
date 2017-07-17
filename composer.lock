@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a9bf43ad1cb317efdb05dbc02f401da",
+    "content-hash": "1b23e58400c8c9ebe207c65f0b211ba1",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -742,21 +742,22 @@
         },
         {
             "name": "mmerian/phpcrawl",
-            "version": "0.8.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mmerian/phpcrawl.git",
-                "reference": "d9c84beeaaa666b5910a6005db689a74cb6894b0"
+                "reference": "454798ff1f91de2804e2ab50a1ca07dd9c56071d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mmerian/phpcrawl/zipball/d9c84beeaaa666b5910a6005db689a74cb6894b0",
-                "reference": "d9c84beeaaa666b5910a6005db689a74cb6894b0",
+                "url": "https://api.github.com/repos/mmerian/phpcrawl/zipball/454798ff1f91de2804e2ab50a1ca07dd9c56071d",
+                "reference": "454798ff1f91de2804e2ab50a1ca07dd9c56071d",
                 "shasum": ""
             },
             "type": "library",
             "autoload": {
                 "classmap": [
+                    "libs/Utils/PHPCrawlerUtils.class.php",
                     "libs"
                 ]
             },
@@ -771,7 +772,7 @@
                 }
             ],
             "description": "PHPCrawl is a webcrawler/webspider-library written in PHP. It supports filters, limiters, cookie-handling, robots.txt-handling, multiprocessing and much more.",
-            "time": "2015-01-31T11:00:11+00:00"
+            "time": "2016-11-17T08:20:51+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3787,7 +3788,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mmerian/phpcrawl": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

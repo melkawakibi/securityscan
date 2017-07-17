@@ -30,7 +30,7 @@ class DBService
 	}
 
 
-	public function store($baseUrl, $url, $headers, $links)
+	public function store($baseUrl, $follow_robot, $url, $headers, $links)
 	{
 
 		$headerInfo = new HeaderInfo($headers);
@@ -38,6 +38,7 @@ class DBService
 		if($baseUrl === $url){
 			$website = new Object;
 			$website->url = $baseUrl;
+			$website->follow_robot = $follow_robot;
 			$website->server = $headerInfo->getServer();
 
 			if(!$this->serviceWebsite->numRowByUrl($baseUrl)){

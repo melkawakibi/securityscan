@@ -1896,41 +1896,6 @@
         ]
     },
     {
-        "name": "mmerian/phpcrawl",
-        "version": "0.8.3",
-        "version_normalized": "0.8.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/mmerian/phpcrawl.git",
-            "reference": "d9c84beeaaa666b5910a6005db689a74cb6894b0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/mmerian/phpcrawl/zipball/d9c84beeaaa666b5910a6005db689a74cb6894b0",
-            "reference": "d9c84beeaaa666b5910a6005db689a74cb6894b0",
-            "shasum": ""
-        },
-        "time": "2015-01-31T11:00:11+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "libs"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL-v2"
-        ],
-        "authors": [
-            {
-                "name": "Uwe Hunfeld",
-                "email": "phpcrawl@cuab.de"
-            }
-        ],
-        "description": "PHPCrawl is a webcrawler/webspider-library written in PHP. It supports filters, limiters, cookie-handling, robots.txt-handling, multiprocessing and much more."
-    },
-    {
         "name": "symfony/polyfill-mbstring",
         "version": "v1.4.0",
         "version_normalized": "1.4.0.0",
@@ -3908,5 +3873,41 @@
             }
         ],
         "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock."
+    },
+    {
+        "name": "mmerian/phpcrawl",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/mmerian/phpcrawl.git",
+            "reference": "454798ff1f91de2804e2ab50a1ca07dd9c56071d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/mmerian/phpcrawl/zipball/454798ff1f91de2804e2ab50a1ca07dd9c56071d",
+            "reference": "454798ff1f91de2804e2ab50a1ca07dd9c56071d",
+            "shasum": ""
+        },
+        "time": "2016-11-17T08:20:51+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "libs/Utils/PHPCrawlerUtils.class.php",
+                "libs"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-v2"
+        ],
+        "authors": [
+            {
+                "name": "Uwe Hunfeld",
+                "email": "phpcrawl@cuab.de"
+            }
+        ],
+        "description": "PHPCrawl is a webcrawler/webspider-library written in PHP. It supports filters, limiters, cookie-handling, robots.txt-handling, multiprocessing and much more."
     }
 ]

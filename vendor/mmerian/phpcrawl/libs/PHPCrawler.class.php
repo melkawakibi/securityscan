@@ -221,7 +221,7 @@ class PHPCrawler
     $classpath = dirname(__FILE__);
     
     // Utils-classes
-    if (!class_exists("PHPCrawlerUtilsV2")) include_once($classpath."/Utils/PHPCrawlerUtils.class.php");
+    if (!class_exists("PHPCrawlerUtils")) include_once($classpath."/Utils/PHPCrawlerUtils.class.php");
     if (!class_exists("PHPCrawlerEncodingUtils")) include_once($classpath."/Utils/PHPCrawlerEncodingUtils.class.php");
     
     // URL-Cache-classes
