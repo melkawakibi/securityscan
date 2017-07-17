@@ -3,7 +3,6 @@
 namespace App\Core;
 
 
-
 class Utils
 {
 
@@ -115,6 +114,11 @@ class Utils
 		}
 
 		return $params;
+	}
+
+	public static function getBaseUrl($url) {
+  		$result = parse_url($url);
+  		return $result['scheme']."://".$result['host'].":".$result['port'];
 	}
 
 

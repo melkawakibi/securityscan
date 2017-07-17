@@ -2,53 +2,40 @@
 
 namespace App\Core\Modules;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Exception\RequestException;
-use App\DB\LinkDB;
-use App\DB\WebsiteDB;
-use App\DB\ScanDB;
+use App\Core\Modules\Module;
+
+use App\Core\Utils;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
 
-class XSSModule{
+class XSSModule extends Module
+{
 
-	private $client;
-	private $baseUrl;
-	private $links;
-	private $formLinks;
-	private $linkDB;
-	private $websiteDB;
-
-	public function __construct($url){
-		$this->url = $url;
-		$this->client = new GuzzleClient;
-		$this->linkDB = new LinkDB;
-		$this->websiteDB = new WebsiteDB;
-		$this->scanDB = new ScanDB;	
-		$this->uriArray = array();
-		$this->defaultlinks = array();
-		$this->properties = array();
+	public function __construct($url)
+	{
+		parent::__construct($url);	
 	}
 
-	public function attack($scan){
-
+	public function start($scan)
+	{
 		$website = $this->websiteDB->findOneByUrl($this->url);
 
 		$links = $this->linkDB->findAllByWebsiteId($website[0]->id);
 
 		if(!empty($links)){
 
-			$this->linkList($links);
+			$this->linkList($links, Lang::get('string.payload_xss'));
 
-			$this->linkAttack($links);
 
-		}else{
+			echo 'XSS attack'.PHP_EOL.PHP_EOL;
+			echo 'Links'.PHP_EOL;
+			foreach ($this->uriArray as $key => $value) {
+				echo $value.PHP_EOL.PHP_EOL;
+			}
 
-			echo 'Default scan started';
+			$this->attackGet($links);
 
-			//default attack	
-			$this->defaultAttack();
 		}
 
 		$this->properties['module_name'] = 'xss';
@@ -60,102 +47,9 @@ class XSSModule{
 		$this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
 	}
 
-	private function linkList($links){
+	public function attackGet($link)
+	{
 
-			foreach ($links as $key => $link) {
-
-			$params = $this->linkDB->findAllByLinkId($link->id);
-
-			foreach ($params as $key => $param) {
-
-				if($link->methode === 'GET'){
-
-					$lines = file(public_path() . '/resources/payload/xss.txt');
-					
-					foreach($lines as $line){
-						if($link->id === $param->link_id){
-							array_push($this->uriArray, $link->url.'?'.$param->params.'='.$line);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private function responseAnalyse($res){
-
-		$response = $res->getBody();
-
-		if(strpos($response, '<script>alert(1);</script>')){
-			return true;
-		}else if($response){
-			return false;
-		}
-	}
-
-	private function getBaseContent($url){
-
-		$res = $this->client->request('GET', $this->url);
-		return $res->getBody();
-	}
-
-	public function defaultAttack(){
-
-		$lines = file(public_path() . '/resources/payload/xss-default.txt');
-		
-		foreach($lines as $line){
-
-			array_push($this->defaultlinks, $this->url.'?'.$line);
-
-		}
-
-		echo 'default XSS attack'.PHP_EOL;
-		foreach ($this->defaultlinks as $key => $value) {
-
-			//place this before any script you want to calculate time
-			$time_start = microtime(true); 
-								
-			//execute blind sql injections
-			$res = $this->client->request('GET', $value);
-
-			$time_end = microtime(true);
-
-			//dividing with 60 will give the execution time in minutes other wise seconds
-			$execution_time = ($time_end - $time_start)/60;
-
-			if(strcmp($this->getBaseContent($this->url), $res->getBody())){
-			
-				echo 'URI: '.$value.PHP_EOL;
-
-				echo 'Time: '.$execution_time.PHP_EOL;
-
-				$params = $this->filterGetUrl($value);
-
-				$this->properties['parameter'] = $params[0];
-
-				$this->properties['attack'] = $value;
-				$this->properties['execution_time'] = $execution_time;
-
-				if($this->responseAnalyse($res)){
-					echo '	'.PHP_EOL;
-					echo Lang::get('description.XSS').PHP_EOL.PHP_EOL;
-				}
-
-				Log::info('Time: ' . $execution_time);
-				Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-				Log::info('Request url: ' . $value);
-				Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-				Log::info('----------------- Content -------------------------' . PHP_EOL);
-				Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
-			}
-
-		}
-
-	}
-
-	public function linkAttack($links){
-
-		echo 'XSS attack'.PHP_EOL;
 		foreach ($this->uriArray as $key => $value) {
 
 			//place this before any script you want to calculate time
@@ -170,12 +64,13 @@ class XSSModule{
 			$execution_time = ($time_end - $time_start)/60;
 
 			if(strcmp($this->getBaseContent($this->url), $res->getBody())){
-			
+				
+				echo 'Result: '.PHP_EOL;
 				echo 'URI: '.$value.PHP_EOL;
 
 				echo 'Time: '.$execution_time.PHP_EOL;
 
-				$params = $this->filterGetUrl($value);
+				$params = Utils::filterGetUrl($value);
 
 				$this->properties['parameter'] = $params[0];
 
@@ -183,9 +78,9 @@ class XSSModule{
 
 				$this->properties['execution_time'] = $execution_time;
 
-				if($this->responseAnalyse($res)){
+				if($this->responseAnalyse($res, Lang::get('string.XSS_Attack'))){
 					echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
-					echo Lang::get('description.XSS').PHP_EOL.PHP_EOL;
+					echo Lang::get('string.XSS').PHP_EOL.PHP_EOL;
 				}
 
 				Log::info('Time: ' . $execution_time);
@@ -198,32 +93,46 @@ class XSSModule{
 		}
 	}
 
-	private function filterGetUrl($url){
+	public function attackPost($link)
+	{
 
-		$params = array();
+	}
 
-		if(strpos($url, "?") !== false){
-			$queryLine = explode("?", $url);
-			
-			if(strpos($queryLine[1], "&") !== false){
-				$queries = explode("&", $queryLine[1]);
+	protected function linkList($links, $payload)
+	{
 
-				foreach ($queries as $key => $query) {
+		foreach ($links as $key => $link) {
+
+			$baseUrl = Utils::getBaseUrl($link->url);
+
+			$params = $this->linkDB->findAllByLinkId($link->id);
+
+			foreach ($params as $key => $param) {
+
+				if($link->methode === 'GET'){
+
+					$lines = file(public_path() . $payload);
 					
-					if(strpos($query, "=") !== false){
-						$param = explode("=", $query);
-						array_push($params, $param[0]);
-					}	
-				}
-			}else{
-
-				if(strpos($queryLine[1], "=") !== false){
-					$param = explode("=", $queryLine[1]);
-					array_push($params, $param[0]);
+					foreach($lines as $line){
+						if($link->id === $param->link_id){
+							array_push($this->uriArray, $baseUrl .'?'. $param->params.'='.$line);
+						}
+					}
 				}
 			}
 		}
-
-		return $params;
 	}
+
+	protected function responseAnalyse($res, $str)
+	{
+
+		$response = $res->getBody();
+
+		if(strpos($response, $str)){
+			return true;
+		}else if($response){
+			return false;
+		}
+	}
+
 }

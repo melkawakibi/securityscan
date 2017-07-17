@@ -60,6 +60,7 @@ class Spider extends PHPCrawler
 			$this->is_enabled_robot = "Off";
 		}
 
+		//TODO add option to tabel website database
 		if(!empty($options['fm'])){
 			if($options['fm'] === '0'){
 				$this->setFollowMode(0);
@@ -93,18 +94,19 @@ class Spider extends PHPCrawler
 
 		echo 'Starting spider' . PHP_EOL;
 		echo 'Follow Robot.txt: ' . $this->is_enabled_robot.PHP_EOL;
-		echo 'Follow Mode: ' . $this->follow_mode.PHP_EOL;
+		echo 'Follow Mode: ' . $this->follow_mode.PHP_EOL.PHP_EOL;
 
 		//Start crawling
 		$this->go();
 
+		//TODO make table for report information
 		$report = $this->getProcessReport();
 
 		echo "Summary:". PHP_EOL; 
 		echo "Links followed: ".$report->links_followed . PHP_EOL; 
 		echo "Documents received: ".$report->files_received . PHP_EOL; 
 		echo "Bytes received: ".$report->bytes_received." bytes". PHP_EOL; 
-		echo "Process runtime: ".$report->process_runtime." sec" . PHP_EOL;
+		echo "Process runtime: ".$report->process_runtime." sec" . PHP_EOL.PHP_EOL;
 
 	}
 
