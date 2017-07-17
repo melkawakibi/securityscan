@@ -50,7 +50,7 @@ class SQLModule extends Module
 	}
 
 
-	public function attackGet($links)
+	protected function attackGet($links)
 	{
 
 		foreach ($this->uriArray as $key => $value) {
@@ -96,7 +96,7 @@ class SQLModule extends Module
 		}
 	}
 
-	public function attackPost($links)
+	protected function attackPost($links)
 	{
 
 	}

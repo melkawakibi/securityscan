@@ -33,9 +33,9 @@ abstract class Module
 
 	abstract public function start($scan);
 
-	abstract public function attackGet($link);
+	abstract protected function attackGet($link);
 
-	abstract public function attackPost($link);
+	abstract protected function attackPost($link);
 
 	protected function getBaseContent($url)
 	{

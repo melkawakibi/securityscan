@@ -47,7 +47,7 @@ class XSSModule extends Module
 		$this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
 	}
 
-	public function attackGet($link)
+	protected function attackGet($link)
 	{
 
 		foreach ($this->uriArray as $key => $value) {
@@ -93,7 +93,7 @@ class XSSModule extends Module
 		}
 	}
 
-	public function attackPost($link)
+	protected function attackPost($link)
 	{
 
 	}

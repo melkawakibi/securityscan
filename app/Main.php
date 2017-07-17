@@ -41,7 +41,6 @@ class Main{
 		// 	$credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
 		// }
 
-
 		//initialte module variables
 		$this->sql = '';
 		$this->xss = '';
