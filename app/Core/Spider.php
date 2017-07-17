@@ -20,6 +20,7 @@ class Spider extends PHPCrawler
 	private $DBService;
 	private $crawler;
 	private $follow_robot;
+	private $follow_mode;
 	private $is_enabled_robot;
 
 	private $headers = array();
@@ -40,16 +41,44 @@ class Spider extends PHPCrawler
 
 		$this->setURL($this->url);
 
-		if($options['r'] === 'y'){
-			$this->follow_robot = $this->obeyRobotsTxt(TRUE);
-			$this->is_enabled_robot = "On";
-		}else if($options['r'] === 'n'){
-			$this->follow_robot = $this->obeyRobotsTxt(FALSE);
-			$this->is_enabled_robot = "Off";
+
+		if(!empty($options['r'])){
+			if($options['r'] === 'y'){
+					$this->follow_robot = $this->obeyRobotsTxt(TRUE);
+					$this->is_enabled_robot = "On";
+				}else if($options['r'] === 'n'){
+					$this->follow_robot = $this->obeyRobotsTxt(FALSE);
+					$this->is_enabled_robot = "Off";
+				}else{
+					//default, if user fill somthing else then y or n
+					$this->follow_robot = FALSE;
+					$this->is_enabled_robot = "Off";
+				}
 		}else{
 			//default
 			$this->follow_robot = FALSE;
 			$this->is_enabled_robot = "Off";
+		}
+
+		if(!empty($options['fm'])){
+			if($options['fm'] === '0'){
+				$this->setFollowMode(0);
+				$this->follow_mode = '0, follow every link';
+			}else if($options['fm'] === '1'){
+				$this->follow_mode = '1, only follow same domian';
+				$this->setFollowMode(1);
+			}else if($options['fm'] === '2'){
+				$this->follow_mode = '2, only follow same host';
+				$this->setFollowMode(2);	
+			}else if($options['fm'] === '3'){
+				$this->follow_mode = '3, only follow same root url';
+				$this->setFollowMode(3);
+			}else{
+				$this->follow_mode = '0, follow every link';
+				$this->setFollowMode(0);
+			}
+		}else{
+			$this->follow_mode = '0, follow every link';
 		}
 
 		$this->addContentTypeReceiveRule("#text/html#"); 
@@ -64,6 +93,7 @@ class Spider extends PHPCrawler
 
 		echo 'Starting spider' . PHP_EOL;
 		echo 'Follow Robot.txt: ' . $this->is_enabled_robot.PHP_EOL;
+		echo 'Follow Mode: ' . $this->follow_mode.PHP_EOL;
 
 		//Start crawling
 		$this->go();

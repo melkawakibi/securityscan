@@ -17,6 +17,7 @@ class ScanCommand extends Command
      */
     protected $signature = 'scan {url}
                             {--r= : y or n | to follow or not to follow the robot.txt} 
+                            {--fm= : set follow mode}
                             {--u= : username} 
                             {--p= : password} 
                             {--s : SQL module} 

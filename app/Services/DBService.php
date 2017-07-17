@@ -95,9 +95,7 @@ class DBService
 		if(!empty($link)){
 
 			$link = (object) $link;
-
-			print_r($link);
-
+			
 			if(!$this->serviceLink->numRowByUrl($link->url_rebuild)){
 
 				$link = $this->serviceLink->create($link, $id);
