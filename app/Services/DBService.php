@@ -70,9 +70,9 @@ class DBService
 	{
 
 		if($isBaseHeader){
+
 			foreach ($headers as $key => $array) 
 			{
-
 				$array = Utils::arrayBuilder($array);
 				$this->serviceWebsite->createHeaders($array, $id);
 
@@ -91,16 +91,22 @@ class DBService
 
 	public function storeLinks($link, $id, $headers)
 	{
+		if(!empty($link)){
 
-		$link = (object) $link;
+			$link = (object) $link;
 
-		if(!$this->serviceLink->numRowByUrl($link->url_rebuild)){
+			print_r($link);
 
-			$link = $this->serviceLink->create($link, $id);
+			if(!$this->serviceLink->numRowByUrl($link->url_rebuild)){
 
-			$this->isBaseHeader = false;
+				$link = $this->serviceLink->create($link, $id);
 
-			$this->storeHeader($headers, $link->id, $this->isBaseHeader);
+				if(!is_null($link)){
+					$this->isBaseHeader = false;
+
+					$this->storeHeader($headers, $link->id, $this->isBaseHeader);
+				}
+			}
 		}
 
 	}

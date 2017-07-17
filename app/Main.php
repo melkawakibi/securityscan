@@ -27,6 +27,8 @@ class Main{
 
 		$spider = new Spider($this->url); 
 
+		$spider->setup($options);
+
 		$spider->start();
 
 		// $credentials = null;
@@ -34,6 +36,7 @@ class Main{
 		// if(!empty($options['u'])){
 		// 	$credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
 		// }
+
 
 		// //initialte module variables
 		// $this->sql = '';

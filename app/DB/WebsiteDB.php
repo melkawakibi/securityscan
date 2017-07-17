@@ -17,13 +17,15 @@ class WebsiteDB{
 	//Create website
 	public function create($websiteObj){
 
-		$website = new Website;
-		$website->base_url = $websiteObj->url;
-		$website->server = $websiteObj->server;
-		$website->date = Carbon::now();
-		$website->customer_id = 1;
+		if(strlen($websiteObj->url) < 255){
+			$website = new Website;
+			$website->base_url = $websiteObj->url;
+			$website->server = $websiteObj->server;
+			$website->date = Carbon::now();
+			$website->customer_id = 1;
 
-		$website->save();
+			$website->save();
+		}
 
 		return $website;
 	}

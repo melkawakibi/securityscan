@@ -19,6 +19,7 @@ class Spider extends PHPCrawler
 	private $client;
 	private $DBService;
 	private $crawler;
+	private $followRobot;
 
 	private $headers = array();
 
@@ -33,10 +34,21 @@ class Spider extends PHPCrawler
 
 	}
 
-	public function setup()
+	public function setup($options)
 	{
 
 		$this->setURL($this->url);
+
+		if($options['r'] === 'y'){
+			$this->obeyRobotsTxt(TRUE);
+			$this->followRobot = "On";
+		}else if($options['r'] === 'n'){
+			$this->obeyRobotsTxt(FALSE);
+			$this->followRobot = "Off";
+		}else{
+			//default
+			$this->followRobot = FALSE;
+		}
 
 		$this->addContentTypeReceiveRule("#text/html#"); 
 
@@ -48,9 +60,10 @@ class Spider extends PHPCrawler
 	public function start()
 	{
 
-		$this->setup();
-
 		echo 'Starting spider' . PHP_EOL;
+		echo 'Follow Robot.txt: ' . $this->followRobot.PHP_EOL;
+
+		//Start crawling
 		$this->go();
 
 		$report = $this->getProcessReport();

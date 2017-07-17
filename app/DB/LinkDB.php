@@ -21,42 +21,50 @@ class LinkDB{
 
 		$linkCode = $linkObj->linkcode;
 
-		$isPost = Utils::searchCriteria($linkCode, array('form', 'method', 'post'));
-
-		if($isPost){
-
-			$methode = 'POST';
-
-		}else{
-
-			$methode = 'GET';
-
-		}
-
 		$link = new Link;
 
-		switch ($methode) {
-			case 'GET':
-				$link->methode = $methode;
-				$link->url = $linkObj->url_rebuild;
-				$link->refering_url = $linkObj->refering_url;
-				$link->is_redirect = $linkObj->is_redirect_url;
-				$link->depth = $linkObj->url_link_depth;
-				$link->website_id = $id;
-				break;
-			case 'POST':
-				$link->methode = $methode;
-				$link->url = $linkObj->url_rebuild;
-				$link->refering_url = $linkObj->refering_url;
-				$link->is_redirect = $linkObj->is_redirect_url;
-				$link->depth = $linkObj->url_link_depth;
-				$link->website_id = $id;
-				break;
-		}
+		if(strlen($linkObj->url_rebuild) < 255){
 
-		$link->save();
+			$isPost = Utils::searchCriteria($linkCode, array('form', 'method', 'post'));
+
+			if($isPost){
+
+				$methode = 'POST';
+
+			}else{
+
+				$methode = 'GET';
+
+			}
+
+			switch ($methode) {
+				case 'GET':
+					$link->methode = $methode;
+					$link->url = $linkObj->url_rebuild;
+					$link->refering_url = $linkObj->refering_url;
+					$link->is_redirect = $linkObj->is_redirect_url;
+					$link->depth = $linkObj->url_link_depth;
+					$link->website_id = $id;
+					break;
+				case 'POST':
+					$link->methode = $methode;
+					$link->url = $linkObj->url_rebuild;
+					$link->refering_url = $linkObj->refering_url;
+					$link->is_redirect = $linkObj->is_redirect_url;
+					$link->depth = $linkObj->url_link_depth;
+					$link->website_id = $id;
+					break;
+			}
+
+			$link->save();
 		
-		return $link;
+			return $link;
+
+		}else{
+			
+			return null;
+
+		}
 	}
 
 	public function findAll(){
