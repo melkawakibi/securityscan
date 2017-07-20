@@ -31,25 +31,24 @@ class BlindSQLModule extends Module
 			echo 'SQLI attack'.PHP_EOL.PHP_EOL;
 			echo 'Links'.PHP_EOL;
 
-			// 	foreach ($this->uriArray as $key => $value) {
-			// 		echo $value.PHP_EOL.PHP_EOL;
-			// 	}
+				foreach ($this->urlArray as $key => $value) {
+					echo $value.PHP_EOL.PHP_EOL;
+				}
 
-			// 	$this->attackGet($links);
+				// $this->attackGet($links);
 
-			// 	$this->properties['module_name'] = 'sql';
+				// $this->properties['module_name'] = 'sql';
 
-			// 	//These are variable value, I keep them static for now
-			// 	$this->properties['risk'] = 'high';
-			// 	$this->properties['wasc_id'] = '19';
+				// //These are variable value, I keep them static for now
+				// $this->properties['risk'] = 'high';
+				// $this->properties['wasc_id'] = '19';
 
-			// 	$this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
+				// $this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
 
-			// }else{
-			// 	echo 'No links to scan'.PHP_EOL;
-			// }
+			}else{
+				echo 'No links to scan'.PHP_EOL;
+			}
 		}
-	}
 
 
 	protected function attackGet($links)

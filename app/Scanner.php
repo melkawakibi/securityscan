@@ -11,7 +11,7 @@ use App\Core\Spider;
 use App\Scan;
 use Illuminate\Support\Facades\Log;
 
-class Scan
+class Scanner
 {
 	/**
 	 * [$url description]
@@ -67,7 +67,6 @@ class Scan
 
 		$this->setup($spider);
 		$this->spider->start();
-		$this->scan();
 	}
 
 	/**
@@ -76,18 +75,18 @@ class Scan
 	public function setup()
 	{
 		try {
+
 			$this->checkUrl();
 			$this->spider->setSpiderUrl($this->url);
 			$this->spider->setup($this->options);
 			$this->prepare($this->options);
 
 			//setting credentials
-			if (!empty($options['u'])) {
-				$this->credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
-			}
+			// if (!empty($options['u'])) {
+			// 	$this->credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
+			// }
 		} catch (Exception $e) {
 			Log::Exception($e);
-			exit;
 		}
 	}
 
@@ -125,7 +124,7 @@ class Scan
 
 		$website = $this->websitedb->findOneByUrl($this->url);
 
-		$uniqueId = rand().(string) $website[0]->id;
+		$uniqueId = rand() . $website[0]->id;
 
 		//save scan to database
 		$this->scan = $this->scandb->create($website[0]->id, $uniqueId);

@@ -134,5 +134,16 @@ class Utils
 
 	}
 
+	public static function getParamArray($array)
+	{	
+		$array = new array();
+
+		foreach ($array as $key => $value) {
+			array_push($array, $value->params);
+		}
+
+		return $array;
+	} 
+
 
 }

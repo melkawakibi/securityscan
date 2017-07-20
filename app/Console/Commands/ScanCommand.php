@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use App\DB\ScanDB;
 use App\DB\WebsiteDB;
 use App\Core\Spider;
-use App\Scan;
+use App\Scanner;
 use App\Core\Utils;
 
 class ScanCommand extends Command
@@ -76,6 +76,7 @@ class ScanCommand extends Command
 
         $options = ($hasValues) ? $this->options() : $this->defaultOptions();
 
-        new Scan($url, $options, new Spider($url) ,new WebsiteDB, new ScanDB);
+        $scanner = new Scanner($url, $options, new Spider($url) ,new WebsiteDB, new ScanDB);
+        $scanner->scan();
     }
 }

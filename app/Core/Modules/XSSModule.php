@@ -30,21 +30,21 @@ class XSSModule extends Module
 
 			echo 'XSS attack'.PHP_EOL.PHP_EOL;
 			echo 'Links'.PHP_EOL;
-			foreach ($this->uriArray as $key => $value) {
+			foreach ($this->urlArray as $key => $value) {
 				echo $value.PHP_EOL.PHP_EOL;
 			}
 
-			$this->attackGet($links);
+			//$this->attackGet($links);
 
 		}
 
-		$this->properties['module_name'] = 'xss';
+		// $this->properties['module_name'] = 'xss';
 
-		//These are variable value, I keep them static for now
-		$this->properties['risk'] = 'high';
-		$this->properties['wasc_id'] = '8';
+		// //These are variable value, I keep them static for now
+		// $this->properties['risk'] = 'high';
+		// $this->properties['wasc_id'] = '8';
 
-		$this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
+		// $this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
 	}
 
 	protected function attackGet($link)
@@ -63,7 +63,7 @@ class XSSModule extends Module
 			//dividing with 60 will give the execution time in minutes other wise seconds
 			$execution_time = ($time_end - $time_start)/60;
 
-			if(strcmp($this->getBaseContent($this->url), $res->getBody())){
+			if (strcmp($this->getBaseContent($this->url), $res->getBody())) {
 				
 				echo 'Result: '.PHP_EOL;
 				echo 'URI: '.$value.PHP_EOL;
@@ -78,7 +78,7 @@ class XSSModule extends Module
 
 				$this->properties['execution_time'] = $execution_time;
 
-				if($this->responseAnalyse($res, Lang::get('string.XSS_Attack'))){
+				if ($this->responseAnalyse($res, Lang::get('string.XSS_Attack'))) {
 					echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
 					echo Lang::get('string.XSS').PHP_EOL.PHP_EOL;
 				}
@@ -103,9 +103,9 @@ class XSSModule extends Module
 
 		$response = $res->getBody();
 
-		if(strpos($response, $str)){
+		if (strpos($response, $str)) {
 			return true;
-		}else if($response){
+		} else if ($response) {
 			return false;
 		}
 	}

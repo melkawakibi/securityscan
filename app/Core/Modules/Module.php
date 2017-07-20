@@ -21,6 +21,8 @@ abstract class Module
 	protected $linkDB;
 	protected $websiteDB;
 	protected $scanDB;
+	protected $urlWithQuery;
+	protected $urlArray;
 
 	public function __construct($url)
 	{
@@ -55,26 +57,28 @@ abstract class Module
 
 			$params = $this->linkDB->findAllByLinkId($link->id);
 
+			$params = getParamArray($params);
 
 			foreach ($params as $key => $param) {
 
 				$lines = file(public_path() . $payload);
 
-				if($link->methode === 'GET'){
-					foreach($lines as $line){
+				if ($link->methode === 'GET') {
+					foreach($lines as $line) {
 
-						if(count($params) > 1){
-
-							$urlWithQuery = $this->multiQueryBuilder($baseUrl)->append($param, $line, count($params), $key);
-
+						if (count($params) > 1) {
+							$this->multiQueryBuilder($baseUrl)->append($param->params, $line, count($params), $key);
+							echo "KEY: " . $key.PHP_EOL;
+							echo "URL WITH QUERY " . $this->url.PHP_EOL;
 						}
 
 					}
 				}
 
-				array_push($this->urlArray, $urlWithQuery);
-
 			}
+
+
+			array_push($this->urlArray, $this->url);
 		}
 	}
 
@@ -87,13 +91,11 @@ abstract class Module
 
 	protected function append($str1, $str2 = "", $size = 0, $index = 0)
 	{
-		if($index < $size){
+		if ($index < $size-1) {
 			$this->url .= sprintf("%s=%s&", $str1, $str2);
-		}else{
+		} else if($index == $size-1){
 			$this->url .= sprintf("%s=%s", $str1, $str2);
 		}
-
-		return $this->url;
 	}
 
 
@@ -101,9 +103,9 @@ abstract class Module
 	{
 		$response = $res->getBody();
 
-		if(strpos($response, $str)){
+		if (strpos($response, $str)) {
 			return true;
-		}else if($response){
+		} else if( $response) {
 			return false;
 		}
 	}
