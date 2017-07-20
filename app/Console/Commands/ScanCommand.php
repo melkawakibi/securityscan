@@ -6,7 +6,11 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
-use App\Main;
+use App\DB\ScanDB;
+use App\DB\WebsiteDB;
+use App\Core\Spider;
+use App\Scan;
+use App\Core\Utils;
 
 class ScanCommand extends Command
 {
@@ -38,6 +42,15 @@ class ScanCommand extends Command
     public function __construct()
     {
         parent::__construct();
+
+    }
+
+    /**
+     * @return Array
+     */
+    public function defaultOptions()
+    {
+        return array( "r" => "y", "fm" => "0", "s" => 1, "x" => 1 );
     }
 
     /**
@@ -59,8 +72,10 @@ class ScanCommand extends Command
 
         $url = $this->argument('url');
 
-        $options = $this->options();
+        $hasValues = Utils::arrayHasValues($this->options());
 
-        new Main($url, $options);
+        $options = ($hasValues) ? $this->options() : $this->defaultOptions();
+
+        new Scan($url, $options, new Spider($url) ,new WebsiteDB, new ScanDB);
     }
 }

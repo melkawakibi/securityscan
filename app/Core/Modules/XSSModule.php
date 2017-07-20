@@ -50,7 +50,7 @@ class XSSModule extends Module
 	protected function attackGet($link)
 	{
 
-		foreach ($this->uriArray as $key => $value) {
+		foreach ($this->urlArray as $key => $value) {
 
 			//place this before any script you want to calculate time
 			$time_start = microtime(true); 
@@ -96,31 +96,6 @@ class XSSModule extends Module
 	protected function attackPost($link)
 	{
 
-	}
-
-	protected function linkList($links, $payload)
-	{
-
-		foreach ($links as $key => $link) {
-
-			$baseUrl = Utils::getBaseUrl($link->url);
-
-			$params = $this->linkDB->findAllByLinkId($link->id);
-
-			foreach ($params as $key => $param) {
-
-				if($link->methode === 'GET'){
-
-					$lines = file(public_path() . $payload);
-					
-					foreach($lines as $line){
-						if($link->id === $param->link_id){
-							array_push($this->uriArray, $baseUrl .'?'. $param->params.'='.$line);
-						}
-					}
-				}
-			}
-		}
 	}
 
 	protected function responseAnalyse($res, $str)

@@ -9,7 +9,7 @@ use App\Core\Utils;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
 
-class SQLModule extends Module
+class BlindSQLModule extends Module
 {
 
 	public function __construct($url)
@@ -30,22 +30,24 @@ class SQLModule extends Module
 
 			echo 'SQLI attack'.PHP_EOL.PHP_EOL;
 			echo 'Links'.PHP_EOL;
-			foreach ($this->uriArray as $key => $value) {
-				echo $value.PHP_EOL.PHP_EOL;
-			}
 
-			$this->attackGet($links);
+			// 	foreach ($this->uriArray as $key => $value) {
+			// 		echo $value.PHP_EOL.PHP_EOL;
+			// 	}
 
-			$this->properties['module_name'] = 'sql';
+			// 	$this->attackGet($links);
 
-			//These are variable value, I keep them static for now
-			$this->properties['risk'] = 'high';
-			$this->properties['wasc_id'] = '19';
+			// 	$this->properties['module_name'] = 'sql';
 
-			$this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
+			// 	//These are variable value, I keep them static for now
+			// 	$this->properties['risk'] = 'high';
+			// 	$this->properties['wasc_id'] = '19';
 
-		}else{
-			echo 'No links to scan'.PHP_EOL;
+			// 	$this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
+
+			// }else{
+			// 	echo 'No links to scan'.PHP_EOL;
+			// }
 		}
 	}
 
@@ -53,7 +55,7 @@ class SQLModule extends Module
 	protected function attackGet($links)
 	{
 
-		foreach ($this->uriArray as $key => $value) {
+		foreach ($this->urlArray as $key => $value) {
 
 			//place this before any script you want to calculate time
 			$time_start = microtime(true);
@@ -99,31 +101,6 @@ class SQLModule extends Module
 	protected function attackPost($links)
 	{
 
-	}
-
-	protected function linkList($links, $payload)
-	{
-
-		foreach ($links as $key => $link) {
-
-			$baseUrl = Utils::getBaseUrl($link->url);
-
-			$params = $this->linkDB->findAllByLinkId($link->id);
-
-			foreach ($params as $key => $param) {
-
-				if($link->methode === 'GET'){
-
-					$lines = file(public_path() . $payload);
-					
-					foreach($lines as $line){
-						if($link->id === $param->link_id){
-							array_push($this->uriArray, $baseUrl .'?'. $param->params.'='.$line);
-						}
-					}
-				}
-			}
-		}
 	}
 
 	protected function responseAnalyse($res, $str)

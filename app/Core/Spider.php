@@ -25,14 +25,12 @@ class Spider extends PHPCrawler
 
 	private $headers = array();
 
-	public function __construct($url)
+	public function __construct()
 	{
 		parent::__construct();
 
 		$this->DBService = new DBService;
 		$this->crawler = new Crawler;
-
-		$this->url = $url;
 
 	}
 
@@ -41,44 +39,43 @@ class Spider extends PHPCrawler
 
 		$this->setURL($this->url);
 
-
-		if(!empty($options['r'])){
-			if($options['r'] === 'y'){
+		if (!empty($options['r'])) {
+			if ($options['r'] === 'y') {
 					$this->follow_robot = $this->obeyRobotsTxt(TRUE);
 					$this->is_enabled_robot = "On";
-				}else if($options['r'] === 'n'){
+				} else if ($options['r'] === 'n') {
 					$this->follow_robot = $this->obeyRobotsTxt(FALSE);
 					$this->is_enabled_robot = "Off";
-				}else{
+				} else {
 					//default, if user fill somthing else then y or n
 					$this->follow_robot = FALSE;
 					$this->is_enabled_robot = "Off";
 				}
-		}else{
+		} else {
 			//default
 			$this->follow_robot = FALSE;
 			$this->is_enabled_robot = "Off";
 		}
 
-		//TODO add option to tabel website database
-		if(!empty($options['fm'])){
-			if($options['fm'] === '0'){
+		//TODO add option to tabel website database, make swtich case
+		if (!empty($options['fm'])) {
+			if($options['fm'] === '0') {
 				$this->setFollowMode(0);
 				$this->follow_mode = '0, follow every link';
-			}else if($options['fm'] === '1'){
+			} else if($options['fm'] === '1') {
 				$this->follow_mode = '1, only follow same domian';
 				$this->setFollowMode(1);
-			}else if($options['fm'] === '2'){
+			} else if($options['fm'] === '2') {
 				$this->follow_mode = '2, only follow same host';
 				$this->setFollowMode(2);	
-			}else if($options['fm'] === '3'){
+			} else if($options['fm'] === '3') {
 				$this->follow_mode = '3, only follow same root url';
 				$this->setFollowMode(3);
-			}else{
+			} else {
 				$this->follow_mode = '0, follow every link';
 				$this->setFollowMode(0);
 			}
-		}else{
+		} else {
 			$this->follow_mode = '0, follow every link';
 		}
 
@@ -133,6 +130,11 @@ class Spider extends PHPCrawler
 		$paramGET = $this->crawler->getURIParams($url);
 
 		$this->DBService->storeParams($paramPOST, $paramGET);
+	}
+
+	public function setSpiderUrl($url)
+	{
+		$this->url = $url;
 	}
 
 
