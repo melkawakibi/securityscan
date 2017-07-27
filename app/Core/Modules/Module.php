@@ -7,7 +7,6 @@ use GuzzleHttp\Exception\RequestException;
 use App\DB\LinkDB;
 use App\DB\WebsiteDB;
 use App\DB\ScanDB;
-
 use App\Core\Utils;
 
 abstract class Module
@@ -57,28 +56,26 @@ abstract class Module
 
 			$params = $this->linkDB->findAllByLinkId($link->id);
 
-			$params = getParamArray($params);
+			$params = Utils::getParamArray($params);
 
-			foreach ($params as $key => $param) {
+			$query_array = array();
 
-				$lines = file(public_path() . $payload);
+			$lines = file(public_path() . $payload);	
 
-				if ($link->methode === 'GET') {
-					foreach($lines as $line) {
+			if ($link->methode === 'GET') {
 
-						if (count($params) > 1) {
-							$this->multiQueryBuilder($baseUrl)->append($param->params, $line, count($params), $key);
-							echo "KEY: " . $key.PHP_EOL;
-							echo "URL WITH QUERY " . $this->url.PHP_EOL;
-						}
-
-					}
-				}
+				$query_array = Utils::create_comined_array($params, $lines);
 
 			}
 
+			foreach ($query_array as $key => $query) {
+				$query = http_build_query($query);
+				$this->url = $baseUrl . '?' . $query;
+				array_push($this->urlArray, $this->url);
+			}
 
-			array_push($this->urlArray, $this->url);
+			print_r($this->urlArray);
+
 		}
 	}
 
@@ -92,6 +89,7 @@ abstract class Module
 	protected function append($str1, $str2 = "", $size = 0, $index = 0)
 	{
 		if ($index < $size-1) {
+			echo 'First if';
 			$this->url .= sprintf("%s=%s&", $str1, $str2);
 		} else if($index == $size-1){
 			$this->url .= sprintf("%s=%s", $str1, $str2);

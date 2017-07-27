@@ -134,16 +134,30 @@ class Utils
 
 	}
 
-	public static function getParamArray($array)
-	{	
-		$array = new array();
 
-		foreach ($array as $key => $value) {
+	public static function getParamArray($param_array)
+	{	
+		$array = array();
+
+		foreach ($param_array as $key => $value) {
 			array_push($array, $value->params);
 		}
 
 		return $array;
-	} 
+	}
+
+	public static function create_comined_array($array1, $array2)
+	{
+		$newArray = array();
+
+		foreach ($array1 as $key){
+        	foreach ($array2 as $i => $value) {
+            	$newArray[$i][$key] = $value;
+         	}
+    }
+
+		return $newArray;
+	}
 
 
 }

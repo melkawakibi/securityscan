@@ -8,7 +8,8 @@ use App\Model\Website;
 use App\DB\ScanDB;
 use App\DB\WebsiteDB;
 use App\Core\Spider;
-use App\Scan;
+use App\Scanner;
+use App\Core\Utils;
 use Illuminate\Support\Facades\Log;
 
 class Scanner
@@ -42,6 +43,12 @@ class Scanner
 	 * @var Spider
 	 */
 	protected $spider;
+
+	/**
+	 * [$scan description]
+	 * @var Scan
+	 */
+	protected $scan;
 
 	/**
 	 * @param string $url
@@ -112,25 +119,34 @@ class Scanner
 	 */
 	public function prepare($options)
 	{
-		echo gettype($options['s']);
 
-		if ($options['s']) {
+		if (!empty($options['s'])) {
 			$this->sql = new BlindSQL($this->url);
 		}
 
-		if ($options['x']) {
+		if (!empty($options['x'])) {
 			$this->xss = new XSS($this->url);
 		}
 
-		$website = $this->websitedb->findOneByUrl($this->url);
+		try{
 
-		$uniqueId = rand() . $website[0]->id;
+			$website = $this->websitedb->findOneByUrl($this->url);
 
-		//save scan to database
-		$this->scan = $this->scandb->create($website[0]->id, $uniqueId);
+			if($website->isNotEmpty()){
 
-		$this->scandb->createModule($this->scan->id, $options);
+				$uniqueId = rand() . $website[0]->id;
 
+				//save scan to database
+				$this->scan = $this->scandb->create($website[0]->id, $uniqueId);
+
+				$this->scandb->createModule($this->scan->id, $options);
+
+			}
+
+		} catch (Exception $e) {
+			Log::Exception($e);
+			exit;
+		}
 	}
 
 	/**
