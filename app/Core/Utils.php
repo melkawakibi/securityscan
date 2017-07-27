@@ -159,5 +159,29 @@ class Utils
 		return $newArray;
 	}
 
+	public static function replace_string_array($array, $str, $strToReplace)
+	{
+
+		foreach ($array as $key => $value) {
+			if(strpos($value, $strToReplace) !== false){
+				$array[$key] = str_replace($strToReplace, $str, $value);
+			}
+		}
+
+		return $array;
+	}
+
+	public static function generateRandomString($length = 10) 
+	{
+	    $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+	    $charactersLength = strlen($characters);
+	    $randomString = '';
+
+	    for ($i = 0; $i < $length; $i++) {
+	        $randomString .= $characters[rand(0, $charactersLength - 1)];
+	    }
+	    
+	    return $randomString;
+	}
 
 }

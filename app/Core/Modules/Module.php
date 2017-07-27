@@ -8,6 +8,7 @@ use App\DB\LinkDB;
 use App\DB\WebsiteDB;
 use App\DB\ScanDB;
 use App\Core\Utils;
+use Illuminate\Support\Facades\Lang;
 
 abstract class Module
 {
@@ -22,6 +23,7 @@ abstract class Module
 	protected $scanDB;
 	protected $urlWithQuery;
 	protected $urlArray;
+	protected $timeout;
 
 	public function __construct($url)
 	{
@@ -33,11 +35,12 @@ abstract class Module
 		$this->urlArray = array();
 		$this->defaultlinks = array();
 		$this->properties = array();
+		$this->timeout = 1;
 	}
 
 	abstract public function start($scan);
 
-	abstract protected function attackGet($link);
+	abstract protected function attackGet($link, $scan);
 
 	abstract protected function attackPost($link);
 
@@ -60,11 +63,17 @@ abstract class Module
 
 			$query_array = array();
 
-			$lines = file(public_path() . $payload);	
+			$lines = file(public_path() . $payload);
+
+			$replace_str = $this->getReplaceString($payload);
+
+			$lines = Utils::replace_string_array($lines, $replace_str[0], $replace_str[1]);
 
 			if ($link->methode === 'GET') {
 
 				$query_array = Utils::create_comined_array($params, $lines);
+
+				array_filter($query_array);
 
 			}
 
@@ -74,28 +83,8 @@ abstract class Module
 				array_push($this->urlArray, $this->url);
 			}
 
-			print_r($this->urlArray);
-
 		}
 	}
-
-	protected function multiQueryBuilder($url)
-	{	
-		$this->url = $url.'?';
-
-		return $this;
-	}
-
-	protected function append($str1, $str2 = "", $size = 0, $index = 0)
-	{
-		if ($index < $size-1) {
-			echo 'First if';
-			$this->url .= sprintf("%s=%s&", $str1, $str2);
-		} else if($index == $size-1){
-			$this->url .= sprintf("%s=%s", $str1, $str2);
-		}
-	}
-
 
 	protected function responseAnalyse($res, $str)
 	{
@@ -107,4 +96,21 @@ abstract class Module
 			return false;
 		}
 	}
+
+	public function setTimeOut($timeout)
+	{
+
+		$this->timeout = $timeout;
+
+	}
+
+	public function getReplaceString($payload)
+	{
+		if(strpos($payload, 'sqlblind') !== false){
+			return array("0" => (string) $this->timeout, "1" => Lang::get('string.SQL_Replace'));
+		}else{
+			return array("0" => Utils::generateRandomString(), "1" => Lang::get('string.XSS_Replace'));
+		}
+	}
+
 }

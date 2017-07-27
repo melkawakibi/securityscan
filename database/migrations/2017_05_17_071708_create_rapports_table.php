@@ -17,7 +17,6 @@ class CreateRapportsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('file');
-            $table->date('date');
             $table->integer('website_id')->unsigned();
             $table->foreign('website_id')->references('id')->on('websites');
             $table->timestamps();

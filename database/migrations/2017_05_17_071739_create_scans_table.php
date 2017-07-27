@@ -15,10 +15,8 @@ class CreateScansTable extends Migration
     {
         Schema::create('scans', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('date');
             $table->integer('website_id')->unsigned();
             $table->foreign('website_id')->references('id')->on('websites');
-            $table->bigInteger('scan_key')->unsigned()->unique();
             $table->timestamps();
         });
     }

@@ -4,11 +4,7 @@ namespace App;
 
 use App\Core\Modules\BlindSQLModule as BlindSQL;
 use App\Core\Modules\XSSModule as XSS;
-use App\Model\Website;
-use App\DB\ScanDB;
-use App\DB\WebsiteDB;
 use App\Core\Spider;
-use App\Scanner;
 use App\Core\Utils;
 use Illuminate\Support\Facades\Log;
 
@@ -60,19 +56,16 @@ class Scanner
 	public function __construct(
 		$url, 
 		$options,
-		Spider $spider,
-		WebsiteDB $websiteDB,
-		ScanDB $scanDB
+		Spider $spider
 	)
 	{
 
 		$this->url = $url;
 		$this->spider = $spider;
 		$this->options = $options;
-		$this->scandb = $scanDB;
-		$this->websitedb = $websiteDB;
 
 		$this->setup($spider);
+
 		$this->spider->start();
 	}
 
@@ -85,13 +78,9 @@ class Scanner
 
 			$this->checkUrl();
 			$this->spider->setSpiderUrl($this->url);
-			$this->spider->setup($this->options);
 			$this->prepare($this->options);
+			$this->spider->setup($this->options);
 
-			//setting credentials
-			// if (!empty($options['u'])) {
-			// 	$this->credentials = [ 'username' => $options['u'] , 'password' => $options['p'] ];
-			// }
 		} catch (Exception $e) {
 			Log::Exception($e);
 		}
@@ -120,32 +109,14 @@ class Scanner
 	public function prepare($options)
 	{
 
-		if (!empty($options['s'])) {
+		if ($options['s']) {
+			echo "MAKE SQL";
 			$this->sql = new BlindSQL($this->url);
 		}
 
-		if (!empty($options['x'])) {
+		if ($options['x']) {
+			echo "MAKE XSS";
 			$this->xss = new XSS($this->url);
-		}
-
-		try{
-
-			$website = $this->websitedb->findOneByUrl($this->url);
-
-			if($website->isNotEmpty()){
-
-				$uniqueId = rand() . $website[0]->id;
-
-				//save scan to database
-				$this->scan = $this->scandb->create($website[0]->id, $uniqueId);
-
-				$this->scandb->createModule($this->scan->id, $options);
-
-			}
-
-		} catch (Exception $e) {
-			Log::Exception($e);
-			exit;
 		}
 	}
 

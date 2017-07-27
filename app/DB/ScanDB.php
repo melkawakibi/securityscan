@@ -10,20 +10,17 @@ use Illuminate\Support\Facades\DB;
 
 class ScanDB{
 
-	use ModuleTrait;
 	use ScanDetailTrait;
 
 	public function __construct(){
 
 	}
 
-	public function create($website_id, $scan_key){
+	public function create($website_id){
 		
 		$scan = new Scan;
-
-		$scan->date = Carbon::now();
+		
 		$scan->website_id = $website_id;
-		$scan->scan_key = $scan_key;
 
 		$scan->save();
 		

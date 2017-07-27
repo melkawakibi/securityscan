@@ -22,7 +22,6 @@ class WebsiteDB{
 			$website->base_url = $websiteObj->url;
 			$website->server = $websiteObj->server;
 			$website->follow_robot = $websiteObj->follow_robot;
-			$website->date = Carbon::now();
 			$website->customer_id = 1;
 
 			$website->save();

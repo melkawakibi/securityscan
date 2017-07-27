@@ -3,9 +3,7 @@
 namespace App\Core\Modules;
 
 use App\Core\Modules\Module;
-
 use App\Core\Utils;
-
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
 
@@ -19,6 +17,9 @@ class BlindSQLModule extends Module
 
 	public function start($scan)
 	{
+		if(is_null($scan)){
+			echo 'SCAN IS NULL'.PHP_EOL;
+		}
 
 		$website = $this->websiteDB->findOneByUrl($this->url);
 
@@ -29,29 +30,16 @@ class BlindSQLModule extends Module
 			$this->linkList($links, Lang::get('string.payload_sql'));
 
 			echo 'SQLI attack'.PHP_EOL.PHP_EOL;
-			echo 'Links'.PHP_EOL;
 
-				foreach ($this->urlArray as $key => $value) {
-					echo $value.PHP_EOL.PHP_EOL;
-				}
+			$this->attackGet($links, $scan);
 
-				// $this->attackGet($links);
-
-				// $this->properties['module_name'] = 'sql';
-
-				// //These are variable value, I keep them static for now
-				// $this->properties['risk'] = 'high';
-				// $this->properties['wasc_id'] = '19';
-
-				// $this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
-
-			}else{
-				echo 'No links to scan'.PHP_EOL;
-			}
+		}else{
+			echo 'No links to scan'.PHP_EOL;
 		}
+	}
 
 
-	protected function attackGet($links)
+	protected function attackGet($links, $scan)
 	{
 
 		foreach ($this->urlArray as $key => $value) {
@@ -69,10 +57,10 @@ class BlindSQLModule extends Module
 
 			if(strcmp($this->getBaseContent($this->url), $res->getBody())){
 				
-				echo 'Result: '.PHP_EOL;
-				echo 'URI: '.$value.PHP_EOL;
+				// echo 'Result: '.PHP_EOL;
+				// echo 'URI: '.$value.PHP_EOL;
 
-				echo 'Time: '.$execution_time.PHP_EOL;
+				// echo 'Time: '.$execution_time.PHP_EOL;
 
 				$params = Utils::filterGetUrl($value);
 
@@ -82,17 +70,27 @@ class BlindSQLModule extends Module
 
 				$this->properties['execution_time'] = $execution_time;
 
-				if($this->responseAnalyse($res, Lang::get('string.SQLi_Attack'))){
-					echo 'This webpage is vulnerable for SQL injections'.PHP_EOL;
-					echo Lang::get('string.SQLi').PHP_EOL.PHP_EOL;
-				}
+				// if($this->responseAnalyse($res, Lang::get('string.SQLi_Attack'))){
+				// 	echo 'This webpage is vulnerable for SQL injections'.PHP_EOL;
+				// 	echo Lang::get('string.SQLi').PHP_EOL.PHP_EOL;
+				// }
 
-				Log::info('Time: ' . $execution_time);
-				Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-				Log::info('Request url: ' . $value);
-				Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-				Log::info('----------------- Content -------------------------' . PHP_EOL);
-				Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
+				// Log::info('Time: ' . $execution_time);
+				// Log::info('----------------- Response Code -------------------------' . PHP_EOL);
+				// Log::info('Request url: ' . $value);
+				// Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
+				// Log::info('----------------- Content -------------------------' . PHP_EOL);
+				// Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
+
+				$this->properties['module_name'] = 'sql';
+
+				//These are variable value, I keep them static for now
+				$this->properties['risk'] = 'high';
+				$this->properties['wasc_id'] = '19';
+
+				if(!is_null($scan)){
+					$this->scanDB->createScanDetail($scan->id, $this->properties);
+				}
 			}		
 		}
 	}

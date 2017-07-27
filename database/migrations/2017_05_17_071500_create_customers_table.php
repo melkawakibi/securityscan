@@ -17,7 +17,6 @@ class CreateCustomersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('comanyname');
-            $table->date('date');
             $table->timestamps();
         });
     }

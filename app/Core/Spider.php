@@ -5,11 +5,8 @@ namespace App\Core;
 use PHPCrawler;
 use PHPCrawlerDocumentInfo;
 use PHPCrawlerResponseHeader;
-
 use App\Model\Crawler;
-
 use App\Services\DBService;
-
 use Illuminate\Support\Facades\Log;
 
 class Spider extends PHPCrawler

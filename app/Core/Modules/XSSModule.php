@@ -19,6 +19,10 @@ class XSSModule extends Module
 
 	public function start($scan)
 	{
+		if(is_null($scan)){
+			echo 'SCAN IS NULL'.PHP_EOL;
+		}
+
 		$website = $this->websiteDB->findOneByUrl($this->url);
 
 		$links = $this->linkDB->findAllByWebsiteId($website[0]->id);
@@ -27,27 +31,15 @@ class XSSModule extends Module
 
 			$this->linkList($links, Lang::get('string.payload_xss'));
 
-
 			echo 'XSS attack'.PHP_EOL.PHP_EOL;
-			echo 'Links'.PHP_EOL;
-			foreach ($this->urlArray as $key => $value) {
-				echo $value.PHP_EOL.PHP_EOL;
-			}
 
-			//$this->attackGet($links);
+			$this->attackGet($links, $scan);
 
 		}
 
-		// $this->properties['module_name'] = 'xss';
-
-		// //These are variable value, I keep them static for now
-		// $this->properties['risk'] = 'high';
-		// $this->properties['wasc_id'] = '8';
-
-		// $this->scanDB->createScanDetail($scan->id, $scan->scan_key, $this->properties);
 	}
 
-	protected function attackGet($link)
+	protected function attackGet($link, $scan)
 	{
 
 		foreach ($this->urlArray as $key => $value) {
@@ -65,10 +57,10 @@ class XSSModule extends Module
 
 			if (strcmp($this->getBaseContent($this->url), $res->getBody())) {
 				
-				echo 'Result: '.PHP_EOL;
-				echo 'URI: '.$value.PHP_EOL;
+				// echo 'Result: '.PHP_EOL;
+				// echo 'URI: '.$value.PHP_EOL;
 
-				echo 'Time: '.$execution_time.PHP_EOL;
+				// echo 'Time: '.$execution_time.PHP_EOL;
 
 				$params = Utils::filterGetUrl($value);
 
@@ -78,17 +70,27 @@ class XSSModule extends Module
 
 				$this->properties['execution_time'] = $execution_time;
 
-				if ($this->responseAnalyse($res, Lang::get('string.XSS_Attack'))) {
-					echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
-					echo Lang::get('string.XSS').PHP_EOL.PHP_EOL;
-				}
+				// if ($this->responseAnalyse($res, Lang::get('string.XSS_Attack'))) {
+				// 	echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
+				// 	echo Lang::get('string.XSS').PHP_EOL.PHP_EOL;
+				// }
 
-				Log::info('Time: ' . $execution_time);
-				Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-				Log::info('Request url: ' . $value);
-				Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-				Log::info('----------------- Content -------------------------' . PHP_EOL);
-				Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
+				// Log::info('Time: ' . $execution_time);
+				// Log::info('----------------- Response Code -------------------------' . PHP_EOL);
+				// Log::info('Request url: ' . $value);
+				// Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
+				// Log::info('----------------- Content -------------------------' . PHP_EOL);
+				// Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
+
+				$this->properties['module_name'] = 'xss';
+
+				//These are variable value, I keep them static for now
+				$this->properties['risk'] = 'high';
+				$this->properties['wasc_id'] = '8';
+
+				if(!is_null($scan)){
+					$this->scanDB->createScanDetail($scan->id, $this->properties);
+				}
 			}		
 		}
 	}
