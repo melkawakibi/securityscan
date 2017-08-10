@@ -6,6 +6,8 @@ use App\Core\Modules\BlindSQLModule as BlindSQL;
 use App\Core\Modules\XSSModule as XSS;
 use App\Core\Spider;
 use App\Core\Utils;
+use App\DB\WebsiteDB;
+use App\Services\DBService;
 use Illuminate\Support\Facades\Log;
 
 class Scanner
@@ -41,17 +43,9 @@ class Scanner
 	protected $spider;
 
 	/**
-	 * [$scan description]
-	 * @var Scan
-	 */
-	protected $scan;
-
-	/**
 	 * @param string $url
 	 * @param Array $options
 	 * @param Spider
-	 * @param WebsiteDB
-	 * @param ScanDB
 	 */
 	public function __construct(
 		$url, 
@@ -60,6 +54,8 @@ class Scanner
 	)
 	{
 
+		$this->websiteDB = new WebsiteDB;
+		$this->service = new DBService;
 		$this->url = $url;
 		$this->spider = $spider;
 		$this->options = $options;
@@ -126,12 +122,16 @@ class Scanner
 	public function scan()
 	{
 
+		//find website store scan
+		$website = $this->websiteDB->findOneByUrl($this->url);
+		$this->service->storeScan($website[0]->id);
+
 		if ($this->sql instanceof BlindSQL) {
-			$this->sql->start($this->scan);
+			$this->sql->start();
 		}
 
 		if ($this->xss instanceof XSS) {
-			$this->xss->start($this->scan);
+			$this->xss->start();
 		}
 
 	}

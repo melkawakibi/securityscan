@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\RequestException;
 use App\DB\LinkDB;
 use App\DB\WebsiteDB;
 use App\DB\ScanDB;
+use App\Services\DBService;
 use App\Core\Utils;
 use Illuminate\Support\Facades\Lang;
 
@@ -21,9 +22,12 @@ abstract class Module
 	protected $linkDB;
 	protected $websiteDB;
 	protected $scanDB;
+	protected $service;
 	protected $urlWithQuery;
 	protected $urlArray;
 	protected $timeout;
+	protected $website;
+	protected $scan;
 
 	public function __construct($url)
 	{
@@ -31,14 +35,15 @@ abstract class Module
 		$this->client = new GuzzleClient;
 		$this->linkDB = new LinkDB;
 		$this->websiteDB = new WebsiteDB;
-		$this->scanDB = new ScanDB;	
+		$this->scanDB = new ScanDB;
+		$this->service = new DBService;
 		$this->urlArray = array();
 		$this->defaultlinks = array();
 		$this->properties = array();
 		$this->timeout = 1;
 	}
 
-	abstract public function start($scan);
+	abstract public function start();
 
 	abstract protected function attackGet($link, $scan);
 

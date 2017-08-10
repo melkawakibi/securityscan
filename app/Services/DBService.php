@@ -51,8 +51,6 @@ class DBService
 
 				$this->storeHeader($headers, $website->id, $this->isBaseHeader);
 
-				$this->storeScan($website->id);
-
 			}
 
 		}
@@ -72,7 +70,7 @@ class DBService
 	public function storeScan($website_id)
 	{
 
-		$this->scan = $this->serviceScan->create($website_id);
+		return $this->serviceScan->create($website_id);
 
 	}
 

@@ -35,6 +35,10 @@ class ScanDB{
 		return Website::Where(['id' => $id])->get();
 	}
 
+	public function findLastByScanIdOrderDesc($id){
+		return Scan::Where('website_id', $id)->orderBy('created_at', 'desc')->get(); 
+	}
+
 	public function findOneByName($name){
 
 	}

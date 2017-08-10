@@ -15,13 +15,12 @@ class BlindSQLModule extends Module
 		parent::__construct($url);	
 	}
 
-	public function start($scan)
+	public function start()
 	{
-		if(is_null($scan)){
-			echo 'SCAN IS NULL'.PHP_EOL;
-		}
 
 		$website = $this->websiteDB->findOneByUrl($this->url);
+
+		$scan = $this->scanDB->findLastByScanIdOrderDesc($website[0]->id);
 
 		$links = $this->linkDB->findAllByWebsiteId($website[0]->id);
 
@@ -89,7 +88,7 @@ class BlindSQLModule extends Module
 				$this->properties['wasc_id'] = '19';
 
 				if(!is_null($scan)){
-					$this->scanDB->createScanDetail($scan->id, $this->properties);
+					$this->scanDB->createScanDetail($scan[0]->id, $this->properties);
 				}
 			}		
 		}

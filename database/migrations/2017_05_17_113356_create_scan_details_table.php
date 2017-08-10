@@ -20,7 +20,7 @@ class CreateScanDetailsTable extends Migration
             $table->string('module_name');
             $table->string('risk');
             $table->string('parameter');
-            $table->string('attack');
+            $table->text('attack');
             $table->string('wasc_id');
             $table->string('execution_time');
             $table->timestamps();
