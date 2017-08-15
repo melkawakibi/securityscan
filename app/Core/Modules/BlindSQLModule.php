@@ -57,7 +57,7 @@ class BlindSQLModule extends Module
 			if(strcmp($this->getBaseContent($this->url), $res->getBody())){
 				
 				// echo 'Result: '.PHP_EOL;
-				// echo 'URI: '.$value.PHP_EOL;
+				//echo 'URI: '.$value.PHP_EOL;
 
 				// echo 'Time: '.$execution_time.PHP_EOL;
 
@@ -69,17 +69,12 @@ class BlindSQLModule extends Module
 
 				$this->properties['execution_time'] = $execution_time;
 
-				// if($this->responseAnalyse($res, Lang::get('string.SQLi_Attack'))){
-				// 	echo 'This webpage is vulnerable for SQL injections'.PHP_EOL;
-				// 	echo Lang::get('string.SQLi').PHP_EOL.PHP_EOL;
-				// }
-
-				// Log::info('Time: ' . $execution_time);
-				// Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-				// Log::info('Request url: ' . $value);
-				// Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-				// Log::info('----------------- Content -------------------------' . PHP_EOL);
-				// Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
+				Log::info('Time: ' . $execution_time);
+				Log::info('----------------- Response Code -------------------------' . PHP_EOL);
+				Log::info('Request url: ' . $value);
+				Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
+				Log::info('----------------- Content -------------------------' . PHP_EOL);
+				Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
 
 				$this->properties['module_name'] = 'sql';
 
@@ -87,8 +82,16 @@ class BlindSQLModule extends Module
 				$this->properties['risk'] = 'high';
 				$this->properties['wasc_id'] = '19';
 
-				if(!is_null($scan)){
-					$this->scanDB->createScanDetail($scan[0]->id, $this->properties);
+				foreach (Lang::get('error_sql') as $key => $value) {
+					
+					if($this->responseAnalyse($res, $value)){
+						echo 'This webpage is vulnerable for SQL injections'.PHP_EOL;
+
+						if(!is_null($scan)){
+							$this->scanDB->createScanDetail($scan[0]->id, $this->properties);
+						}
+					}
+
 				}
 			}		
 		}

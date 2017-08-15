@@ -71,11 +71,6 @@ class XSSModule extends Module
 
 				$this->properties['execution_time'] = $execution_time;
 
-				// if ($this->responseAnalyse($res, Lang::get('string.XSS_Attack'))) {
-				// 	echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
-				// 	echo Lang::get('string.XSS').PHP_EOL.PHP_EOL;
-				// }
-
 				// Log::info('Time: ' . $execution_time);
 				// Log::info('----------------- Response Code -------------------------' . PHP_EOL);
 				// Log::info('Request url: ' . $value);
@@ -89,8 +84,13 @@ class XSSModule extends Module
 				$this->properties['risk'] = 'high';
 				$this->properties['wasc_id'] = '8';
 
-				if(!is_null($scan)){
-					$this->scanDB->createScanDetail($scan[0]->id, $this->properties);
+				if ($this->responseAnalyse($res, Lang::get('string.XSS_Attack'))) {
+					echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
+					echo Lang::get('string.XSS').PHP_EOL.PHP_EOL;
+					
+					if(!is_null($scan)){
+						$this->scanDB->createScanDetail($scan[0]->id, $this->properties);
+					}
 				}
 			}		
 		}

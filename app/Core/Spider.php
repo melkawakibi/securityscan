@@ -122,6 +122,7 @@ class Spider extends PHPCrawler
 
 	public function handelParams($url)
 	{
+
 		$paramPOST = $this->crawler->getFormsParams($url);
 
 		$paramGET = $this->crawler->getURIParams($url);

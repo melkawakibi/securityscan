@@ -82,10 +82,13 @@ abstract class Module
 
 			}
 
+
+
 			foreach ($query_array as $key => $query) {
 				$query = http_build_query($query);
-				$this->url = $baseUrl . '?' . $query;
-				array_push($this->urlArray, $this->url);
+				$url = $baseUrl . '?' . $query;
+				array_push($this->urlArray, $url);
+
 			}
 
 		}

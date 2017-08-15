@@ -42,6 +42,7 @@ class Crawler
 	{
 
 		$this->url = $url;
+
 		$this->crawler->filter('input[type=submit]')->each(function(DomCrawler $node){
 
 			if(!in_array($node->attr('value'), $this->submits)){

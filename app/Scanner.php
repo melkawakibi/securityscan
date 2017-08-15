@@ -106,12 +106,10 @@ class Scanner
 	{
 
 		if ($options['s']) {
-			echo "MAKE SQL";
 			$this->sql = new BlindSQL($this->url);
 		}
 
 		if ($options['x']) {
-			echo "MAKE XSS";
 			$this->xss = new XSS($this->url);
 		}
 	}
