@@ -16,6 +16,7 @@ trait ScanDetailTrait{
 		$scanDetail->risk = $properties['risk'];
 		$scanDetail->parameter = $properties['parameter'];
 		$scanDetail->attack = $properties['attack'];
+		$scanDetail->error = $properties['error'];
 		$scanDetail->wasc_id = $properties['wasc_id'];
 		$scanDetail->execution_time = $properties['execution_time'];
 

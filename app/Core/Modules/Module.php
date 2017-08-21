@@ -45,7 +45,7 @@ abstract class Module
 
 	abstract public function start();
 
-	abstract protected function attackGet($link, $scan);
+	abstract protected function attackGet($scan);
 
 	abstract protected function attackPost($link);
 
@@ -81,7 +81,6 @@ abstract class Module
 				array_filter($query_array);
 
 			}
-
 
 
 			foreach ($query_array as $key => $query) {

@@ -30,7 +30,7 @@ class BlindSQLModule extends Module
 
 			echo 'SQLI attack'.PHP_EOL.PHP_EOL;
 
-			$this->attackGet($links, $scan);
+			$this->attackGet($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
@@ -38,7 +38,7 @@ class BlindSQLModule extends Module
 	}
 
 
-	protected function attackGet($links, $scan)
+	protected function attackGet($scan)
 	{
 
 		foreach ($this->urlArray as $key => $value) {
@@ -86,6 +86,7 @@ class BlindSQLModule extends Module
 					
 					if($this->responseAnalyse($res, $value)){
 						echo 'This webpage is vulnerable for SQL injections'.PHP_EOL;
+						$this->properties['error'] = $value;
 
 						if(!is_null($scan)){
 							$this->scanDB->createScanDetail($scan[0]->id, $this->properties);

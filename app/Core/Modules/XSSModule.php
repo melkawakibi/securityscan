@@ -32,7 +32,7 @@ class XSSModule extends Module
 
 			echo 'XSS attack'.PHP_EOL.PHP_EOL;
 
-			$this->attackGet($links, $scan);
+			$this->attackGet($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
@@ -40,7 +40,7 @@ class XSSModule extends Module
 
 	}
 
-	protected function attackGet($link, $scan)
+	protected function attackGet($scan)
 	{
 
 		foreach ($this->urlArray as $key => $value) {
@@ -58,11 +58,6 @@ class XSSModule extends Module
 
 			if (strcmp($this->getBaseContent($this->url), $res->getBody())) {
 				
-				// echo 'Result: '.PHP_EOL;
-				// echo 'URI: '.$value.PHP_EOL;
-
-				// echo 'Time: '.$execution_time.PHP_EOL;
-
 				$params = Utils::filterGetUrl($value);
 
 				$this->properties['parameter'] = $params[0];
@@ -71,12 +66,12 @@ class XSSModule extends Module
 
 				$this->properties['execution_time'] = $execution_time;
 
-				// Log::info('Time: ' . $execution_time);
-				// Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-				// Log::info('Request url: ' . $value);
-				// Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-				// Log::info('----------------- Content -------------------------' . PHP_EOL);
-				// Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
+				Log::info('Time: ' . $execution_time);
+				Log::info('----------------- Response Code -------------------------' . PHP_EOL);
+				Log::info('Request url: ' . $value);
+				Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
+				Log::info('----------------- Content -------------------------' . PHP_EOL);
+				Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
 
 				$this->properties['module_name'] = 'xss';
 
@@ -84,10 +79,14 @@ class XSSModule extends Module
 				$this->properties['risk'] = 'high';
 				$this->properties['wasc_id'] = '8';
 
-				if ($this->responseAnalyse($res, Lang::get('string.XSS_Attack'))) {
+				$xss_array = explode("=", $value);
+
+				$xss_attack = urldecode($xss_array[1]);
+
+				if ($this->responseAnalyse($res, $xss_attack)) {
 					echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
-					echo Lang::get('string.XSS').PHP_EOL.PHP_EOL;
-					
+					$this->properties['error'] = 'This webpage is vulnerable for Cross site scripting';
+
 					if(!is_null($scan)){
 						$this->scanDB->createScanDetail($scan[0]->id, $this->properties);
 					}
