@@ -11,8 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function(){
+
+	return view('hello');
+
 });
 
-Route::get('pdf', 'ReportGenerator@generateReport');
+Route::get('pdf', 'PDFController@downloadPDF');
