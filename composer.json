@@ -6,10 +6,12 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "barryvdh/laravel-dompdf": "^0.8.0",
         "fabpot/goutte": "^3.2",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
+        "laravelcollective/html": "^5.4",
         "mmerian/phpcrawl": "dev-master",
         "symfony/browser-kit": "^3.3"
     },

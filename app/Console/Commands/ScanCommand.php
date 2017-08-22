@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 use App\Core\Spider;
 use App\Scanner;
+use App\Core\ReportGenerator as Report;
 use App\Core\Utils;
+use Artisan;
 
 class ScanCommand extends Command
 {
@@ -74,7 +76,9 @@ class ScanCommand extends Command
 
         $options = ($hasValues) ? $this->options() : $this->defaultOptions();
 
-        $scanner = new Scanner($url, $options, new Spider($url));
-        $scanner->scan();
+        // $scanner = new Scanner($url, $options, new Spider($url));
+        // $scanner->scan();
+
+        new Report();
     }
 }
