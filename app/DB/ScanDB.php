@@ -27,7 +27,7 @@ class ScanDB{
 		return $scan;
 	}
 
-	public function findAll(){
+	public function findAllScans(){
 		return Scan::all();
 	}
 

@@ -24,7 +24,7 @@ trait ScanDetailTrait{
 		return $scanDetail;
 	}
 
-	public function findAll(){
+	public function findAllScanDetails(){
 		return ScanDetail::all();
 	}
 
