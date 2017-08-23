@@ -31,8 +31,8 @@ class ScanDB{
 		return Scan::all();
 	}
 
-	public function findAllByScanId($id){
-		return Website::Where(['id' => $id])->get();
+	public function findOneByScanId($id){
+		return Scan::Where(['id' => $id])->get();
 	}
 
 	public function findLastByScanIdOrderDesc($id){

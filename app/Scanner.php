@@ -8,6 +8,7 @@ use App\Core\Spider;
 use App\Core\Utils;
 use App\DB\WebsiteDB;
 use App\Services\DBService;
+use App\Core\PDFGenerator as PDF;
 use Illuminate\Support\Facades\Log;
 
 class Scanner
@@ -43,6 +44,24 @@ class Scanner
 	protected $spider;
 
 	/**
+	 * [$websiteDB description]
+	 * @var WebsiteDB
+	 */
+	protected $websiteDB;
+
+	/**
+	 * [$service description]
+	 * @var DBService
+	 */
+	protected $service;
+
+	/**
+	 * [$pdf description]
+	 * @var PDFGenerator
+	 */
+	protected $pdf;
+
+	/**
 	 * @param string $url
 	 * @param Array $options
 	 * @param Spider
@@ -56,6 +75,7 @@ class Scanner
 
 		$this->websiteDB = new WebsiteDB;
 		$this->service = new DBService;
+		$this->pdf = new PDF;
 		$this->url = $url;
 		$this->spider = $spider;
 		$this->options = $options;
@@ -122,7 +142,7 @@ class Scanner
 
 		//find website store scan
 		$website = $this->websiteDB->findOneByUrl($this->url);
-		$this->service->storeScan($website[0]->id);
+		$scan = $this->service->storeScan($website[0]->id);
 
 		if ($this->sql instanceof BlindSQL) {
 			$this->sql->start();
@@ -132,6 +152,13 @@ class Scanner
 			$this->xss->start();
 		}
 
+
+
+	}
+
+	public function generateReport($id, $website)
+	{
+		$this->pdf->generatePDF($id);
 	}
 
 }

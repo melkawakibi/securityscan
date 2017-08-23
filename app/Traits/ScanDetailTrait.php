@@ -28,4 +28,8 @@ trait ScanDetailTrait{
 		return ScanDetail::all();
 	}
 
+	public function findAllScanDetailsByScanId($id){
+		return ScanDetail::Where(['scan_id' => $id])->get();
+	}
+
 }
