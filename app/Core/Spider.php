@@ -6,29 +6,28 @@ use PHPCrawler;
 use PHPCrawlerDocumentInfo;
 use PHPCrawlerResponseHeader;
 use App\Model\Crawler;
-use App\Services\DBService;
+use App\Services\WebsiteService;
+use App\Services\HeaderService;
+use App\Services\LinkService;
+use \stdClass as Object;
 use Illuminate\Support\Facades\Log;
 
 class Spider extends PHPCrawler
 {
 
 	private $url;
-	private $client;
-	private $DBService;
 	private $crawler;
 	private $follow_robot;
 	private $follow_mode;
 	private $is_enabled_robot;
-
 	private $headers = array();
+	private $links;
 
 	public function __construct()
 	{
 		parent::__construct();
 
-		$this->DBService = new DBService;
 		$this->crawler = new Crawler;
-
 	}
 
 	public function setup($options)
@@ -109,15 +108,58 @@ class Spider extends PHPCrawler
 	{
 		$this->headers = Utils::headerToArray($pageInfo->header);
 
-		$links = $pageInfo->links_found;
+		$this->links = $pageInfo->links_found;
 
 		$this->crawler->createCrawler($pageInfo);
 
-		//Store all general information
-		$this->DBService->store($this->url, $this->follow_robot, $pageInfo->url, $this->headers, $links);
+		$this->handleWebsite();
 
-		//Store all params
 		$this->handelParams($pageInfo->url);
+	}
+
+	public function handleWebsite()
+	{
+		if($this->url === $pageInfo->url){
+
+			$website = new Object;
+			$website->url = $this->url;
+			$website->follow_robot = $this->follow_robot;
+			$website->server = Utils::getServer($this->headers);
+
+			$website = WebsiteService::store($website);
+
+			if(!is_null($website)){
+				$headers = new Object;
+				$headers->headers = $this->headers;
+				$headers->website_id = $website[0]->id;
+
+				HeaderService::store($headers);
+
+				$links = new Object;
+				$links->linksArray = $this->links;
+				$links->website_id = $website[0]->id;
+
+				$this->handleLinks($links);
+
+			}
+		}
+	}
+
+	public function handleLinks($links)
+	{
+		if(!empty($links->linksArray)){
+
+			$links->linksObject = (object) $links->linksArray;
+			
+			if(LinkService::numRowByUrl($links->linksObject->url_rebuild)){
+
+				$links = LinkService::store($links);
+
+				if(!is_null($links)){
+					$this->storeHeader($headers, $link->id, $this->isBaseHeader);
+				}
+			}
+		}
 	}
 
 	public function handelParams($url)

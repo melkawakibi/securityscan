@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\ScanCommand',
         'App\Console\Commands\ClearTables',
         'App\Console\Commands\PDFCommand',
+        'App\Console\Commands\TestCommand',
     ];
 
     /**

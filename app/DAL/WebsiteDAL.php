@@ -1,21 +1,14 @@
 <?php
 
-namespace App\DB;
+namespace App\DAL;
 
 use App\Model\Website;
-use App\Traits\HeaderTrait;
 use Carbon\Carbon;
 
-class WebsiteDB{
+class WebsiteDAL
+{
 
-	use HeaderTrait;
-
-	public function __construct(){
-
-	}
-
-	//Create website
-	public function create($websiteObj){
+	public static function create($websiteObj){
 
 		if(strlen($websiteObj->url) < 255){
 			$website = new Website;
@@ -30,26 +23,25 @@ class WebsiteDB{
 		return $website;
 	}
 
-	//Find all websites
-	public function findAll(){
+	public static function findAll(){
 
 		return Website::all();
 
 	}
 
-	public function findOneById($var){
-		
+	public static function findById($id){
+		return Website::Where(['id' => $id])->get();
 	}
 
-	//Find website by url
-	public function findOneByUrl($url){
+
+	public static function findOneByUrl($url){
 
 		return Website::Where(['base_url' => $url])->get();
 
 	}
 
-	//returns num rows by url
-	public function numRowByUrl($url){
+
+	public static function numRowByUrl($url){
 
 		return Website::Where(['base_url' => $url])->get()->count();
 

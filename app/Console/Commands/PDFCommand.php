@@ -39,15 +39,6 @@ class PDFCommand extends Command
      */
     public function handle()
     {
-        
-        $path = storage_path('logs');
-        
-        $file = fopen($path . "/laravel.log","w");
-
-        if($file !== false){
-            ftruncate($file, 0);
-            fclose($file);
-        }
 
        new PDFGenerator;
 

@@ -95,10 +95,6 @@ class XSSModule extends Module
 		}
 	}
 
-	protected function attackPost($link)
-	{
-
-	}
 
 	protected function responseAnalyse($res, $str)
 	{

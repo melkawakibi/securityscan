@@ -98,10 +98,6 @@ class BlindSQLModule extends Module
 		}
 	}
 
-	protected function attackPost($links)
-	{
-
-	}
 
 	protected function responseAnalyse($res, $str)
 	{

@@ -15,8 +15,10 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('comanyname');
+            $table->cms_name('cms_name');
+            $table->cms_url('cms_url')->unique();
+            $table->cms_email('cms_email');
+            $table->boolean('active');
             $table->timestamps();
         });
     }

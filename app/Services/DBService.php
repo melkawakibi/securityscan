@@ -3,18 +3,17 @@
 namespace App\Services;
 
 use App\Model\HeaderInfo;
-
-use App\Core\Utils;
-
+use App\DB\CustomerDB;
 use App\DB\WebsiteDB;
 use App\DB\LinkDB;
 use App\DB\ScanDB;
-
+use App\Core\Utils;
 use \stdClass as Object;
 
 class DBService
 {
 
+	private $serviceCustomer;
 	private $serviceWebsite;
 	private $serviceLink;
 	private $serviceScan;
@@ -23,6 +22,7 @@ class DBService
 
 	public function __construct()
 	{
+		$this->serviceCustomer = new CustomerDB;
 		$this->serviceWebsite = new WebsiteDB;
 		$this->serviceLink = new LinkDB;
 		$this->serviceScan = new ScanDB;
@@ -43,28 +43,31 @@ class DBService
 
 			if(!$this->serviceWebsite->numRowByUrl($baseUrl)){
 
-				//Check if website exists
-				//If so is it updated? Yes, update record
 				$website = $this->serviceWebsite->create($website);
 
 				$this->isBaseHeader = true;
 
 				$this->storeHeader($headers, $website->id, $this->isBaseHeader);
 
-			}
+			}else{
+				
+				foreach ($links as $key => $link) {
 
-		}
+					$this->storeLinks($link, $website[0]->id, $headers);
 
-		if($this->serviceWebsite->numRowByUrl($baseUrl)){
-
-			$website = $this->serviceWebsite->findOneByUrl($baseUrl);
-
-			foreach ($links as $key => $link) {
-
-				$this->storeLinks($link, $website[0]->id, $headers);
-
+				}
 			}
 		}
+	}
+
+	public function storeCustomer($name, $url, $email)
+	{
+		$customer = new Object;
+		$customer->name = $name;
+		$customer->url = $url;
+		$customer->email = $email;
+
+		return $this->serviceCustomer->create($customer);
 	}
 
 	public function storeScan($website_id)
@@ -99,21 +102,7 @@ class DBService
 
 	public function storeLinks($link, $id, $headers)
 	{
-		if(!empty($link)){
-
-			$link = (object) $link;
-			
-			if(!$this->serviceLink->numRowByUrl($link->url_rebuild)){
-
-				$link = $this->serviceLink->create($link, $id);
-
-				if(!is_null($link)){
-					$this->isBaseHeader = false;
-
-					$this->storeHeader($headers, $link->id, $this->isBaseHeader);
-				}
-			}
-		}
+	
 
 	}
 

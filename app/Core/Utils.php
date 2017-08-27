@@ -188,4 +188,20 @@ class Utils
 	    return $randomString;
 	}
 
+	public static function getServer($headers){
+
+		foreach ($this->headers as $key => $array) {
+
+			foreach ($array as $key => $value) {
+
+				if($array[0] === 'Server' || $array[0] === 'server'){
+					return $array[1];
+				}
+			}
+		}
+
+		return "No-server-found";
+	}
+
+
 }

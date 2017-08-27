@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Traits;
+namespace App\DAL;
 
 use App\Model\Param;
 
-trait ParamTrait{
+class ParamDAL
+{
 
-	//Create headers
-	public function createParams($id, $value){
+	public static function createParams($id, $value){
 
 		$param = new Param;
 		$param->params = $value;
@@ -19,25 +19,27 @@ trait ParamTrait{
 
 	}
 
-	public function findAll(){
+	public static function findAll(){
 		return Param::all();
 	}
 
-	public function findAllByLinkId($id){
+	public static function findAllByLinkId($id){
 		return Param::Where(['link_id' => $id])->get();
 	}
 
-	public function findOneById($id){
+	public static function findOneById($id){
 		return Param::Where(['id' => $id])->get();
 	}
 
 
-	public function numRowByParamAndLinkId($linkId, $param){
+	public static function numRowByParamAndLinkId($linkId, $param){
 		return Param::Where(['link_id' => $linkId, 'params' => $param])->get()->count();
 	}
 
 
-	public function numRowByName($param){
+	public static function numRowByName($param){
 		return Param::Where(['params' => $param])->get()->count();	
 	}
+
+
 }

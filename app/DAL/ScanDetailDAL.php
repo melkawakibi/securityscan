@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Traits;
+namespace App\DAL;
 
 use App\Model\ScanDetail;
 
-trait ScanDetailTrait{
-
-
-	public function createScanDetail($scan_id, $properties){
+class ScanDetailDAL
+{
+	
+	public static function createScanDetail($scan_id, $properties)
+	{
 
 		$scanDetail = new ScanDetail;
 
@@ -24,12 +25,15 @@ trait ScanDetailTrait{
 		return $scanDetail;
 	}
 
-	public function findAllScanDetails(){
+	public static function findAll()
+	{
 		return ScanDetail::all();
 	}
 
-	public function findAllScanDetailsByScanId($id){
+	public static function findAllScanDetailsByScanId($id)
+	{
 		return ScanDetail::Where(['scan_id' => $id])->get();
 	}
+
 
 }

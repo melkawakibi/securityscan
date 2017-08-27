@@ -52,14 +52,8 @@ class ScanCommand extends Command
         return array( "r" => "y", "fm" => "0", "s" => 1, "x" => 1 );
     }
 
-    /**
-     * Execute the console command.
-     * 
-     * @return mixed
-     */
-    public function handle()
+    public function logController()
     {
-
         $path = storage_path('logs');
         
         $file = fopen($path . "/laravel.log","w");
@@ -68,6 +62,17 @@ class ScanCommand extends Command
             ftruncate($file, 0);
             fclose($file);
         }
+    }    
+
+    /**
+     * Execute the console command.
+     * 
+     * @return mixed
+     */
+    public function handle()
+    {
+
+        //$this->logController();
 
         $url = $this->argument('url');
 
