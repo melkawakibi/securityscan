@@ -9,6 +9,7 @@ use App\Model\Crawler;
 use App\Services\WebsiteService;
 use App\Services\HeaderService;
 use App\Services\LinkService;
+use App\Services\HeaderLinkService;
 use \stdClass as Object;
 use Illuminate\Support\Facades\Log;
 
@@ -134,14 +135,16 @@ class Spider extends PHPCrawler
 				$headers->website_id = $website[0]->id;
 
 				HeaderService::store($headers);
-
-				$links = new Object;
-				$links->linksArray = $this->links;
-				$links->website_id = $website[0]->id;
-
-				$this->handleLinks($links);
-
 			}
+
+		}else{
+
+			$links = new Object;
+			$links->linksArray = $this->links;
+			$links->website_id = $website[0]->id;
+
+			$this->handleLinks($links);
+
 		}
 	}
 
@@ -156,7 +159,8 @@ class Spider extends PHPCrawler
 				$links = LinkService::store($links);
 
 				if(!is_null($links)){
-					$this->storeHeader($headers, $link->id, $this->isBaseHeader);
+
+					HeaderLinkService::store();
 				}
 			}
 		}

@@ -7,7 +7,7 @@ use App\Model\ScanDetail;
 class ScanDetailDAL
 {
 	
-	public static function createScanDetail($scan_id, $properties)
+	public static function create($scan_id, $properties)
 	{
 
 		$scanDetail = new ScanDetail;
@@ -28,6 +28,16 @@ class ScanDetailDAL
 	public static function findAll()
 	{
 		return ScanDetail::all();
+	}
+
+	public static function findOneById($id)
+	{
+		return ScanDetail::Where(['id' => $id])->get();
+	}
+
+	public static function numRow($id)
+	{
+		return ScanDetail::Where(['id' => $id])->get()->count();
 	}
 
 	public static function findAllScanDetailsByScanId($id)

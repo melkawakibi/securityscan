@@ -7,7 +7,7 @@ use App\Model\HeaderLink;
 class HeaderLinkDAL
 {
 
-	public static function createHeaderLinks($object)
+	public static function create($object)
 	{
 
 		if(!is_null($object)){
@@ -36,11 +36,6 @@ class HeaderLinkDAL
 	public function numRow($id)
 	{
 		return HeaderLink::Where(['website_id' => $id])->get()->count();
-	}
-
-	public static function findAllByWebsiteId($id)
-	{
-		return HeaderLink::Where(['link_id' => $id])->get();
 	}
 
 	public static function findAllByWebsiteId($id)
