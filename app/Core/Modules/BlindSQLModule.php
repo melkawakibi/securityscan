@@ -3,7 +3,9 @@
 namespace App\Core\Modules;
 
 use App\Core\Modules\Module;
-use App\Core\Utils;
+use App\Services\WebsiteService as Website;
+use App\Services\ScanService as Scan;
+use App\Services\LinkService as Link;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
 
@@ -18,11 +20,11 @@ class BlindSQLModule extends Module
 	public function start()
 	{
 
-		$website = $this->websiteDB->findOneByUrl($this->url);
+		$website = Website::findOneByUrl($this->url);
 
-		$scan = $this->scanDB->findLastByScanIdOrderDesc($website[0]->id);
+		$scan = Scan::findLastByScanIdOrderDesc($website[0]->id);
 
-		$links = $this->linkDB->findAllByWebsiteId($website[0]->id);
+		$links = Link::findAllByWebsiteId($website[0]->id);
 
 		if(!empty($links)){
 
@@ -36,7 +38,6 @@ class BlindSQLModule extends Module
 			echo 'No links to scan'.PHP_EOL;
 		}
 	}
-
 
 	protected function attackGet($scan)
 	{
@@ -89,7 +90,12 @@ class BlindSQLModule extends Module
 						$this->properties['error'] = $value;
 
 						if(!is_null($scan)){
-							$this->scanDB->createScanDetail($scan[0]->id, $this->properties);
+							
+							$scanDetail = new Object;
+							$scanDetail->scan = $scan->id;
+							$scanDetail->properties = properties;
+							scanDetail::create($scanDetail);
+
 						}
 					}
 

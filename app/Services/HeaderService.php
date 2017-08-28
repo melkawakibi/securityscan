@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\Service;
 use App\DAL\HeaderDAL as Header;
+use App\Core\Utils;
 
 class HeaderService implements Service
 {
@@ -12,28 +13,23 @@ class HeaderService implements Service
 	{
 		foreach ($object->headers as $key => $array) {
 			$array = Utils::arrayBuilder($array);
-			HeaderDAL::createHeaders($array, $object->website_id);
+			Header::create($array, $object->website_id);
 		}
 	}
 
-	// foreach ($header->headers as $key => $array) {
-	// 	$array = Utils::arrayBuilder($array);
-	// 	$this->serviceLink->createHeaderLinks($array, $header->id);
-	// }
-
 	public static function findAll()
 	{
-
+		return Header::findAll();
 	}
 
-	public static function findOneById($var)
+	public static function findOneById($id)
 	{
-
+		return Header::findOneById($id);
 	}
 
-	public static function numRow($var)
+	public static function numRow($id)
 	{
-
+		return Header::numRow($id);
 	}	
 
 

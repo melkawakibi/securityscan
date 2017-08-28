@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 use App\Core\Spider;
 use App\Scanner;
 use App\Core\Utils;
-use Artisan;
 
 class ScanCommand extends Command
 {
@@ -72,7 +71,7 @@ class ScanCommand extends Command
     public function handle()
     {
 
-        //$this->logController();
+        $this->logController();
 
         $url = $this->argument('url');
 

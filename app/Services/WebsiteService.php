@@ -13,10 +13,8 @@ class WebsiteService implements Service
 		if(!Website::numRowByUrl($object->url)){
 
 			return Website::create($object);
-
+			
 		}
-
-		return null;
 	}
 
 	public static function findAll()
@@ -32,6 +30,11 @@ class WebsiteService implements Service
 	public static function numRow($url)
 	{
 		return Website::numRowByUrl($url);
+	}
+
+	public static function findOneByUrl($url)
+	{
+		return Website::findOneByUrl($url);
 	}
 
 }

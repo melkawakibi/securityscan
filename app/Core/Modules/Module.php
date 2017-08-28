@@ -4,11 +4,14 @@ namespace App\Core\Modules;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
-use App\DB\LinkDB;
-use App\DB\WebsiteDB;
-use App\DB\ScanDB;
-use App\Services\DBService;
+use App\Services\WebsiteService as Website;
+use App\Services\ScanService as Scan;
+use App\Services\LinkService as Link;
+use App\Services\ScanDetailService as ScanDetail;
+use App\Services\ParamService as Param;
+use \stdClass as Object;
 use App\Core\Utils;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
 
 abstract class Module
@@ -19,24 +22,14 @@ abstract class Module
 	protected $baseUrl;
 	protected $links;
 	protected $formLinks;
-	protected $linkDB;
-	protected $websiteDB;
-	protected $scanDB;
-	protected $service;
 	protected $urlWithQuery;
 	protected $urlArray;
 	protected $timeout;
-	protected $website;
-	protected $scan;
 
 	public function __construct($url)
 	{
 		$this->url = $url;
 		$this->client = new GuzzleClient;
-		$this->linkDB = new LinkDB;
-		$this->websiteDB = new WebsiteDB;
-		$this->scanDB = new ScanDB;
-		$this->service = new DBService;
 		$this->urlArray = array();
 		$this->defaultlinks = array();
 		$this->properties = array();
@@ -46,8 +39,6 @@ abstract class Module
 	abstract public function start();
 
 	abstract protected function attackGet($scan);
-
-	abstract protected function attackPost($link);
 
 	protected function getBaseContent($url)
 	{
@@ -62,7 +53,9 @@ abstract class Module
 
 			$baseUrl = Utils::getBaseUrl($link->url);
 
-			$params = $this->linkDB->findAllByLinkId($link->id);
+			$params = Param::findAllByLinkId($link->id);
+
+			print_r($params);
 
 			$params = Utils::getParamArray($params);
 
@@ -81,7 +74,6 @@ abstract class Module
 				array_filter($query_array);
 
 			}
-
 
 			foreach ($query_array as $key => $query) {
 				$query = http_build_query($query);

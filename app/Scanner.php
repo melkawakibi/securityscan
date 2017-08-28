@@ -4,11 +4,12 @@ namespace App;
 
 use App\Core\Modules\BlindSQLModule as BlindSQL;
 use App\Core\Modules\XSSModule as XSS;
+use App\Services\WebsiteService as Website;
+use App\Services\ScanService as Scan;
+use App\Core\PDFGenerator as PDF;
+use \stdClass as Object;
 use App\Core\Spider;
 use App\Core\Utils;
-use App\DB\WebsiteDB;
-use App\Services\DBService;
-use App\Core\PDFGenerator as PDF;
 use Illuminate\Support\Facades\Log;
 
 class Scanner
@@ -72,9 +73,7 @@ class Scanner
 		Spider $spider
 	)
 	{
-
-		$this->websiteDB = new WebsiteDB;
-		$this->service = new DBService;
+		
 		$this->pdf = new PDF;
 		$this->url = $url;
 		$this->spider = $spider;
@@ -140,9 +139,11 @@ class Scanner
 	public function scan()
 	{
 
-		//find website store scan
-		$website = $this->websiteDB->findOneByUrl($this->url);
-		$scan = $this->service->storeScan($website[0]->id);
+		$website = Website::findOneByUrl($this->url);
+
+		$scan = new Object;
+		$scan->id = $website[0]->id;
+		Scan::store($scan);
 
 		if ($this->sql instanceof BlindSQL) {
 			$this->sql->start();
@@ -152,10 +153,14 @@ class Scanner
 			$this->xss->start();
 		}
 
-
-
 	}
 
+	/**
+	 * [generateReport description]
+	 * @param  [type] $id      [description]
+	 * @param  [type] $website [description]
+	 * @return [type]          [description]
+	 */
 	public function generateReport($id, $website)
 	{
 		$this->pdf->generatePDF($id);

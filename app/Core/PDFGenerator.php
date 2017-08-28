@@ -5,30 +5,20 @@ namespace App\Core;
 use Spipu\Html2Pdf\Html2Pdf;
 use Spipu\Html2Pdf\Exception\Html2PdfException;
 use Spipu\Html2Pdf\Exception\ExceptionFormatter;
-use App\DB\WebsiteDB;
-use App\DB\ScanDB;
-use App\Model\ScanDetail;
+use App\Services\WebsiteService as Website;
+use App\Services\ScanDetailService as ScanDetail;
 use Illuminate\Support\Facades\Log;
 
 class PDFGenerator
 {
 
-	private $websiteDB;
-	private $linkDB;
-	private $scanDB;
-
-	public function __construct()
-	{
-		$this->websiteDB = new WebsiteDB;
-		$this->scanDB = new ScanDB;
-	}
-
-	public function generatePDF($id, $website)
+	public static function generatePDF($id, $website)
 	{
 
-		$scanDetails = $this->scanDB->findAllScanDetailsByScanId($id);
+		$website = Website::findOneById($id);
+		$scanDetail = ScanDetail::findOneById($website[0]->id);
 
-		$html = \PDF::parseView('template', ['scans' => $scanDetails, 'website' => $website]);
+		$html = \PDF::parseView('template', ['scan_detail' => $scanDetail, 'website' => $website]);
 
 		Log::info($html);
 

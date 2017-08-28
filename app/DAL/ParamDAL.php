@@ -7,7 +7,8 @@ use App\Model\Param;
 class ParamDAL
 {
 
-	public static function createParams($id, $value){
+	public static function createParams($object)
+	{
 
 		$param = new Param;
 		$param->params = $value;
@@ -19,27 +20,29 @@ class ParamDAL
 
 	}
 
-	public static function findAll(){
+	public static function findAll()
+	{
 		return Param::all();
 	}
 
-	public static function findAllByLinkId($id){
-		return Param::Where(['link_id' => $id])->get();
-	}
-
-	public static function findOneById($id){
+	public static function findOneById($id)
+	{
 		return Param::Where(['id' => $id])->get();
 	}
 
-
-	public static function numRowByParamAndLinkId($linkId, $param){
+	public static function numRow($linkId, $param)
+	{
 		return Param::Where(['link_id' => $linkId, 'params' => $param])->get()->count();
 	}
 
-
-	public static function numRowByName($param){
-		return Param::Where(['params' => $param])->get()->count();	
+	public static function findAllByLinkId($id)
+	{
+		return Param::Where(['link_id' => $id])->get();
 	}
 
+	public static function numRowByName($param)
+	{
+		return Param::Where(['params' => $param])->get()->count();	
+	}
 
 }

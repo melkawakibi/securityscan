@@ -7,16 +7,18 @@ use Carbon\Carbon;
 
 class ScanDAL{
 
-	public static function create($website_id)
+	public static function create($object)
 	{
 		
-		$scan = new Scan;
-		
-		$scan->website_id = $website_id;
+		if(!is_null($object)){
+			$scan = new Scan;
+			
+			$scan->website_id = $object->id;
 
-		$scan->save();
-		
-		return $scan;
+			$scan->save();
+			
+			return $scan;
+		}
 	}
 
 	public static function findAll()

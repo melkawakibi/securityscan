@@ -4,9 +4,7 @@ namespace App\Model;
 
 use App\Core\BaseClient;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
-
-use App\DB\LinkDB;
-
+use App\Service\LinkService as Link;
 use App\Core\Utils;
 use Illuminate\Support\Facades\Log;
 
@@ -15,7 +13,6 @@ class Crawler
 	private $crawler;
 	private $client;
 	private $url;
-	private $serviceLink;
 	private $submits = array();
 	private $forms = array();
 	private $paramPOST = array();
@@ -24,7 +21,6 @@ class Crawler
 	public function __construct()
 	{
 		$this->client = new BaseClient;
-		$this->serviceLink = new LinkDB;
 	}
 
 	public function createCrawler($pageInfo)
@@ -64,7 +60,7 @@ class Crawler
 
 					if($form->getUri() === $url){
 
-						$link = $this->serviceLink->findAllByLinkUrl($url);
+						$link = Link::findAllByLinkUrl($url);
 
 						if(!is_null($link)){
 							foreach ($fields as $field) {
@@ -94,7 +90,7 @@ class Crawler
 
 		if(!empty($params)){
 
-			$link = $this->serviceLink->findAllByLinkUrl($url);
+			$link = Link::findAllByLinkUrl($url);
 
 			if(!is_null($link)){
 				

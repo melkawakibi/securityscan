@@ -190,7 +190,7 @@ class Utils
 
 	public static function getServer($headers){
 
-		foreach ($this->headers as $key => $array) {
+		foreach ($headers as $key => $array) {
 
 			foreach ($array as $key => $value) {
 
@@ -203,5 +203,18 @@ class Utils
 		return "No-server-found";
 	}
 
+	public static function printType($var)
+	{
+		echo PHP_EOL . 'Type: ' . gettype($var) . PHP_EOL;
+	}
+
+	public static function printVar($var1, $var2 = null)
+	{
+		if(is_null($var2)){
+			echo PHP_EOL . 'Variable: ' .PHP_EOL. $var1 . PHP_EOL;
+		}else{
+			echo PHP_EOL . 'Variables: ' .PHP_EOL. $var1 . PHP_EOL . $var2; 
+		}
+	}
 
 }

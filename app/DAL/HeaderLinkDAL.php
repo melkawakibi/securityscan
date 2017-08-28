@@ -3,19 +3,20 @@
 namespace App\DAL;
 
 use App\Model\HeaderLink;
+use App\Core\Utils;
 
 class HeaderLinkDAL
 {
 
-	public static function create($object)
+	public static function create($array, $id)
 	{
 
-		if(!is_null($object)){
+		if(!is_null($array)){
 
 			$headerLink = new HeaderLink;
-			$headerLink->name = $object->headers[0];
-			$headerLink->value = $object->headers[1];
-			$headerLink->website_id = $object->website_id;
+			$headerLink->name = $array[0];
+			$headerLink->value = $array[0];
+			$headerLink->link_id = $id;
 
 			$headerLink->save();
 

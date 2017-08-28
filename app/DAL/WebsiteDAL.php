@@ -8,8 +8,8 @@ use Carbon\Carbon;
 class WebsiteDAL
 {
 
-	public static function create($websiteObj){
-
+	public static function create($websiteObj)
+	{
 		if(strlen($websiteObj->url) < 255){
 			$website = new Website;
 			$website->base_url = $websiteObj->url;
@@ -18,33 +18,29 @@ class WebsiteDAL
 			$website->customer_id = 1;
 
 			$website->save();
+
+			return $website;
 		}
-
-		return $website;
 	}
 
-	public static function findAll(){
-
+	public static function findAll()
+	{
 		return Website::all();
-
 	}
 
-	public static function findById($id){
+	public static function findById($id)
+	{
 		return Website::Where(['id' => $id])->get();
 	}
 
-
-	public static function findOneByUrl($url){
-
+	public static function findOneByUrl($url)
+	{
 		return Website::Where(['base_url' => $url])->get();
-
 	}
 
-
-	public static function numRowByUrl($url){
-
+	public static function numRowByUrl($url)
+	{
 		return Website::Where(['base_url' => $url])->get()->count();
-
 	}
 
 }

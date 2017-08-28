@@ -6,12 +6,13 @@ use PHPCrawler;
 use PHPCrawlerDocumentInfo;
 use PHPCrawlerResponseHeader;
 use App\Model\Crawler;
-use App\Services\WebsiteService;
-use App\Services\HeaderService;
-use App\Services\LinkService;
-use App\Services\HeaderLinkService;
+use App\Services\WebsiteService as Website;
+use App\Services\HeaderService as Header;
+use App\Services\LinkService as Link;
+use App\Services\HeaderLinkService as HeaderLink;
 use \stdClass as Object;
 use Illuminate\Support\Facades\Log;
+use App\Core\Utils;
 
 class Spider extends PHPCrawler
 {
@@ -23,6 +24,7 @@ class Spider extends PHPCrawler
 	private $is_enabled_robot;
 	private $headers = array();
 	private $links;
+	private $id;
 
 	public function __construct()
 	{
@@ -113,65 +115,79 @@ class Spider extends PHPCrawler
 
 		$this->crawler->createCrawler($pageInfo);
 
-		$this->handleWebsite();
+		$this->handleWebsite($pageInfo);
 
-		$this->handelParams($pageInfo->url);
+		$this->handelParams($pageInfo);
 	}
 
-	public function handleWebsite()
+	public function handleWebsite($pageInfo)
 	{
+
+		$website = new Object;
+		$website->url = $this->url;
+		$website->follow_robot = $this->follow_robot;
+		$website->server = Utils::getServer($this->headers);
+
+		if(!is_null($website)){
+			$website = Website::store($website);
+			if(!is_null($website)){
+				$this->id = $website->id;
+			}
+		}
+
 		if($this->url === $pageInfo->url){
 
-			$website = new Object;
-			$website->url = $this->url;
-			$website->follow_robot = $this->follow_robot;
-			$website->server = Utils::getServer($this->headers);
-
-			$website = WebsiteService::store($website);
-
 			if(!is_null($website)){
-				$headers = new Object;
-				$headers->headers = $this->headers;
-				$headers->website_id = $website[0]->id;
 
-				HeaderService::store($headers);
+				$header = new Object;
+				$header->headers = $this->headers;
+				$header->website_id = $this->id;
+
+				Header::store($header);
 			}
 
 		}else{
 
-			$links = new Object;
-			$links->linksArray = $this->links;
-			$links->website_id = $website[0]->id;
-
-			$this->handleLinks($links);
+			$this->handleLinks($this->links);
 
 		}
 	}
 
 	public function handleLinks($links)
 	{
-		if(!empty($links->linksArray)){
-
-			$links->linksObject = (object) $links->linksArray;
+		if(!empty($links)){
 			
-			if(LinkService::numRowByUrl($links->linksObject->url_rebuild)){
+			foreach ($links as $link) {
 
-				$links = LinkService::store($links);
+				$link = (object) $link;
 
-				if(!is_null($links)){
+				if(!Link::numRow($link->url_rebuild)){
 
-					HeaderLinkService::store();
+					$object = new Object;
+					$object->link = $link;
+					$object->website_id = $this->id;
+
+					$link = Link::store($object);
+
+					if(!is_null($link)){
+
+						$headerLink = new Object;
+						$headerLink->headers = $this->headers;
+						$headerLink->link_id = $link->id;
+
+						HeaderLink::store($headerLink);
+					}
 				}
 			}
 		}
 	}
 
-	public function handelParams($url)
+	public function handelParams($pageInfo)
 	{
 
-		$paramPOST = $this->crawler->getFormsParams($url);
+		$paramPOST = $this->crawler->getFormsParams($pageInfo->url);
 
-		$paramGET = $this->crawler->getURIParams($url);
+		$paramGET = $this->crawler->getURIParams($pageInfo->url);
 
 		$this->DBService->storeParams($paramPOST, $paramGET);
 	}
@@ -180,6 +196,5 @@ class Spider extends PHPCrawler
 	{
 		$this->url = $url;
 	}
-
 
 }

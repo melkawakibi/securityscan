@@ -8,27 +8,25 @@ use App\Core\Utils;
 class LinkDAL
 {
 
-	public static function create($object)
+	public static function create($object, $id)
 	{
 
-		if(strlen($object->linksObject->url_rebuild) < 255){
+		if(strlen($object->url_rebuild) < 255){
 
 			$link = new Link;
 
-			$linkObject = $object->linkObject;
-
-			$linkCode = $linkObject->linkcode;
+			$linkCode = $object->linkcode;
 
 			$isPost = Utils::searchCriteria($linkCode, array('form', 'method', 'post'));
 
 			$methode =  ($isPost ? 'POST' : 'GET');
 
 			$link->methode = $methode;
-			$link->url = linkObject->url_rebuild;
-			$link->refering_url = linkObject->refering_url;
-			$link->is_redirect = linkObject->is_redirect_url;
-			$link->depth = linkObject->url_link_depth;
-			$link->website_id = $object->website_id;
+			$link->url = $object->url_rebuild;
+			$link->refering_url = $object->refering_url;
+			$link->is_redirect = $object->is_redirect_url;
+			$link->depth = $object->url_link_depth;
+			$link->website_id = $id;
 
 			$link->save();
 		
@@ -52,12 +50,12 @@ class LinkDAL
 		return Link::Where(['url' => $url])->get()->count();
 	}
 
-		public static function findAllByWebsiteId($id)
+	public static function findAllByWebsiteId($id)
 	{
 		return Link::Where(['website_id' => $id])->get();
 	}
 
-	public static function findAllByLinkUrl($url)
+	public static function findOneByLinkUrl($url)
 	{
 		return Link::Where(['url' => $url])->get();
 	}

@@ -3,17 +3,19 @@
 namespace App\DAL;
 
 use App\Model\Header;
+use App\Core\Utils;
 
 class HeaderDAL
 {
 
-	public function createHeaders($object)
+	public static function create($headers, $id)
 	{
-		if(!is_null($object)){
+
+		if(!is_null($headers)){
 			$header = new Header;
-			$header->name = $object->headers[0];
-			$header->value = $object->headers[1];
-			$header->website_id = $object->website_id;
+			$header->name = $headers[0];
+			$header->value = $headers[1];
+			$header->website_id = $id;
 
 			$header->save();
 
@@ -21,22 +23,22 @@ class HeaderDAL
 		}
 	}
 
-	public function findAll()
+	public static function findAll()
 	{
 		return Header::all();
 	}
 
-	public function findOneById($id)
+	public static function findOneById($id)
 	{
 		return Header::Where(['id' => $id])->get();
 	}
 
-	public function numRow($id)
+	public static function numRow($id)
 	{
 		return Header::Where(['website_id' => $id])->get()->count();
 	}
 
-	public function findAllByWebsiteId($id)
+	public static function findAllByWebsiteId($id)
 	{
 		return Header::Where(['website_id' => $id])->get();
 	}

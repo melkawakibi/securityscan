@@ -7,22 +7,27 @@ use App\Model\ScanDetail;
 class ScanDetailDAL
 {
 	
-	public static function create($scan_id, $properties)
+	public static function create($object)
 	{
 
-		$scanDetail = new ScanDetail;
+		if(!is_null($object)){
+			$properties = $object->properties;
 
-		$scanDetail->scan_id = $scan_id;	
-		$scanDetail->module_name = $properties['module_name'];
-		$scanDetail->risk = $properties['risk'];
-		$scanDetail->parameter = $properties['parameter'];
-		$scanDetail->attack = $properties['attack'];
-		$scanDetail->error = $properties['error'];
-		$scanDetail->wasc_id = $properties['wasc_id'];
-		$scanDetail->execution_time = $properties['execution_time'];
+			$scanDetail = new ScanDetail;
 
-		$scanDetail->save();
-		return $scanDetail;
+			$scanDetail->scan_id = $object->scan_id;	
+			$scanDetail->module_name = $properties['module_name'];
+			$scanDetail->risk = $properties['risk'];
+			$scanDetail->parameter = $properties['parameter'];
+			$scanDetail->attack = $properties['attack'];
+			$scanDetail->error = $properties['error'];
+			$scanDetail->wasc_id = $properties['wasc_id'];
+			$scanDetail->execution_time = $properties['execution_time'];
+
+			$scanDetail->save();
+
+			return $scanDetail;
+		}
 	}
 
 	public static function findAll()

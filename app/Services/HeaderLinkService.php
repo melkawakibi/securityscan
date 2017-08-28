@@ -3,29 +3,34 @@
 namespace App\Services;
 
 use App\Services\Service;
-use App\HeaderLinkDAL;
+use App\DAL\HeaderLinkDAL as HeaderLink;
+use App\Core\Utils;
 
 class HeaderLinkService implements Service
 {
 
 	public static function store($object)
 	{
-		return HeaderLinkDAL::create($object);
+
+		foreach ($object->headers as $header) {
+			$array = Utils::arrayBuilder($header);
+			HeaderLink::create($array, $object->link_id);
+		}
 	}
 
 	public static function findAll()
 	{
-		return HeaderLinkDAL::findAll();
+		return HeaderLink::findAll();
 	}
 
 	public static function findOneById($id)
 	{
-		return HeaderLinkDAL::findOneById($id);
+		return HeaderLink::findOneById($id);
 	}
 
 	public static function numRow($id)
 	{
-		return HeaderLinkDAL::numRow($id);
+		return HeaderLink::numRow($id);
 	}
 
 
