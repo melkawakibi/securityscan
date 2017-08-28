@@ -7,12 +7,12 @@ use App\Model\Param;
 class ParamDAL
 {
 
-	public static function createParams($object)
+	public static function create($array)
 	{
 
 		$param = new Param;
-		$param->params = $value;
-		$param->link_id = $id;
+		$param->link_id = $array['id'];
+		$param->params = $array['param'];
 
 		$param->save();
 

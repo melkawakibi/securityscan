@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Core\BaseClient;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
-use App\Service\LinkService as Link;
+use App\Services\LinkService as Link;
 use App\Core\Utils;
 use Illuminate\Support\Facades\Log;
 
@@ -60,7 +60,7 @@ class Crawler
 
 					if($form->getUri() === $url){
 
-						$link = Link::findAllByLinkUrl($url);
+						$link = Link::findOneByLinkUrl($url);
 
 						if(!is_null($link)){
 							foreach ($fields as $field) {
@@ -90,7 +90,7 @@ class Crawler
 
 		if(!empty($params)){
 
-			$link = Link::findAllByLinkUrl($url);
+			$link = Link::findOneByLinkUrl($url);
 
 			if(!is_null($link)){
 				

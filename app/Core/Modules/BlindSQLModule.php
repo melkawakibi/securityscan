@@ -8,6 +8,8 @@ use App\Services\ScanService as Scan;
 use App\Services\LinkService as Link;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
+use \stdClass as Object;
+use App\Core\Utils;
 
 class BlindSQLModule extends Module
 {

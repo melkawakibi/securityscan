@@ -9,7 +9,6 @@ use App\Services\ScanService as Scan;
 use App\Services\LinkService as Link;
 use App\Services\ScanDetailService as ScanDetail;
 use App\Services\ParamService as Param;
-use \stdClass as Object;
 use App\Core\Utils;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
@@ -54,8 +53,6 @@ abstract class Module
 			$baseUrl = Utils::getBaseUrl($link->url);
 
 			$params = Param::findAllByLinkId($link->id);
-
-			print_r($params);
 
 			$params = Utils::getParamArray($params);
 

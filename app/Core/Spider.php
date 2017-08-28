@@ -10,6 +10,7 @@ use App\Services\WebsiteService as Website;
 use App\Services\HeaderService as Header;
 use App\Services\LinkService as Link;
 use App\Services\HeaderLinkService as HeaderLink;
+use App\Services\ParamService as Param;
 use \stdClass as Object;
 use Illuminate\Support\Facades\Log;
 use App\Core\Utils;
@@ -189,7 +190,11 @@ class Spider extends PHPCrawler
 
 		$paramGET = $this->crawler->getURIParams($pageInfo->url);
 
-		$this->DBService->storeParams($paramPOST, $paramGET);
+		if(!empty($paramGET)){
+			foreach ($paramGET as $param) {
+				Param::store($param);			
+			}
+		}
 	}
 
 	public function setSpiderUrl($url)
