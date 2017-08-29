@@ -6,6 +6,7 @@ use App\Core\Modules\Module;
 use App\Services\WebsiteService as Website;
 use App\Services\ScanService as Scan;
 use App\Services\LinkService as Link;
+use App\Services\ScanDetailService as ScanDetail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
 use \stdClass as Object;
@@ -90,12 +91,10 @@ class XSSModule extends Module
 					$this->properties['error'] = 'This webpage is vulnerable for Cross site scripting';
 
 					if(!is_null($scan)){
-						
 						$scanDetail = new Object;
-						$scanDetail->scan = $scan->id;
-						$scanDetail->properties = properties;
-						scanDetail::create($scanDetail);
-
+						$scanDetail->scan_id = $scan[0]->id;
+						$scanDetail->properties = $this->properties;
+						ScanDetail::store($scanDetail);
 					}
 				}
 			}		

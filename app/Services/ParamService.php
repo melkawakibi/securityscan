@@ -8,9 +8,9 @@ use App\DAL\ParamDal as Param;
 class ParamService implements Service
 {
 
-	public static function store($object)
+	public static function store($array)
 	{
-		return Param::create($object);
+		return Param::create($array);
 	}
 
 	public static function findAll()

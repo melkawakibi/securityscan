@@ -10,13 +10,15 @@ class ParamDAL
 	public static function create($array)
 	{
 
-		$param = new Param;
-		$param->link_id = $array['id'];
-		$param->params = $array['param'];
+		if(!empty($array)){
+			$param = new Param;
+			$param->link_id = $array['id'];
+			$param->params = $array['param'];
 
-		$param->save();
+			$param->save();
 
-		return $param;
+			return $param;
+		}
 
 	}
 
@@ -30,9 +32,9 @@ class ParamDAL
 		return Param::Where(['id' => $id])->get();
 	}
 
-	public static function numRow($linkId, $param)
+	public static function numRow($param)
 	{
-		return Param::Where(['link_id' => $linkId, 'params' => $param])->get()->count();
+		return Param::Where(['link_id' => $param['id'], 'params' => $param['param']])->get()->count();
 	}
 
 	public static function findAllByLinkId($id)

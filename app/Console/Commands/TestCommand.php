@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Services\WebsiteService;
+use App\Services\WebsiteService as Website;
+use App\Services\CustomerService as Customer;
 use \stdClass as Object;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
@@ -56,10 +57,23 @@ class TestCommand extends Command
     public function handle()
     {
         
-        //$this->logController();
+        $this->logController();
 
         $argument = $this->argument('class');
-        
+
+        if($argument === 'customer'){
+
+            $customer = new Object;
+            $customer->cms_id = 578;
+            $customer->cms_name = 'Willem';
+            $customer->cms_url = 'www.justbetter.nl';
+            $customer->cms_email = 'Willem@justbetter.nl';
+            $customer->active = 1;
+
+            Customer::store($customer);
+
+        }
+
         if($argument === 'website'){
 
             $website = new Object;
@@ -67,7 +81,7 @@ class TestCommand extends Command
             $website->server = 'apache 2.4';
             $website->follow_robot = 1;
             
-            WebsiteService::store($website);
+            Website::store($website);
         }
        
 

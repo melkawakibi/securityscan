@@ -5,7 +5,7 @@ namespace App\Core;
 use PHPCrawler;
 use PHPCrawlerDocumentInfo;
 use PHPCrawlerResponseHeader;
-use App\Model\Crawler;
+use App\Core\Crawler;
 use App\Services\WebsiteService as Website;
 use App\Services\HeaderService as Header;
 use App\Services\LinkService as Link;
@@ -26,6 +26,7 @@ class Spider extends PHPCrawler
 	private $headers = array();
 	private $links;
 	private $id;
+	private $customer_id;
 
 	public function __construct()
 	{
@@ -192,7 +193,10 @@ class Spider extends PHPCrawler
 
 		if(!empty($paramGET)){
 			foreach ($paramGET as $param) {
-				Param::store($param);			
+
+				if(!Param::numRow($param)){
+					Param::store($param);
+				}			
 			}
 		}
 	}

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Model;
+namespace App\Core;
 
 use App\Core\BaseClient;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 use App\Services\LinkService as Link;
+use App\Model\Field;
 use App\Core\Utils;
 use Illuminate\Support\Facades\Log;
 
@@ -104,6 +105,8 @@ class Crawler
 				}
 			}
 		}
+
+		//print_r($this->paramGET);
 
 		return $this->paramGET;
 

@@ -19,19 +19,20 @@ class CustomerService implements Service
 		return Customer::findAll();
 	}
 
-	public static function findOne($id)
+	public static function findOneById($id)
 	{
-		Customer::findCustomberByUrl($id);
+		return Customer::findCustomberByUrl($id);
 	}
+
+	public static function numRow($id)
+	{
+		return Customer::numRow($id);
+	}		
 
 	public static function findOneByUrl($url)
 	{
-		Customer::findCustomberByUrl($url);
+		return Customer::findCustomberByUrl($url);
 	}
 
-	public static function numRow($var)
-	{
-		//TODO
-	}		
 
 }
