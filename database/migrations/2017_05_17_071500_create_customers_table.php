@@ -19,6 +19,7 @@ class CreateCustomersTable extends Migration
             $table->string('cms_name');
             $table->string('cms_url')->unique();
             $table->string('cms_email');
+            $table->string('cms_register_date');
             $table->boolean('active');
             $table->timestamps();
         });

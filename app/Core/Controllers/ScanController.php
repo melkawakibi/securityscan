@@ -11,19 +11,30 @@ use \stdClass as Object;
 class ScanController extends Controller
 {
 
-	public function start(Request $request)
+	public function store(Request $request)
 	{
+  		$customer = new Object;
+      $customer->cms_id = $request->input('cms_id');
+      $customer->cms_name = $request->input('cms_username');
+      $customer->cms_email = $request->input('cms_email');
+      $customer->cms_url = $request->input('cms_url');
+      $customer->cms_register_date = $request->input('cms_register_date');
+      $customer->active = 0;
 
-		return $request;
+      Customer::store($customer);
 
-		// $customer = new Object;
-  //       $customer->cms_id = 578;
-  //       $customer->cms_name = 'Karel';
-  //       $customer->cms_url = 'www.example.nl';
-  //       $customer->cms_email = 'karel@example.nl';
-  //       $customer->active = 1;
-
-  //       Customer::store($customer);
+      return 'Succesvol geregistreerd';
 	}
+
+  public function authenticate(Request $request)
+  {
+      
+  }
+
+  public function scan(Request $request)
+  {
+
+  }
+
 
 }
