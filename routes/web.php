@@ -17,8 +17,6 @@ Route::get('/', function(){
 
 });
 
-Route::get('pdf', 'PDFController@downloadPDF');
-
 Route::post('request_scan', 'ScanController@start');
 
-Route::get('hello', 'ScanController@hello');
+Route::post('auth', 'ScanController@authenticate');
