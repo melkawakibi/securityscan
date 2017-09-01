@@ -24,7 +24,7 @@ class ScanController extends Controller
 
       Customer::store($customer);
 
-      return 'Succesvol geregistreerd';
+      return $request;
 	}
 
   public function authenticate(Request $request)
@@ -36,6 +36,8 @@ class ScanController extends Controller
       $request->input('cms_register_date') );
 
       $customers = Customer::findAll();
+
+      $stored_hash = '';
 
       foreach ($customers as $customer) {
       
@@ -55,6 +57,5 @@ class ScanController extends Controller
   {
 
   }
-
 
 }

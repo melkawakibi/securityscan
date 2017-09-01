@@ -16,6 +16,7 @@ class CustomerDAL
 			$customer->cms_name = $object->cms_name;
 			$customer->cms_url = $object->cms_url;
 			$customer->cms_email = $object->cms_email;
+			$customer->cms_register_date = $object->cms_register_date;
 			$customer->active = $object->active;
 
 			$customer->save();

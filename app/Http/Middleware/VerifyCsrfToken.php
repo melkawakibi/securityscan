@@ -14,5 +14,7 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         'request_scan',
         'auth',
+        'register',
+        'test',
     ];
 }
