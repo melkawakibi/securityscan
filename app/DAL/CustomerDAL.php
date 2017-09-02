@@ -12,6 +12,9 @@ class CustomerDAL
 
 		if(strlen($object->cms_url) < 255){
 			$customer = new Customer;
+			$customer->name = $object->name;
+			$customer->company = $object->company;
+			$customer->second_email = $object->second_email;
 			$customer->cms_id = $object->cms_id;
 			$customer->cms_name = $object->cms_name;
 			$customer->cms_url = $object->cms_url;
@@ -41,15 +44,9 @@ class CustomerDAL
 		return Customer::Where(['cms_id' => $id])->get()->count();
 	}
 
-	public static function findCustomerById($id)
-	{
-		return Customer::Where(['id' => $id])->get();
-	}
-
 	public static function findCustomberByUrl($url)
 	{
 		return Customer::Where(['cms_url' => $url])->get();
 	}
-
 
 }

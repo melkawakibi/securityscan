@@ -12,6 +12,7 @@ return array(
     'App\\Console\\Commands\\TestCommand' => $baseDir . '/app/Console/Commands/TestCommand.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Core\\BaseClient' => $baseDir . '/app/Core/BaseClient.php',
+    'App\\Core\\Controllers\\AdminController' => $baseDir . '/app/Core/Controllers/AdminController.php',
     'App\\Core\\Controllers\\PDFController' => $baseDir . '/app/Core/Controllers/PDFController.php',
     'App\\Core\\Controllers\\ScanController' => $baseDir . '/app/Core/Controllers/ScanController.php',
     'App\\Core\\Crawler' => $baseDir . '/app/Core/Crawler.php',

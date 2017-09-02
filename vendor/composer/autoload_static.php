@@ -354,6 +354,7 @@ class ComposerStaticInit9c27d45ceb246d96a03bf812544883be
         'App\\Console\\Commands\\TestCommand' => __DIR__ . '/../..' . '/app/Console/Commands/TestCommand.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Core\\BaseClient' => __DIR__ . '/../..' . '/app/Core/BaseClient.php',
+        'App\\Core\\Controllers\\AdminController' => __DIR__ . '/../..' . '/app/Core/Controllers/AdminController.php',
         'App\\Core\\Controllers\\PDFController' => __DIR__ . '/../..' . '/app/Core/Controllers/PDFController.php',
         'App\\Core\\Controllers\\ScanController' => __DIR__ . '/../..' . '/app/Core/Controllers/ScanController.php',
         'App\\Core\\Crawler' => __DIR__ . '/../..' . '/app/Core/Crawler.php',

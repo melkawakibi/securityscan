@@ -17,7 +17,7 @@ class TestCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'test {class}';
+    protected $signature = 'test {option}';
 
     /**
      * The console command description.
@@ -59,7 +59,7 @@ class TestCommand extends Command
         
         $this->logController();
 
-        $argument = $this->argument('class');
+        $argument = $this->argument('option');
 
         if($argument === 'customer'){
 
@@ -82,6 +82,14 @@ class TestCommand extends Command
             $website->follow_robot = 1;
             
             Website::store($website);
+        }
+
+        if($argument === 'customer-list'){
+
+            $customer = Customer::findOneById(15);
+
+            print_r($customer[0]);
+
         }
        
 

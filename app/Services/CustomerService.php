@@ -21,7 +21,7 @@ class CustomerService implements Service
 
 	public static function findOneById($id)
 	{
-		return Customer::findCustomberByUrl($id);
+		return Customer::findOneById($id);
 	}
 
 	public static function numRow($id)
