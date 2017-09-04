@@ -29,8 +29,4 @@ class Scan extends Model
         return $this->hasMany('App\Model\ScanDetail');
     }
 
-    public function modules(){
-        return $this->hasMany('App\Model\Module');
-    }
-
 }

@@ -199,16 +199,6 @@ class PHPCrawlerDocumentInfo
    * @section 2 Content-related information
    */
   public $http_status_code = null;
-
-  /**
-   * The HTTP-statuscode the webserver responded for the request, e.g. 200 (OK) or 404 (file not found).
-   *
-   * @var int
-   * @section 2 Content-related information
-   */
-  public $request_method = null;
-
-  
   
   /**
    * Cookies send by the server.

@@ -11,6 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function(){
+
+	return 'Security webserver';
+
 });
+
+Route::post('request_scan', 'ScanController@scan');
+
+Route::post('register', 'ScanController@store');
+
+Route::post('auth', 'ScanController@authenticate');
+
+Route::get('admin', 'AdminController@customerList');
+
+Route::get('active/{id}', 'AdminController@updateActiveState');

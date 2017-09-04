@@ -6,7 +6,10 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
-use App\Main;
+use App\Services\CustomerService as Customer;
+use App\Core\Spider;
+use App\Scanner;
+use App\Core\Utils;
 
 class ScanCommand extends Command
 {
@@ -15,7 +18,9 @@ class ScanCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'scan {url} 
+    protected $signature = 'scan {url}
+                            {--r= : y or n | to follow or not to follow the robot.txt} 
+                            {--fm= : set follow mode}
                             {--u= : username} 
                             {--p= : password} 
                             {--s : SQL module} 
@@ -36,7 +41,28 @@ class ScanCommand extends Command
     public function __construct()
     {
         parent::__construct();
+
     }
+
+    /**
+     * @return Array
+     */
+    public function defaultOptions()
+    {
+        return array( "r" => "y", "fm" => "0", "s" => 1, "x" => 1 );
+    }
+
+    public function logController()
+    {
+        $path = storage_path('logs');
+        
+        $file = fopen($path . "/laravel.log","w");
+
+        if($file !== false){
+            ftruncate($file, 0);
+            fclose($file);
+        }
+    }    
 
     /**
      * Execute the console command.
@@ -46,19 +72,16 @@ class ScanCommand extends Command
     public function handle()
     {
 
-        $path = storage_path('logs');
-        
-        $file = fopen($path . "/laravel.log","w");
-
-        if($file !== false){
-            ftruncate($file, 0);
-            fclose($file);
-        }
+        $this->logController();
 
         $url = $this->argument('url');
 
-        $options = $this->options();
+        $hasValues = Utils::arrayHasValues($this->options());
 
-        new Main($url, $options);
+        $options = ($hasValues) ? $this->options() : $this->defaultOptions();
+
+        $scanner = new Scanner($url, $options, new Spider($url));
+
+        $scanner->scan();
     }
 }

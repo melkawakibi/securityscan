@@ -17,7 +17,7 @@ class CreateWebsitesTable extends Migration
             $table->increments('id');
             $table->string('base_url');
             $table->string('server');
-            $table->date('date');
+            $table->boolean('follow_robot');
             $table->integer('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->timestamps();

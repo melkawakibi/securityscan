@@ -17,7 +17,7 @@ class PHPCrawlerResponseHeader
   {
     $this->header_raw = $header_string;
     $this->source_url = $source_url;
-
+    
     $this->http_status_code = PHPCrawlerUtils::getHTTPStatusCode($header_string);
     $this->content_type = strtolower(PHPCrawlerUtils::getHeaderValue($header_string, "content-type"));
     $this->content_length = strtolower(PHPCrawlerUtils::getHeaderValue($header_string, "content-length"));
@@ -32,13 +32,6 @@ class PHPCrawlerResponseHeader
    * @var string
    */
   public $header_raw;
-
-  /**
-   * 
-   *
-   * @var string
-   */
-  public $request_method;
   
   /**
    * The HTTP-statuscode

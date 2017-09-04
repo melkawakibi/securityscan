@@ -16,7 +16,10 @@ class CreateLinksTable extends Migration
         Schema::create('links', function (Blueprint $table) {
             $table->increments('id');
             $table->string('methode');
-            $table->string('url');
+            $table->string('url', 255);
+            $table->string('refering_url');
+            $table->boolean('is_redirect');
+            $table->integer('depth');
             $table->integer('website_id')->unsigned();
             $table->foreign('website_id')->references('id')->on('websites');
             $table->timestamps();

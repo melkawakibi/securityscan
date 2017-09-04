@@ -1,0 +1,47 @@
+<?php
+
+namespace App\DAL;
+
+use App\Model\HeaderLink;
+use App\Core\Utils;
+
+class HeaderLinkDAL
+{
+
+	public static function create($array, $id)
+	{
+
+		if(!is_null($array)){
+
+			$headerLink = new HeaderLink;
+			$headerLink->name = $array[0];
+			$headerLink->value = $array[0];
+			$headerLink->link_id = $id;
+
+			$headerLink->save();
+
+			return $headerLink;
+		}
+	}
+
+	public static function findAll()
+	{
+		return HeaderLink::all();
+	}
+
+	public static function findOneById($id)
+	{
+		return HeaderLink::Where(['id' => $id])->get();
+	}
+
+	public function numRow($id)
+	{
+		return HeaderLink::Where(['website_id' => $id])->get()->count();
+	}
+
+	public static function findAllByWebsiteId($id)
+	{
+		return HeaderLink::Where(['link_id' => $id])->get();
+	}
+
+}
