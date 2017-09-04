@@ -6,8 +6,11 @@ The Web Application Scanner scans web applications on SQLi and XSS vulnerabiliti
 ## Project Context
 I made this with the goal of creating a MVP for a schoolproject but I really want to make it into a finished product, so it's a continuous software project.
 
-> //TODO
+
 ## Installation
 
-> TODO
+> //TODO
+
 ## Examples
+
+> TODO
