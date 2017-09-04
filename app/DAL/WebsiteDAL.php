@@ -14,7 +14,7 @@ class WebsiteDAL
 			$website->base_url = $websiteObj->url;
 			$website->server = $websiteObj->server;
 			$website->follow_robot = $websiteObj->follow_robot;
-			$website->customer_id = 1;
+			$website->customer_id = $websiteObj->customer_id;
 
 			$website->save();
 

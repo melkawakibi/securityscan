@@ -84,7 +84,7 @@ class Crawler
 
 	}
 
-
+ 
 	public function getURIParams($url){
 
 		$params = Utils::filterGetUrl($url);
@@ -93,8 +93,8 @@ class Crawler
 
 			$link = Link::findOneByLinkUrl($url);
 
-			if(!is_null($link)){
-				
+			if(!is_null($link) && $link->isNotEmpty()){
+
 				foreach ($params as $param) {
 
 					$param = (object) $param;

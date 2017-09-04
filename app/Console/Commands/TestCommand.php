@@ -91,6 +91,14 @@ class TestCommand extends Command
             print_r($customer[0]);
 
         }
+
+        if($argument === 'customers'){
+
+            $customers = Customer::findAll();
+
+            print_r($customers);
+
+        }
        
 
     }

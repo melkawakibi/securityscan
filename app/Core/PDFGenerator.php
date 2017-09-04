@@ -7,18 +7,19 @@ use Spipu\Html2Pdf\Exception\Html2PdfException;
 use Spipu\Html2Pdf\Exception\ExceptionFormatter;
 use App\Services\WebsiteService as Website;
 use App\Services\ScanDetailService as ScanDetail;
+use App\Services\CustomerService as Customer;
 use Illuminate\Support\Facades\Log;
 
 class PDFGenerator
 {
 
-	public static function generatePDF($id, $website)
+	public static function generatePDF($website)
 	{
 
-		$website = Website::findOneById($id);
-		$scanDetail = ScanDetail::findOneById($website[0]->id);
+		$scanDetail = ScanDetail::findOneById($website->id);
+		$customer = Customer::findOneById($website->base_url);
 
-		$html = \PDF::parseView('template', ['scan_detail' => $scanDetail, 'website' => $website]);
+		$html = \PDF::parseView('template', ['scan_details' => $scanDetail, 'website' => $website, 'customer' => $customer]);
 
 		Log::info($html);
 

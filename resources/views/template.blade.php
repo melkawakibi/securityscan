@@ -24,16 +24,16 @@
 			<th>wasc_id</th>
 			<th>datum</th>
 		</tr>
-		@foreach($scans as $scan)
+		@foreach($scan_details as $scan_detail)
 		<tr>
-			<td>{{$scan->id}}</td>
-			<td>{{$scan->module_name}}</td>
-			<td>{{$scan->risk}}</td>
-			<td>{{$scan->parameter}}</td>
-			<td>{{$scan->attack}}</td>
-			<td>{{$scan->error}}</td>
-			<td>{{$scan->wasc_id}}</td>
-			<td>{{$scan->created_at}}</td>
+			<td>{{$scan_detail->id}}</td>
+			<td>{{$scan_detail->module_name}}</td>
+			<td>{{$scan_detail->risk}}</td>
+			<td>{{$scan_detail->parameter}}</td>
+			<td>{{$scan_detail->attack}}</td>
+			<td>{{$scan_detail->error}}</td>
+			<td>{{$scan_detail->wasc_id}}</td>
+			<td>{{$scan_detail->created_at}}</td>
 		</tr>
 		@endforeach
 	</table>

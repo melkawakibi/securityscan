@@ -11,7 +11,7 @@ class LinkDAL
 	public static function create($object, $id)
 	{
 
-		if(strlen($object->url_rebuild) < 255){
+		if(strlen($object->url_rebuild) < 255 && !empty($object)){
 
 			$link = new Link;
 

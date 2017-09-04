@@ -51,50 +51,56 @@ class XSSModule extends Module
 			//place this before any script you want to calculate time
 			$time_start = microtime(true); 
 								
-			//execute blind sql injections
-			$res = $this->client->request('GET', $value);
+			$res = 'default';
+
+			if (filter_var($value, FILTER_VALIDATE_URL) !== false){
+				//execute blind sql injections
+				$res = $this->client->request('GET', $value);
+			}
 
 			$time_end = microtime(true);
 
 			//dividing with 60 will give the execution time in minutes other wise seconds
 			$execution_time = ($time_end - $time_start)/60;
 
-			if (strcmp($this->getBaseContent($this->url), $res->getBody())) {
-				
-				$params = Utils::filterGetUrl($value);
+			if($res !== 'default'){
+				if (strcmp($this->getBaseContent($this->url), $res->getBody())) {
+					
+					$params = Utils::filterGetUrl($value);
 
-				$this->properties['parameter'] = $params[0];
+					$this->properties['parameter'] = $params[0];
 
-				$this->properties['attack'] = $value;
+					$this->properties['attack'] = $value;
 
-				$this->properties['execution_time'] = $execution_time;
+					$this->properties['execution_time'] = $execution_time;
 
-				Log::info('Time: ' . $execution_time);
-				Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-				Log::info('Request url: ' . $value);
-				Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-				Log::info('----------------- Content -------------------------' . PHP_EOL);
-				Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
+					Log::info('Time: ' . $execution_time);
+					Log::info('----------------- Response Code -------------------------' . PHP_EOL);
+					Log::info('Request url: ' . $value);
+					Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
+					Log::info('----------------- Content -------------------------' . PHP_EOL);
+					Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
 
-				$this->properties['module_name'] = 'xss';
+					$this->properties['module_name'] = 'xss';
 
-				//These are variable value, I keep them static for now
-				$this->properties['risk'] = 'high';
-				$this->properties['wasc_id'] = '8';
+					//These are variable value, I keep them static for now
+					$this->properties['risk'] = 'high';
+					$this->properties['wasc_id'] = '8';
 
-				$xss_array = explode("=", $value);
+					$xss_array = explode("=", $value);
 
-				$xss_attack = urldecode($xss_array[1]);
+					$xss_attack = urldecode($xss_array[1]);
 
-				if ($this->responseAnalyse($res, $xss_attack)) {
-					echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
-					$this->properties['error'] = 'This webpage is vulnerable for Cross site scripting';
+					if ($this->responseAnalyse($res, $xss_attack)) {
+						echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
+						$this->properties['error'] = 'This webpage is vulnerable for Cross site scripting';
 
-					if(!is_null($scan)){
-						$scanDetail = new Object;
-						$scanDetail->scan_id = $scan[0]->id;
-						$scanDetail->properties = $this->properties;
-						ScanDetail::store($scanDetail);
+						if(!is_null($scan)){
+							$scanDetail = new Object;
+							$scanDetail->scan_id = $scan[0]->id;
+							$scanDetail->properties = $this->properties;
+							ScanDetail::store($scanDetail);
+						}
 					}
 				}
 			}		

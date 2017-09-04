@@ -5,10 +5,11 @@ namespace App\Core\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Cache;s
+use Illuminate\Support\Facades\Cache;
 use App\Services\CustomerService as Customer;
 use App\Scanner;
 use \stdClass as Object;
+use \Artisan;
 
 class ScanController extends Controller
 {
@@ -40,29 +41,47 @@ class ScanController extends Controller
 
       $customers = Customer::findAll();
 
+      if($customers->isEmpty()){
+        return Response::json([
+          'state' => 0 
+        ]);
+      }
+
+      $active = 0;
       $stored_hash = '';
 
       foreach ($customers as $customer) {
-      
+        
         $stored_hash = substr($customer->cms_id, 4);
 
         if($stored_hash === $hash){
-          return Response::json(
-            ['check' => 1, 
+          $active = $customer->active;
+          
+          return Response::json([
+            'state' => 1, 
             'stored_hash' => $stored_hash, 
-            'hash' => $hash, 
-            'active' => $customer->active]
-            );
+            'hash' => $hash,
+            'active' => $active
+            ]);
         }
 
       }
 
-      return Response::json(['check' => 0, 'stored_hash' => $stored_hash, 'hash' => $hash]);
+      return Response::json([
+        'state' => 1, 
+        'stored_hash' => $stored_hash, 
+        'hash' => $hash,
+        'active' => $active
+        ]);
 
   }
 
   public function scan(Request $request)
   {
+
+    $collection = Customer::findOneByUrl($request->input('cms_url'));
+    $customer = $collection[0];
+    echo $customer->cms_url; 
 
     if(!empty($request->input('request_name'))){
       $request_name = $request->input('request_name');
@@ -80,19 +99,22 @@ class ScanController extends Controller
       switch ($select) {
         case 'full':
           
-          return 'full scan';
+          \Artisan::call('scan', ['url' => $customer->cms_url]);
+          return $request;
 
           break;
         
         case 'SQLi':
           
-          return 'sqli';
+          \Artisan::call('scan', ['url' => $customer->cms_url], ['--s' => 1]);
+          return $request;
 
           break;
 
         case 'XSS':
 
-          return 'xss';
+          \Artisan::call('scan', ['url' => $customer->cms_url]);
+          return $request;
 
           break;
 

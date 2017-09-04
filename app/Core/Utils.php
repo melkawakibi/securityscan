@@ -118,10 +118,12 @@ class Utils
 	public static function getBaseUrl($url) 
 	{
   		$result = parse_url($url);
-  		if(!empty($result['path'])){
+  		if(!empty($result['path']) && !empty($result['port'])){
   			return $result['scheme']."://".$result['host'].":".$result['port']."/".$result['path'];
 		}else{
+			if(!empty($result['port'])){
 			return $result['scheme']."://".$result['host'].":".$result['port'];
+			}
 		}
 	}
 

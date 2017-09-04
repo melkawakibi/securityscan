@@ -11,6 +11,7 @@ use App\Services\HeaderService as Header;
 use App\Services\LinkService as Link;
 use App\Services\HeaderLinkService as HeaderLink;
 use App\Services\ParamService as Param;
+use App\Services\CustomerService as Customer;
 use \stdClass as Object;
 use Illuminate\Support\Facades\Log;
 use App\Core\Utils;
@@ -25,7 +26,7 @@ class Spider extends PHPCrawler
 	private $is_enabled_robot;
 	private $headers = array();
 	private $links;
-	private $id;
+	private $website_id;
 	private $customer_id;
 
 	public function __construct()
@@ -39,6 +40,8 @@ class Spider extends PHPCrawler
 	{
 
 		$this->setURL($this->url);
+
+		$this->customer_id = $this->getCustomerId($this->url);
 
 		if (!empty($options['r'])) {
 			if ($options['r'] === 'y') {
@@ -127,13 +130,14 @@ class Spider extends PHPCrawler
 
 		$website = new Object;
 		$website->url = $this->url;
-		$website->follow_robot = $this->follow_robot;
 		$website->server = Utils::getServer($this->headers);
+		$website->follow_robot = $this->follow_robot;	
+		$website->customer_id = $this->customer->id;		
 
 		if(!is_null($website)){
 			$website = Website::store($website);
 			if(!is_null($website)){
-				$this->id = $website->id;
+				$this->setWebsite($website->id);
 			}
 		}
 
@@ -143,7 +147,7 @@ class Spider extends PHPCrawler
 
 				$header = new Object;
 				$header->headers = $this->headers;
-				$header->website_id = $this->id;
+				$header->website_id = $this->website_id;
 
 				Header::store($header);
 			}
@@ -167,7 +171,7 @@ class Spider extends PHPCrawler
 
 					$object = new Object;
 					$object->link = $link;
-					$object->website_id = $this->id;
+					$object->website_id = $this->website_id;
 
 					$link = Link::store($object);
 
@@ -201,9 +205,25 @@ class Spider extends PHPCrawler
 		}
 	}
 
-	public function setSpiderUrl($url)
+	public function getCustomerId($url)
+	{
+		$customer =  Customer::findOneByUrl($this->url);
+
+		if($customer->isNotEmpty()){
+			return $customer->id;
+		}
+
+		return null;
+	}
+
+	public function setSpiderConfig($url)
 	{
 		$this->url = $url;
+	}
+
+	public function setWebsite($id)
+	{
+		$this->website_id = $id;
 	}
 
 }

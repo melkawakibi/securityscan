@@ -63,6 +63,11 @@ class Scanner
 	protected $pdf;
 
 	/**
+	 * @var Customer
+	 */
+	protected $customer;
+
+	/**
 	 * @param string $url
 	 * @param Array $options
 	 * @param Spider
@@ -73,7 +78,7 @@ class Scanner
 		Spider $spider
 	)
 	{
-		
+
 		$this->pdf = new PDF;
 		$this->url = $url;
 		$this->spider = $spider;
@@ -82,6 +87,7 @@ class Scanner
 		$this->setup($spider);
 
 		$this->spider->start();
+
 	}
 
 	/**
@@ -92,7 +98,7 @@ class Scanner
 		try {
 
 			$this->checkUrl();
-			$this->spider->setSpiderUrl($this->url);
+			$this->spider->setSpiderConfig($this->url, $this->customer);
 			$this->prepare($this->options);
 			$this->spider->setup($this->options);
 
@@ -153,6 +159,8 @@ class Scanner
 			$this->xss->start();
 		}
 
+		$this->generateReport($website[0]);
+
 	}
 
 	/**
@@ -161,9 +169,9 @@ class Scanner
 	 * @param  [type] $website [description]
 	 * @return [type]          [description]
 	 */
-	public function generateReport($id, $website)
+	public function generateReport($website)
 	{
-		$this->pdf->generatePDF($id);
+		$this->pdf->generatePDF($website);
 	}
 
 }
