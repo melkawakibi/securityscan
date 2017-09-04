@@ -777,7 +777,6 @@ return array(
     'Illuminate\\Auth\\AuthServiceProvider' => $vendorDir . '/laravel/framework/src/Illuminate/Auth/AuthServiceProvider.php',
     'Illuminate\\Auth\\Authenticatable' => $vendorDir . '/laravel/framework/src/Illuminate/Auth/Authenticatable.php',
     'Illuminate\\Auth\\AuthenticationException' => $vendorDir . '/laravel/framework/src/Illuminate/Auth/AuthenticationException.php',
-    'Illuminate\\Auth\\Console\\AuthMakeCommand' => $vendorDir . '/laravel/framework/src/Illuminate/Auth/Console/AuthMakeCommand.php',
     'Illuminate\\Auth\\Console\\ClearResetsCommand' => $vendorDir . '/laravel/framework/src/Illuminate/Auth/Console/ClearResetsCommand.php',
     'Illuminate\\Auth\\CreatesUserProviders' => $vendorDir . '/laravel/framework/src/Illuminate/Auth/CreatesUserProviders.php',
     'Illuminate\\Auth\\DatabaseUserProvider' => $vendorDir . '/laravel/framework/src/Illuminate/Auth/DatabaseUserProvider.php',
