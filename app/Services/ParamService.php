@@ -28,6 +28,11 @@ class ParamService implements Service
 		return Param::numRow($id);
 	}
 
+	public static function update($object)
+	{
+		return Param::update($object);
+	}
+
 	public static function numRowByName($param)
 	{
 		return Param::numRowByName($name);

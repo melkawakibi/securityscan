@@ -3,7 +3,6 @@
 namespace App\DAL;
 
 use App\Model\HeaderLink;
-use App\Core\Utils;
 
 class HeaderLinkDAL
 {
@@ -37,6 +36,11 @@ class HeaderLinkDAL
 	public function numRow($id)
 	{
 		return HeaderLink::Where(['website_id' => $id])->get()->count();
+	}
+
+	public static function update($object)
+	{
+		return $object->save();
 	}
 
 	public static function findAllByWebsiteId($id)

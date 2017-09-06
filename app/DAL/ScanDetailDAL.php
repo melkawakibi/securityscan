@@ -45,10 +45,14 @@ class ScanDetailDAL
 		return ScanDetail::Where(['id' => $id])->get()->count();
 	}
 
+	public static function update($object)
+	{
+		return $object->save();
+	}
+
 	public static function findAllScanDetailsByScanId($id)
 	{
 		return ScanDetail::Where(['scan_id' => $id])->get();
 	}
-
 
 }

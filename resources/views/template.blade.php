@@ -12,8 +12,22 @@
 	</style>
 </head>
 <body>
-	
+
 	<table>
+		<tr>
+		 	<th><b>Algemene informatie</b></th>
+		</tr>
+
+		@foreach($scan as $data)
+		<tr>
+			<td><b>Start tijd: </b> $data->created_at</td>
+			<td><b>Eind tijd: </b> </td>
+		</tr>
+		@endforeach
+	</table>
+
+	<table>
+		<h2>Scan informatie</h2>
 		<tr>
 			<th>id</th>
 			<th>module naam</th>

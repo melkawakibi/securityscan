@@ -50,6 +50,11 @@ class LinkDAL
 		return Link::Where(['url' => $url])->get()->count();
 	}
 
+	public static function update($object)
+	{
+		return $object->save();
+	}
+
 	public static function findAllByWebsiteId($id)
 	{
 		return Link::Where(['website_id' => $id])->get();

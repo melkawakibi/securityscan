@@ -33,5 +33,10 @@ class HeaderLinkService implements Service
 		return HeaderLink::numRow($id);
 	}
 
+	public static function update($object)
+	{
+		return HeaderLink::update($object);
+	}
+
 
 }

@@ -37,6 +37,11 @@ class ParamDAL
 		return Param::Where(['link_id' => $param['id'], 'params' => $param['param']])->get()->count();
 	}
 
+	public static function update($object)
+	{
+		return $object->save();
+	}
+
 	public static function findAllByLinkId($id)
 	{
 		return Param::Where(['link_id' => $id])->get();

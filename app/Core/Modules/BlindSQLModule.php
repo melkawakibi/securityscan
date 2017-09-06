@@ -59,16 +59,12 @@ class BlindSQLModule extends Module
 
 			$time_end = microtime(true);
 
-			//dividing with 60 will give the execution time in minutes other wise seconds
 			$execution_time = ($time_end - $time_start)/60;
 
 			if($res !== 'default'){
 				if(strcmp($this->getBaseContent($this->url), $res->getBody())){
-					
-					// echo 'Result: '.PHP_EOL;
-					//echo 'URI: '.$value.PHP_EOL;
 
-					// echo 'Time: '.$execution_time.PHP_EOL;
+					echo 'Time: '.$execution_time.PHP_EOL;
 
 					$params = Utils::filterGetUrl($value);
 

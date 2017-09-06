@@ -27,9 +27,19 @@ class WebsiteDAL
 		return Website::all();
 	}
 
-	public static function findById($id)
+	public static function findByOneId($id)
 	{
 		return Website::Where(['id' => $id])->get();
+	}
+
+	public static function numRow($id)
+	{
+		return Website::Where(['id' => $id])->get()->count();
+	}
+
+	public static function update($object)
+	{
+		return $object->save();
 	}
 
 	public static function findOneByUrl($url)

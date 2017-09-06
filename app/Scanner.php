@@ -11,6 +11,7 @@ use \stdClass as Object;
 use App\Core\Spider;
 use App\Core\Utils;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class Scanner
 {
@@ -57,12 +58,6 @@ class Scanner
 	protected $service;
 
 	/**
-	 * [$pdf description]
-	 * @var PDFGenerator
-	 */
-	protected $pdf;
-
-	/**
 	 * @var Customer
 	 */
 	protected $customer;
@@ -79,7 +74,6 @@ class Scanner
 	)
 	{
 
-		$this->pdf = new PDF;
 		$this->url = $url;
 		$this->spider = $spider;
 		$this->options = $options;
@@ -148,8 +142,9 @@ class Scanner
 		$website = Website::findOneByUrl($this->url);
 
 		$scan = new Object;
-		$scan->id = $website[0]->id;
-		Scan::store($scan);
+		$scan->website_id = $website[0]->id;
+
+		$scan = Scan::store($scan);
 
 		if ($this->sql instanceof BlindSQL) {
 			$this->sql->start();
@@ -159,19 +154,54 @@ class Scanner
 			$this->xss->start();
 		}
 
-		$this->generateReport($website[0]);
+		$this->storeScanTime($scan);
+
+		//$this->generateReport($website[0]);
 
 	}
 
 	/**
-	 * [generateReport description]
-	 * @param  [type] $id      [description]
-	 * @param  [type] $website [description]
-	 * @return [type]          [description]
+	 * 
+	 * @param Scan $scan
+	 * @return void
+	 */
+	public function storeScanTime($scan)
+	{
+		$collection = Scan::findOneById($scan->id);
+
+		$storedScan = $collection->first();
+
+		$start_time = $storedScan['created_at'];
+
+		$scan->time_end = Carbon::now()->toDateTimeString();
+
+		$scan->time_taken = $start_time->diffInSeconds(Carbon::now());		
+
+		if($scan->time_taken > 60){
+			$time_taken = round(($scan->time_taken/60));
+			$scan->time_taken = $time_taken . ' minuten';			
+		}elseif ($scan->time_taken > 3600) {
+			$time_taken = round(($scan->time_taken/3600));
+			$scan->time_taken = $time_taken . ' hours';
+		}else{
+			$scan->time_taken .= ' secondes';
+		}
+
+		echo 'Start Time: ' . $start_time . PHP_EOL;
+		echo 'End time: ' . $scan->time_end . PHP_EOL; 
+		echo 'Time Taken: ' . $scan->time_taken . PHP_EOL; 
+
+		Scan::update($scan);
+	}
+
+	/**
+	 * calls generatePDF from PDFGenerator class
+	 * @param  Website $website
+	 * @return void
 	 */
 	public function generateReport($website)
 	{
-		$this->pdf->generatePDF($website);
+		PDF::generatePDF($website);
 	}
 
 }

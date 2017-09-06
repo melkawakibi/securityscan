@@ -6,8 +6,6 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "barryvdh/laravel-dompdf": "dev-ontwikkel",
-        "dompdf/dompdf": "^0.8",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
@@ -35,12 +33,6 @@
             "Tests\\": "tests/"
         }
     },
-     "repositories": [
-        {
-            "type": "vcs",
-            "url":  "https://github.com/melkawakibi/laravel-dompdf.git"
-        }
-    ],
     "scripts": {
         "post-root-package-install": [
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""

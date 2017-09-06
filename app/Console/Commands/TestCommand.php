@@ -9,6 +9,8 @@ use \stdClass as Object;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
+use App\Core\Spider;
+use App\Scanner;
 
 class TestCommand extends Command
 {
@@ -37,6 +39,14 @@ class TestCommand extends Command
 
     }
 
+    /**
+     * @return Array
+     */
+    public function defaultOptions()
+    {
+        return array( "r" => "y", "fm" => "0", "s" => 1, "x" => 1 );
+    }
+
     public function logController()
     {
         $path = storage_path('logs');
@@ -61,19 +71,6 @@ class TestCommand extends Command
 
         $argument = $this->argument('option');
 
-        if($argument === 'customer'){
-
-            $customer = new Object;
-            $customer->cms_id = 578;
-            $customer->cms_name = 'Willem';
-            $customer->cms_url = 'www.justbetter.nl';
-            $customer->cms_email = 'Willem@justbetter.nl';
-            $customer->active = 1;
-
-            Customer::store($customer);
-
-        }
-
         if($argument === 'website'){
 
             $website = new Object;
@@ -97,6 +94,33 @@ class TestCommand extends Command
             $customers = Customer::findAll();
 
             print_r($customers);
+
+        }
+
+        if($argument === 'create-test-customer'){
+
+            $customer = new Object;
+            $customer->name = 'example';
+            $customer->company = 'example-company';
+            $customer->second_email = 'example@email.com';
+            $customer->cms_id = '145';
+            $customer->cms_name = 'example';
+            $customer->cms_url = 'http://localhost:8888';
+            $customer->cms_email = 'example@email.nl';
+            $customer->cms_register_date = '2017-09-04 17:00:00';
+            $customer->active = 1;
+
+            Customer::store($customer);
+
+        }
+
+        if($argument === 'scan'){
+
+            $url = 'http://localhost:8888';
+
+            $scanner = new Scanner($url, $this->defaultOptions(), new Spider($url));
+
+            $scanner->scan();
 
         }
        

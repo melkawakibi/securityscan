@@ -132,7 +132,7 @@ class Spider extends PHPCrawler
 		$website->url = $this->url;
 		$website->server = Utils::getServer($this->headers);
 		$website->follow_robot = $this->follow_robot;	
-		$website->customer_id = $this->customer->id;		
+		$website->customer_id = $this->customer_id;	
 
 		if(!is_null($website)){
 			$website = Website::store($website);
@@ -207,13 +207,7 @@ class Spider extends PHPCrawler
 
 	public function getCustomerId($url)
 	{
-		$customer =  Customer::findOneByUrl($this->url);
-
-		if($customer->isNotEmpty()){
-			return $customer->id;
-		}
-
-		return null;
+		return Customer::findIdByUrl($this->url);
 	}
 
 	public function setSpiderConfig($url)

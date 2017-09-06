@@ -28,6 +28,16 @@ class ScanService implements Service
 		return Scan::numRow($id);
 	}
 
+	public static function update($object)
+	{
+		return Scan::update($object);
+	}
+
+	public static function findOneByWebsiteId($id)
+	{
+		return Scan::findOneByWebsiteId($id);
+	}
+
 	public static function findLastByScanIdOrderDesc($id)
 	{
 		return Scan::findLastByScanIdOrderDesc($id);

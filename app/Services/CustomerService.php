@@ -27,11 +27,23 @@ class CustomerService implements Service
 	public static function numRow($id)
 	{
 		return Customer::numRow($id);
+	}
+
+	public static function update($object)
+	{
+		return Customer::update($object);
 	}		
 
 	public static function findOneByUrl($url)
 	{
-		return Customer::findCustomberByUrl($url);
+		return Customer::findOneByUrl($url);
+	}
+
+	public static function findIdByUrl($url)
+	{
+		if(Customer::numRowByUrl($url) > 0){
+			return CustomerService::findOneByUrl($url)[0]->id;
+		}
 	}
 
 

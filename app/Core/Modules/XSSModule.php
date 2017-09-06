@@ -60,7 +60,6 @@ class XSSModule extends Module
 
 			$time_end = microtime(true);
 
-			//dividing with 60 will give the execution time in minutes other wise seconds
 			$execution_time = ($time_end - $time_start)/60;
 
 			if($res !== 'default'){

@@ -44,9 +44,19 @@ class CustomerDAL
 		return Customer::Where(['cms_id' => $id])->get()->count();
 	}
 
-	public static function findCustomberByUrl($url)
+	public static function update($object)
+	{
+		return $object->save();
+	}
+
+	public static function findOneByUrl($url)
 	{
 		return Customer::Where(['cms_url' => $url])->get();
+	}
+
+	public static function numRowByUrl($url)
+	{
+		return Customer::Where(['cms_url' => $url])->get()->count();
 	}
 
 }

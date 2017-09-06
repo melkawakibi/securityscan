@@ -2,33 +2,38 @@
 
 namespace App\Services;
 
-use App\DAL\ScanDetailDAL;
+use App\DAL\ScanDetailDAL as ScanDetail;
 
 class ScanDetailService implements Service
 {
 
 	public static function store($object)
 	{
-		return ScanDetailDAL::create($object);
+		return ScanDetail::create($object);
 	}
 
 	public static function findAll()
 	{
-		return ScanDetailDAL::findAll();
+		return ScanDetail::findAll();
 	}
 
 	public static function findOneById($id)
 	{
-		return ScanDetailDAL::findOneById($id);
+		return ScanDetail::findOneById($id);
 	}
 
 	public static function numRow($id)
 	{
-		return ScanDetailDAL::numRow($id);
+		return ScanDetail::numRow($id);
+	}
+
+	public static function update($object)
+	{
+		return ScanDetail::update($object);
 	}
 
 	public static function findAllScanDetailsByScanId($id)
 	{
-		return ScanDetailDAL::findAllScanDetailsByScanId($id);
+		return ScanDetail::findAllScanDetailsByScanId($id);
 	}
 }

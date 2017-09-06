@@ -30,6 +30,11 @@ class HeaderService implements Service
 	public static function numRow($id)
 	{
 		return Header::numRow($id);
+	}
+
+	public static function update($object)
+	{
+		return Header::update($object);
 	}	
 
 

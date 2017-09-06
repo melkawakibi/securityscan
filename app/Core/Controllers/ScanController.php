@@ -113,7 +113,7 @@ class ScanController extends Controller
 
         case 'XSS':
 
-          \Artisan::call('scan', ['url' => $customer->cms_url]);
+          \Artisan::call('scan', ['url' => $customer->cms_url], ['--x' => 1]);
           return $request;
 
           break;

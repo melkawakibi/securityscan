@@ -28,6 +28,11 @@ class LinkService implements Service
 		return Link::numRow($url);
 	}
 
+	public static function update($object)
+	{
+		return Link::update($object);
+	}
+
 	public static function findAllByWebsiteId($id)
 	{
 		return Link::findAllByWebsiteId($id);
