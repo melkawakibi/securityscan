@@ -48,13 +48,12 @@ class XSSModule extends Module
 
 		foreach ($this->urlArray as $key => $value) {
 
-			//place this before any script you want to calculate time
 			$time_start = microtime(true); 
 								
 			$res = 'default';
 
 			if (filter_var($value, FILTER_VALIDATE_URL) !== false){
-				//execute blind sql injections
+				
 				$res = $this->client->request('GET', $value);
 			}
 
@@ -69,8 +68,6 @@ class XSSModule extends Module
 
 					$this->properties['parameter'] = $params[0];
 
-					$this->properties['attack'] = $value;
-
 					$this->properties['execution_time'] = $execution_time;
 
 					Log::info('Time: ' . $execution_time);
@@ -78,7 +75,7 @@ class XSSModule extends Module
 					Log::info('Request url: ' . $value);
 					Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
 					Log::info('----------------- Content -------------------------' . PHP_EOL);
-					Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
+					Log::info('Content: ' .PHP_EOL. addslashes($res->getBody()) . PHP_EOL);
 
 					$this->properties['module_name'] = 'xss';
 
@@ -90,8 +87,10 @@ class XSSModule extends Module
 
 					$xss_attack = urldecode($xss_array[1]);
 
-					if ($this->responseAnalyse($res, $xss_attack)) {
-						echo 'This webpage is vulnerable for Cross site scripting'.PHP_EOL;
+					$this->properties['attack'] = $xss_attack;
+
+					if($this->find_xss($res, $xss_attack)) {
+						
 						$this->properties['error'] = 'This webpage is vulnerable for Cross site scripting';
 
 						if(!is_null($scan)){
@@ -99,6 +98,8 @@ class XSSModule extends Module
 							$scanDetail->scan_id = $scan[0]->id;
 							$scanDetail->properties = $this->properties;
 							ScanDetail::store($scanDetail);
+
+							echo 'ScanDetail stored';
 						}
 					}
 				}
@@ -106,17 +107,21 @@ class XSSModule extends Module
 		}
 	}
 
-
-	protected function responseAnalyse($res, $str)
+	protected function find_xss($res, $str)
 	{
 
-		$response = $res->getBody();
+		$html = (string) $res->getBody();
 
-		if (strpos($response, $str)) {
+		$str = substr($str, 0, 6);
+
+		$pos = strpos($html, $str);
+
+		if($pos !== false){
 			return true;
-		} else if ($response) {
-			return false;
 		}
+
+		return false;
+		
 	}
 
 }

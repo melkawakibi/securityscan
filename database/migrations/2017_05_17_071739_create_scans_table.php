@@ -17,6 +17,7 @@ class CreateScansTable extends Migration
             $table->increments('id');
             $table->integer('website_id')->unsigned();
             $table->foreign('website_id')->references('id')->on('websites');
+            $table->string('type')->nullable();
             $table->timestamp('time_end')->nullable();
             $table->string('time_taken')->nullable();
             $table->timestamps();

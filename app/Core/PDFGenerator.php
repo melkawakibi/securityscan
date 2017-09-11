@@ -9,12 +9,18 @@ use App\Services\WebsiteService as Website;
 use App\Services\ScanService as Scan;
 use App\Services\ScanDetailService as ScanDetail;
 use App\Services\CustomerService as Customer;
+use \stdClass as Object;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Log;
 
 class PDFGenerator
 {
 
+	/**
+	 * 
+	 * @param Website $website
+	 * @return void
+	 */
 	public static function generatePDF($website)
 	{
 
@@ -22,9 +28,13 @@ class PDFGenerator
 
 		$scanDetail = ScanDetail::findAllScanDetailsByScanId($scan[0]->id);
 
-		$customer = Customer::findOneById($website->base_url);
+		$customer = Customer::findOneByUrl($website->base_url);
 
-		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scan_details' => $scanDetail, 'customer' => $customer])->render();
+		$risk = PDFGenerator::countRisks($scanDetail);
+
+		$modules = PDFGenerator::countModules($scanDetail);
+
+		$html = View::make('template', ['website' => $website, 'scan' => $scan[0], 'scandetails' => $scanDetail, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0]])->render();
 
 		try {
 		    $html2pdf = new Html2Pdf('P', 'A4', 'en');
@@ -36,4 +46,61 @@ class PDFGenerator
 		    echo $formatter->getHtmlMessage();
 		}
 	}
+
+	/**
+	 *  
+	 * @param ScanDetail $object
+	 * @return StdClass $riskObject
+	 */
+	public static function countRisks($object)
+	{
+		$riskObject = new Object;
+		$riskObject->high = 0;
+		$riskObject->average = 0;
+		$riskObject->low = 0;
+
+		foreach ($object as $value) {
+			
+			$risk = $value->risk;
+
+			if($risk === 'high'){
+				$riskObject->high += 1;
+			}elseif ($risk === 'average') {
+				$riskObject->average += 1;
+			}else{
+				$riskObject->low += 1;
+			}
+		}
+
+		return $riskObject;
+	}
+
+	/**
+	 * 
+	 * @param ScanDetail $scanDetail
+	 * @return StdClass $moduleObject
+	 */
+	public static function countModules($object)
+	{	
+		
+		$moduleObject = new Object;
+		$moduleObject->sql = array('module' => 'SQLI', 'risk' => 'hoog', 'count' => 0);
+		$moduleObject->xss = array('module' => 'XSS', 'risk' => 'hoog', 'count' => 0);
+
+		foreach ($object as $value) {
+			
+			$module = $value->module_name;
+
+			if($module === 'sql'){
+				$moduleObject->sql['count'] += 1;
+			}else{
+				$moduleObject->xss['count'] +=1;
+			}
+
+		}
+
+		return $moduleObject;
+
+	}
+
 }

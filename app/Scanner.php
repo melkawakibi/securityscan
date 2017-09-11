@@ -146,18 +146,45 @@ class Scanner
 
 		$scan = Scan::store($scan);
 
+		$type = new Object;
+		$type->sql = false;
+		$type->xss = false;
+
 		if ($this->sql instanceof BlindSQL) {
+			$type->sql = true;
 			$this->sql->start();
 		}
 
 		if ($this->xss instanceof XSS) {
+			$type->xss = true;
 			$this->xss->start();
 		}
 
+		$this->storeType($type, $scan);
+
 		$this->storeScanTime($scan);
 
-		//$this->generateReport($website[0]);
+		// echo PHP_EOL . 'Generating report...' . PHP_EOL;
 
+		// $this->generateReport($website[0]);
+
+		// echo PHP_EOL . 'Report is generated.' . PHP_EOL . 'It is stored in the folder: public/resources/reports' . PHP_EOL;
+	}
+
+	public function storeType($object, $scan)
+	{
+		$type = '';
+		if($object->sql === true && $object->xss === true){
+			$type = 'Full Scan';
+		}elseif($object->sql === true && $object->xss === false){
+			$type = 'SQLi';
+		}else{
+			$type = 'XSS';
+		}
+
+		$scan->type = $type;
+
+		Scan::Update($scan);
 	}
 
 	/**
@@ -187,9 +214,9 @@ class Scanner
 			$scan->time_taken .= ' secondes';
 		}
 
-		echo 'Start Time: ' . $start_time . PHP_EOL;
+		echo PHP_EOL . 'Start Time: ' . $start_time . PHP_EOL;
 		echo 'End time: ' . $scan->time_end . PHP_EOL; 
-		echo 'Time Taken: ' . $scan->time_taken . PHP_EOL; 
+		echo 'Time Taken: ' . $scan->time_taken . PHP_EOL . PHP_EOL; 
 
 		Scan::update($scan);
 	}

@@ -197,7 +197,7 @@ class Utils
 			foreach ($array as $key => $value) {
 
 				if($array[0] === 'Server' || $array[0] === 'server'){
-					return $array[1];
+					return 'Apache';
 				}
 			}
 		}
