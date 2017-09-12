@@ -160,17 +160,27 @@ class Scanner
 			$this->xss->start();
 		}
 
+		$isShortReport = (!empty($this->options['rt']) ? 1 : 0);
+
+		$scan->report_type = ($isShortReport) ? 'Short Report' : 'Full Report';
+
 		$this->storeType($type, $scan);
 
 		$this->storeScanTime($scan);
 
-		// echo PHP_EOL . 'Generating report...' . PHP_EOL;
+		echo PHP_EOL . 'Generating report...' . PHP_EOL;
 
-		// $this->generateReport($website[0]);
+		$this->generateReport($website[0], $scan, $isShortReport);
 
-		// echo PHP_EOL . 'Report is generated.' . PHP_EOL . 'It is stored in the folder: public/resources/reports' . PHP_EOL;
+		echo PHP_EOL . 'Report is generated.' . PHP_EOL . 'It is stored in the folder: public/resources/reports' . PHP_EOL;
 	}
 
+	/**
+	 * 
+	 *@param stdClass $type
+	 *@param Scan $scan
+	 *return void
+	 */
 	public function storeType($object, $scan)
 	{
 		$type = '';
@@ -178,7 +188,7 @@ class Scanner
 			$type = 'Full Scan';
 		}elseif($object->sql === true && $object->xss === false){
 			$type = 'SQLi';
-		}else{
+		}elseif($object->sql === false && $object->xss === true){
 			$type = 'XSS';
 		}
 
@@ -226,9 +236,9 @@ class Scanner
 	 * @param  Website $website
 	 * @return void
 	 */
-	public function generateReport($website)
+	public function generateReport($website, $scan, $isShortReport)
 	{
-		PDF::generatePDF($website);
+		PDF::generatePDF($website, $scan, $isShortReport);
 	}
 
 }

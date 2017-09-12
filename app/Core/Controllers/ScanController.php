@@ -76,7 +76,7 @@ class ScanController extends Controller
 
   }
 
-  public function scan(Request $request)
+  public function setupScan(Request $request)
   {
 
     $collection = Customer::findOneByUrl($request->input('cms_url'));
@@ -94,31 +94,66 @@ class ScanController extends Controller
       $this->caching($request_email, 'email');
     }
 
-      $select = $request->input('type');
+      $selectType = $request->input('type');
 
-      switch ($select) {
+      $selectReport = $request->input('report');
+
+      $this->scan($request, $selectReport, $selectType, $customer);
+
+  }
+
+  public function scan($request, $selectReport, $selectType, $customer)
+  {
+
+    if($selectReport === 'full-report'){
+      switch ($selectType) {
         case 'full':
           
-          \Artisan::call('scan', ['url' => $customer->cms_url]);
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--rt' => 0]);
           return $request;
 
           break;
-        
+
         case 'SQLi':
           
-          \Artisan::call('scan', ['url' => $customer->cms_url], ['--s' => 1]);
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--s' => 1, '--rt' => 0]);
           return $request;
 
           break;
 
         case 'XSS':
 
-          \Artisan::call('scan', ['url' => $customer->cms_url], ['--x' => 1]);
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--x' => 1, '--rt' => 0]);
+          return $request;
+
+          break;
+      }
+
+    }elseif($selectReport === 'short-report'){
+      switch ($selectType) {
+        case 'full':
+          
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--rt' => 1]);
           return $request;
 
           break;
 
-      }
+        case 'SQLi':
+          
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--s' => 1, '--rt' => 1]);
+          return $request;
+
+          break;
+
+        case 'XSS':
+
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--x' => 1, '--rt' => 1]);
+          return $request;
+
+          break;
+
+      }      
+    }
 
   }
 

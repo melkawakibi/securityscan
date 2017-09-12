@@ -24,7 +24,8 @@ class ScanCommand extends Command
                             {--u= : username} 
                             {--p= : password} 
                             {--s : SQL module} 
-                            {--x : XSS module}';
+                            {--x : XSS module}
+                            {--rt : handles report type}';
 
     /**
      * The console command description.
@@ -49,7 +50,7 @@ class ScanCommand extends Command
      */
     public function defaultOptions()
     {
-        return array( "r" => "y", "fm" => "0", "s" => 1, "x" => 1 );
+        return array( "r" => "y", "fm" => "0", "s" => 1, "x" => 1, "rt" => 0 );
     }
 
     public function logController()

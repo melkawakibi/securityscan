@@ -21,12 +21,10 @@ class PDFGenerator
 	 * @param Website $website
 	 * @return void
 	 */
-	public static function generatePDF($website)
+	public static function generatePDF($website, $scan, $isShortReport)
 	{
 
-		$scan = Scan::findOneByWebsiteId($website->id);
-
-		$scanDetail = ScanDetail::findAllScanDetailsByScanId($scan[0]->id);
+		$scanDetail = ScanDetail::findAllScanDetailsByScanId($scan->id);
 
 		$customer = Customer::findOneByUrl($website->base_url);
 
@@ -34,13 +32,13 @@ class PDFGenerator
 
 		$modules = PDFGenerator::countModules($scanDetail);
 
-		$html = View::make('template', ['website' => $website, 'scan' => $scan[0], 'scandetails' => $scanDetail, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0]])->render();
+		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scandetails' => $scanDetail, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0], 'isShortReport' => $isShortReport])->render();
 
 		try {
 		    $html2pdf = new Html2Pdf('P', 'A4', 'en');
 		    $html2pdf->pdf->SetDisplayMode('fullpage');
 		    $html2pdf->writeHTML($html);
-		    $html2pdf->output('public/resources/reports/report.pdf', 'F');
+		    $html2pdf->output('resources/reports/report.pdf', 'F');
 		} catch (Html2PdfException $e) {
 		    $formatter = new ExceptionFormatter($e);
 		    echo $formatter->getHtmlMessage();

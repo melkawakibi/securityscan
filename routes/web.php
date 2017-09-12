@@ -17,7 +17,7 @@ Route::get('/', function(){
 
 });
 
-Route::post('request_scan', 'ScanController@scan');
+Route::post('request_scan', 'ScanController@setupScan');
 
 Route::post('register', 'ScanController@store');
 

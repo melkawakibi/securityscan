@@ -67,24 +67,12 @@ class XSSModule extends Module
 					$params = Utils::filterGetUrl($value);
 
 					$this->properties['parameter'] = $params[0];
-
 					$this->properties['execution_time'] = $execution_time;
-
-					Log::info('Time: ' . $execution_time);
-					Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-					Log::info('Request url: ' . $value);
-					Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-					Log::info('----------------- Content -------------------------' . PHP_EOL);
-					Log::info('Content: ' .PHP_EOL. addslashes($res->getBody()) . PHP_EOL);
-
 					$this->properties['module_name'] = 'xss';
-
-					//These are variable value, I keep them static for now
 					$this->properties['risk'] = 'high';
 					$this->properties['wasc_id'] = '8';
 
 					$xss_array = explode("=", $value);
-
 					$xss_attack = urldecode($xss_array[1]);
 
 					$this->properties['attack'] = $xss_attack;
@@ -98,11 +86,17 @@ class XSSModule extends Module
 							$scanDetail->scan_id = $scan[0]->id;
 							$scanDetail->properties = $this->properties;
 							ScanDetail::store($scanDetail);
-
-							echo 'ScanDetail stored';
 						}
 					}
 				}
+
+				Log::info('Time: ' . $execution_time);
+				Log::info('----------------- Response Code -------------------------' . PHP_EOL);
+				Log::info('Request url: ' . $value);
+				Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
+				Log::info('----------------- Content -------------------------' . PHP_EOL);
+				Log::info('Content: ' .PHP_EOL. addslashes($res->getBody()) . PHP_EOL);
+
 			}		
 		}
 	}

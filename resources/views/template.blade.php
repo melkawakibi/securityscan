@@ -93,6 +93,14 @@
 	</table>
 
 	<table>
+		
+		<tr>
+			<td></td>
+		</tr>
+
+	</table>
+
+	<table>
 
 		<tr>
 			<th>Categorie dreigementen</th>
@@ -112,6 +120,8 @@
 
 	</table>
 
+	@if(!$isShortReport)
+	@if(!empty($scandetails))
 	<table>
 
 		<tr>
@@ -119,6 +129,7 @@
 		</tr>
 
 		@foreach($scandetails as $scandetail)
+
 		<tr>
 			<td><b>ID: </b> {{$scandetail->id}}</td>
 		</tr>
@@ -150,6 +161,7 @@
 		@endforeach
 
 	</table>
-
+	@endif
+	@endif
 </body>
 </html>

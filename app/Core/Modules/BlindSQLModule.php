@@ -63,36 +63,22 @@ class BlindSQLModule extends Module
 			if($res !== 'default'){
 				if(strcmp($this->getBaseContent($this->url), $res->getBody())){
 
-					//echo 'Time: '.$execution_time.PHP_EOL;
-
 					$params = Utils::filterGetUrl($value);
 
 					$this->properties['parameter'] = $params[0];
-
 					$this->properties['execution_time'] = $execution_time;
-
-					// Log::info('Time: ' . $execution_time);
-					// Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-					// Log::info('Request url: ' . $value);
-					// Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-					// Log::info('----------------- Content -------------------------' . PHP_EOL);
-					// Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
-
 					$this->properties['module_name'] = 'sql';
-
-					//These are variable value, I keep them static for now
 					$this->properties['risk'] = 'high';
 					$this->properties['wasc_id'] = '19';
 
 					$sql_array = explode("=", $value);
-
 					$sql_attack = urldecode($sql_array[1]);
 
 					$this->properties['attack'] = $sql_attack;
 
 					foreach (Lang::get('error_sql') as $key => $value) {
 						
-						if($this->responseAnalyse($res, $value)){
+						if($this->find_sql($res, $value)){
 
 							$this->properties['error'] = $value;
 
@@ -103,15 +89,21 @@ class BlindSQLModule extends Module
 								ScanDetail::store($scanDetail);
 							}
 						}
-
 					}
 				}
+
+					Log::info('Time: ' . $execution_time);
+					Log::info('----------------- Response Code -------------------------' . PHP_EOL);
+					Log::info('Request url: ' . $value);
+					Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
+					Log::info('----------------- Content -------------------------' . PHP_EOL);
+					Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
 			}		
 		}
 	}
 
 
-	protected function responseAnalyse($res, $str)
+	protected function find_sql($res, $str)
 	{
 		$response = $res->getBody();
 
