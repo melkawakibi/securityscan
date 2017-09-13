@@ -117,13 +117,13 @@ class TestCommand extends Command
         if($argument === 'create-test-customer-wp'){
 
             $customer = new Object;
-            $customer->name = 'example';
-            $customer->company = 'example-company';
-            $customer->second_email = 'example@email.com';
+            $customer->name = 'wp-example';
+            $customer->company = 'wp-example-company';
+            $customer->second_email = 'wp-example@email.com';
             $customer->cms_id = '147';
-            $customer->cms_name = 'example';
+            $customer->cms_name = 'wp-example';
             $customer->cms_url = 'http://cms.local/wordpress/';
-            $customer->cms_email = 'example@email.nl';
+            $customer->cms_email = 'wp-example@email.nl';
             $customer->cms_register_date = '2017-09-04 17:00:00';
             $customer->active = 1;
 

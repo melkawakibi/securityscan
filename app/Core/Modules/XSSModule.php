@@ -68,9 +68,9 @@ class XSSModule extends Module
 
 					$this->properties['parameter'] = $params[0];
 					$this->properties['execution_time'] = $execution_time;
-					$this->properties['module_name'] = 'xss';
-					$this->properties['risk'] = 'high';
-					$this->properties['wasc_id'] = '8';
+					$this->properties['module_name'] = Lang::get('string.XSS.module');
+					$this->properties['risk'] = Lang::get('string.XSS.risk');
+					$this->properties['wasc_id'] = Lang::get('string.XSS.wasc_id');
 
 					$xss_array = explode("=", $value);
 					$xss_attack = urldecode($xss_array[1]);

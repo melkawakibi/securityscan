@@ -11,6 +11,7 @@ use App\Services\ScanDetailService as ScanDetail;
 use App\Services\CustomerService as Customer;
 use \stdClass as Object;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 
 class PDFGenerator
@@ -30,15 +31,23 @@ class PDFGenerator
 
 		$risk = PDFGenerator::countRisks($scanDetail);
 
+		$level = PDFGenerator::checkRiskLevel($risk);
+
 		$modules = PDFGenerator::countModules($scanDetail);
 
-		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scandetails' => $scanDetail, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0], 'isShortReport' => $isShortReport])->render();
+		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scandetails' => $scanDetail, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0], 'isShortReport' => $isShortReport, 'level' => $level])->render();
+
+		if($customer[0]->cms_id === '145'){
+			$reportPath =  'public/resources/reports/report.pdf';
+		}else{
+			$reportPath =  'resources/reports/report.pdf';
+		}
 
 		try {
 		    $html2pdf = new Html2Pdf('P', 'A4', 'en');
 		    $html2pdf->pdf->SetDisplayMode('fullpage');
 		    $html2pdf->writeHTML($html);
-		    $html2pdf->output('resources/reports/report.pdf', 'F');
+		    $html2pdf->output($reportPath, 'F');
 		} catch (Html2PdfException $e) {
 		    $formatter = new ExceptionFormatter($e);
 		    echo $formatter->getHtmlMessage();
@@ -73,6 +82,23 @@ class PDFGenerator
 		return $riskObject;
 	}
 
+	public static function checkRiskLevel($risk)
+	{
+		$level = 0;
+
+		if($risk->low > 10 && $risk->low < 10){
+			$level = 1;
+		}elseif ($risk->low >= 10 && $risk->average <= 10  && $risk->high <= 5) {
+			$level = 2;
+		}elseif ($risk->average >= 10 && $risk->high >= 5) {
+			$level = 3;
+		}elseif ($risk->high >= 10) {
+			$level = 4;
+		}
+
+		return $level;
+	}
+
 	/**
 	 * 
 	 * @param ScanDetail $scanDetail
@@ -82,7 +108,7 @@ class PDFGenerator
 	{	
 		
 		$moduleObject = new Object;
-		$moduleObject->sql = array('module' => 'SQLI', 'risk' => 'hoog', 'count' => 0);
+		$moduleObject->sql = array('module' => 'SQLi', 'risk' => 'hoog', 'count' => 0);
 		$moduleObject->xss = array('module' => 'XSS', 'risk' => 'hoog', 'count' => 0);
 
 		foreach ($object as $value) {

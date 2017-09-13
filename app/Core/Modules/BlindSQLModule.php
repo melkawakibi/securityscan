@@ -67,9 +67,9 @@ class BlindSQLModule extends Module
 
 					$this->properties['parameter'] = $params[0];
 					$this->properties['execution_time'] = $execution_time;
-					$this->properties['module_name'] = 'sql';
-					$this->properties['risk'] = 'high';
-					$this->properties['wasc_id'] = '19';
+					$this->properties['module_name'] = Lang::get('string.SQL.module');
+					$this->properties['risk'] = Lang::get('string.SQL.risk');
+					$this->properties['wasc_id'] = Lang::get('string.SQL.wasc_id');
 
 					$sql_array = explode("=", $value);
 					$sql_attack = urldecode($sql_array[1]);
