@@ -18,6 +18,7 @@ class ScanDetailDAL
 			$scanDetail->scan_id = $object->scan_id;	
 			$scanDetail->module_name = $properties['module_name'];
 			$scanDetail->risk = $properties['risk'];
+			$scanDetail->target = $properties['target'];
 			$scanDetail->parameter = $properties['parameter'];
 			$scanDetail->attack = $properties['attack'];
 			$scanDetail->error = $properties['error'];

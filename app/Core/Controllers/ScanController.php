@@ -114,7 +114,14 @@ class ScanController extends Controller
 
           break;
 
-        case 'SQLi':
+        case 'BlindSQL':
+          
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--bs' => 1, '--rt' => 0]);
+          return $request;
+
+          break;
+
+        case 'SQL':
           
           \Artisan::call('scan', ['url' => $customer->cms_url, '--s' => 1, '--rt' => 0]);
           return $request;
@@ -138,7 +145,14 @@ class ScanController extends Controller
 
           break;
 
-        case 'SQLi':
+        case 'BlindSQL':
+          
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--bs' => 1, '--rt' => 1]);
+          return $request;
+
+          break;        
+
+        case 'SQL':
           
           \Artisan::call('scan', ['url' => $customer->cms_url, '--s' => 1, '--rt' => 1]);
           return $request;

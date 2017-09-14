@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Core\Modules\BlindSQLModule as BlindSQL;
+use App\Core\Modules\SQLModule as SQL;
 use App\Core\Modules\XSSModule as XSS;
 use App\Services\WebsiteService as Website;
 use App\Services\ScanService as Scan;
@@ -22,8 +23,14 @@ class Scanner
 	protected $url;
 
 	/**
-	 * [$sql description]
+	 * [$blindSql description]
 	 * @var BlindSQLModule
+	 */
+	protected $blindSql;
+
+	/**
+	 * [$sql description]
+	 * @var SQLModule
 	 */
 	protected $sql;
 
@@ -124,8 +131,12 @@ class Scanner
 	public function prepare($options)
 	{
 
-		if ($options['s']) {
-			$this->sql = new BlindSQL($this->url);
+		if ($options['bs']) {
+			$this->blindSql = new BlindSQL($this->url);
+		}
+
+		if($options['s']){
+			$this->sql = new SQL($this->url);
 		}
 
 		if ($options['x']) {
@@ -147,10 +158,16 @@ class Scanner
 		$scan = Scan::store($scan);
 
 		$type = new Object;
+		$type->blindSql = false;
 		$type->sql = false;
 		$type->xss = false;
 
-		if ($this->sql instanceof BlindSQL) {
+		if($this->blindSql instanceof BlindSQL){
+			$type->blindSql = true;
+			$this->blindSql->start();
+		}		
+
+		if ($this->sql instanceof SQL) {
 			$type->sql = true;
 			$this->sql->start();
 		}
@@ -184,11 +201,13 @@ class Scanner
 	public function storeType($object, $scan)
 	{
 		$type = '';
-		if($object->sql === true && $object->xss === true){
+		if($object->blindSql === true && $object->sql === true && $object->xss === true){
 			$type = 'Full Scan';
-		}elseif($object->sql === true && $object->xss === false){
-			$type = 'SQLi';
-		}elseif($object->sql === false && $object->xss === true){
+		}elseif($object->blindSql === true && $object->sql === false  && $object->xss === false){
+			$type = 'BlindSQL';
+		}elseif($object->blindSql === false && $object->sql === true  && $object->xss === false) {
+			$type = 'SQL';
+		}elseif($object->blindSql === false && $object->sql === false  && $object->xss === true){
 			$type = 'XSS';
 		}
 

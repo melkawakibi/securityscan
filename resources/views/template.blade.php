@@ -104,25 +104,25 @@
 
 		<tr>
 			@if($level === 0)
-			<td class="thread-level level"></td>
-			<td style="font-size: 20px;text-align: center;">0</td>
-			<td>@lang('string.thread_level_0')</td>
+				<td class="thread-level level"></td>
+				<td style="font-size: 20px;text-align: center;">0</td>
+				<td>@lang('string.thread_level_0')</td>
 			@elseif($level === 1) 
-			<td class="thread-level level"></td>
-			<td style="font-size: 20px;text-align: center;">1</td>
-			<td>@lang('string.thread_level_1')</td>
+				<td class="thread-level level"></td>
+				<td style="font-size: 20px;text-align: center;">1</td>
+				<td>@lang('string.thread_level_1')</td>
 			@elseif($level === 2)
-			<td class="thread-level level2"></td>
-			<td style="font-size: 20px;text-align: center;">2</td>
-			<td>@lang('string.thread_level_2')</td>
+				<td class="thread-level level2"></td>
+				<td style="font-size: 20px;text-align: center;">2</td>
+				<td>@lang('string.thread_level_2')</td>
 			@elseif($level === 3)
-			<td class="thread-level level3"></td>
-			<td style="font-size: 20px;text-align: center;">3</td>
-			<td>@lang('string.thread_level_3')</td>
+				<td class="thread-level level3"></td>
+				<td style="font-size: 20px;text-align: center;">3</td>
+				<td>@lang('string.thread_level_3')</td>
 			@elseif($level === 4)
-			<td class="thread-level level4"></td>
-			<td style="font-size: 20px;text-align: center;">4</td>
-			<td>@lang('string.thread_level_4')</td>
+				<td class="thread-level level4"></td>
+				<td style="font-size: 20px;text-align: center;">4</td>
+				<td>@lang('string.thread_level_4')</td>
 			@endif
 		</tr>
 
@@ -146,6 +146,7 @@
 
 	</table>
 
+	@if($modules->sql['count'] > 0 || $modules->xss['count'] > 0)
 	<table>
 
 		<tr>
@@ -164,10 +165,12 @@
 
 				<td> {{ $module['count'] }}</td>
 
-				@if($module['module'] === 'SQLi')
-				<td>@lang('string.SQLi_description')</td>
+				@if($module['module'] === 'BlindSQLi')
+					<td>@lang('string.BlindSQLi_description')</td>
+				@elseif($module['module'] === 'SQLi')
+					<td>@lang('string.SQLi_description')</td>
 				@else
-				<td>@lang('string.XSS_description')</td>
+					<td>@lang('string.XSS_description')</td>
 				@endif
 			@endif
 		</tr>
@@ -176,59 +179,74 @@
 	</table>
 
 	<table>
-		
-		<tr>
-			<th>Advies</th>
-		</tr>
+		@foreach($modules as $module)
+			@if($module['count'] > 0 AND $module['module'] !== 'BlindSQLi')					
+				<tr>
+					@if($module['module'] === 'SQLi')
+						<th>Advies: SQLi en Blind SQLi </th>
+					@else
+						<th>Advies: {{ $module['module'] }} </th>
+					@endif
+				</tr>
 
-		<tr>
-			<td></td>
-		</tr>
-
-	</table>
-
-	@if(!$isShortReport)
-	@if(!empty($scandetails))
-	<table>
-
-		<tr>
-			<th>Detials van gevonden kwetsbaarheden</th>
-		</tr>
-
-		@foreach($scandetails as $scandetail)
-
-		<tr>
-			<td><b>ID: </b> {{$scandetail->id}}</td>
-		</tr>
-		<tr>
-			<td><b>Module: </b> {{$scandetail->module_name}}</td>
-		</tr>
-		<tr>
-			<td><b>Risico: </b> {{$scandetail->risk}}</td>
-		</tr>
-		<tr>
-			<td><b>Parameter: </b> {{$scandetail->parameter}}</td>
-		</tr>
-		<tr>
-			<td><b>Aanval: </b> {{$scandetail->attack}}</td>
-		</tr>
-		<tr>
-			<td><b>Error: </b> {{$scandetail->error}}</td>
-		</tr>
-		<tr>
-			<td><b>WASC ID: </b> {{$scandetail->wasc_id}}</td>
-		</tr>
-		<tr>
-			<td><b>Datum: </b> {{$scandetail->created_at}}</td>
-		</tr>
-
-		<tr>
-			<th></th>
-		</tr>
+				<tr>
+					@if($module['module'] === 'SQLi')
+						<td>@lang('string.SQL_advies')</td>
+					@else
+						<td>@lang('string.XSS_advies')</td>
+					@endif
+				</tr>
+			@endif
 		@endforeach
 
 	</table>
 	@endif
+
+	@if(!$isShortReport)
+		@if(!$isScanDetailEmpty)
+		<table>
+
+			<tr>
+				<th>Detials van gevonden kwetsbaarheden</th>
+			</tr>
+
+			@foreach($scandetails as $scandetail)
+
+			<tr>
+				<td><b>ID: </b> {{$scandetail->id}}</td>
+			</tr>
+			<tr>
+				<td><b>Module: </b> {{$scandetail->module_name}}</td>
+			</tr>
+			<tr>
+				<td><b>Risico: </b> {{$scandetail->risk}}</td>
+			</tr>
+			<tr>
+				<td><b>Target URL: </b> {{ $scandetail->target }} </td>
+			</tr>
+			<tr>
+				<td><b>Parameter: </b> {{$scandetail->parameter}}</td>
+			</tr>
+			<tr>
+				<td><b>Aanval: </b> {{$scandetail->attack}}</td>
+			</tr>
+			<tr>
+				<td><b>Error: </b> {{$scandetail->error}}</td>
+			</tr>
+			<tr>
+				<td><b>WASC ID: </b> {{$scandetail->wasc_id}}</td>
+			</tr>
+			<tr>
+				<td><b>Datum: </b> {{$scandetail->created_at}}</td>
+			</tr>
+
+			<tr>
+				<th></th>
+			</tr>
+			@endforeach
+
+		</table>
+		@endif
 	@endif
 </body>
 </html>

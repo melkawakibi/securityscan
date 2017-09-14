@@ -23,6 +23,7 @@ class ScanCommand extends Command
                             {--fm= : set follow mode}
                             {--u= : username} 
                             {--p= : password} 
+                            {--bs : Blind SQL module}
                             {--s : SQL module} 
                             {--x : XSS module}
                             {--rt : handles report type}';
@@ -50,7 +51,7 @@ class ScanCommand extends Command
      */
     public function defaultOptions()
     {
-        return array( "r" => "y", "fm" => "0", "s" => 1, "x" => 1, "rt" => 0 );
+        return array( "r" => "y", "fm" => "0", "bs" => 1, "s" => 1, "x" => 1, "rt" => 0 );
     }
 
     public function logController()
@@ -78,7 +79,7 @@ class ScanCommand extends Command
         $url = $this->argument('url');
 
         $hasValues = Utils::arrayHasValues($this->options());
-
+        
         $options = ($hasValues) ? $this->options() : $this->defaultOptions();
 
         $scanner = new Scanner($url, $options, new Spider($url));

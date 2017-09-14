@@ -35,7 +35,13 @@ class PDFGenerator
 
 		$modules = PDFGenerator::countModules($scanDetail);
 
-		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scandetails' => $scanDetail, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0], 'isShortReport' => $isShortReport, 'level' => $level])->render();
+		$isScanDetailEmpty = false;
+
+		if($scanDetail->isEmpty()){
+			$isScanDetailEmpty = true;
+		}
+
+		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scandetails' => $scanDetail, 'isScanDetailEmpty' => $isScanDetailEmpty, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0], 'isShortReport' => $isShortReport, 'level' => $level])->render();
 
 		if($customer[0]->cms_id === '145'){
 			$reportPath =  'public/resources/reports/report.pdf';
@@ -108,6 +114,7 @@ class PDFGenerator
 	{	
 		
 		$moduleObject = new Object;
+		$moduleObject->blindSql = array('module' => 'BlindSQLi', 'risk' => 'hoog', 'count' => 0); 
 		$moduleObject->sql = array('module' => 'SQLi', 'risk' => 'hoog', 'count' => 0);
 		$moduleObject->xss = array('module' => 'XSS', 'risk' => 'hoog', 'count' => 0);
 
@@ -115,7 +122,9 @@ class PDFGenerator
 			
 			$module = $value->module_name;
 
-			if($module === 'sql'){
+			if($module === 'blindsql'){
+				$moduleObject->blindSql['count'] += 1;
+			}elseif($module === 'sql'){
 				$moduleObject->sql['count'] += 1;
 			}else{
 				$moduleObject->xss['count'] +=1;

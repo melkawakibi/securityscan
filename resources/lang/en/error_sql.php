@@ -12,7 +12,6 @@ return [
 
     'mysql1' => 'You have an error in your SQL syntax',
     'mysql2' => 'Supplied argument is not a valid MySQL',
-    'mysql1' => 'The used Select statements have a different number of columns',
     'microsoft1' => 'Syntax error in string in query expression',
     'microsoft2' => 'Microsoft OLE DB Provider for ODBC Drivers',
     'java1' => 'java.sql.SQLException: Syntax error or access violation',

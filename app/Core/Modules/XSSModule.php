@@ -73,8 +73,10 @@ class XSSModule extends Module
 					$this->properties['wasc_id'] = Lang::get('string.XSS.wasc_id');
 
 					$xss_array = explode("=", $value);
+					$xss_url = explode("?", $xss_array[0]);
 					$xss_attack = urldecode($xss_array[1]);
 
+					$this->properties['target'] =  $xss_url[0];
 					$this->properties['attack'] = $xss_attack;
 
 					if($this->find_xss($res, $xss_attack)) {

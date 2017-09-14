@@ -32,7 +32,7 @@ abstract class Module
 		$this->urlArray = array();
 		$this->defaultlinks = array();
 		$this->properties = array();
-		$this->timeout = 1;
+		$this->timeout = 10;
 	}
 
 	abstract public function start();
@@ -103,7 +103,7 @@ abstract class Module
 	public function getReplaceString($payload)
 	{
 		if(strpos($payload, 'sqlblind') !== false){
-			return array("0" => (string) $this->timeout, "1" => Lang::get('string.SQL_Replace'));
+			return array("0" => (string) $this->timeout, "1" => Lang::get('string.BlindSQL_Replace'));
 		}else{
 			return array("0" => Utils::generateRandomString(), "1" => Lang::get('string.XSS_Replace'));
 		}

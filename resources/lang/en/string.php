@@ -10,11 +10,13 @@ return [
     |
     */
 
+    'BlindSQLi' => 'Blind SQL injection is a type of cyber attack on a database.',
+    'payload_blind_sql' => '/resources/payload/sqlblind-injection.txt',
+    'BlindSQL_Replace' => '__TIME__',
 
-    'SQLi' => 'SQL injection is a type of cyber attack on a database.',
+    'SQL' => 'SQL injection is a type of cyber attack on a database.',
     'SQLi_Attack' => 'You have an error in your SQL syntax;',
-    'payload_sql' => '/resources/payload/sqlblind-injection.txt',
-    'SQL_Replace' => '__TIME__',
+    'payload_sql' => '/resources/payload/sql-injection.txt',
 
     'XSS' => 'XSS stands for Cross side scripting, a type of cyber attack that executes javascriptes on the targets website.',
     'XSS_Attack' => '<script>alert(1);</script>',
@@ -42,7 +44,10 @@ return [
     |
     */
 
-    'SQLi_description' => 'SQL Injection is een code injectie techniek dat gebruikt wordt <br> om software applicaties aan te vallen met SQL statements met als <br> doel schade aan te brengen in het software systeem.',
+    'BlindSQLi_description' => 'Blind SQL Injections is een query injectie techniek waarbij de hacker <br> True en False vragen stelt aan de database om te <br> bepalen of een database kwetsbaar.',
+
+    'SQLi_description' => 'SQL Injection is een query injectie techniek dat gebruikt wordt <br> om software applicaties aan te vallen met SQL statements met als <br> doel data uit een database op te vragen.',
+
     'XSS_description' => 'Cross-site scripting is een type kwetsbaarheid dat vooral gevonden <br> wordt in webapplicaties. XSS maakt het mogelijk voor hackers om <br> client-side scripting talen te injecteren op webpagina\'s.',
 
     /*
@@ -51,6 +56,13 @@ return [
     | --------------------------------------------------------------------------
     |
     */
+
+    'BlindSQL' => [
+
+        'module' => 'blindsql',
+        'risk' => 'high',
+        'wasc_id' => '19',  
+    ],
 
     'SQL' => [
 
@@ -65,6 +77,31 @@ return [
         'risk' => 'high',
         'wasc_id' => '8',  
     ],
+
+
+   /*
+    | --------------------------------------------------------------------------
+    | Advies
+    | --------------------------------------------------------------------------
+    |
+    */ 
+
+
+    'SQL_advies' => 'SQL injectie is helaas nog steeds een veel voorkomende kwetsbaarheid. <br> Maar gelukkig zijn er een aantal oplossingen hiervoor bedacht. <br> Hieronder een lijst met simpele technieken om SQL injecties te verkomen. <br>
+        <h5>Regels</h5>
+        <ul>
+            <li>Gebruik maken van Prepared Statments</li>
+            <li>Gebruik maken van opgeslagen procedures (zoals data)</li>
+            <li>Een White List maken van toegestaande invoer</li>
+            <li>Escaping van gebruikersinput.</li>
+        </ul>',
+
+    'XSS_advies' => 'Cross-site scripting is een veel voorkomende client-side kwetsbaarheid waarbij <br> de aanvaller client-site code injecteert op webpagina. <br> Er zijn twee basis regels waar een website aan moet <br> voldoen om dit probleem te verkomen: <br>
+        <h5>Regels</h5> 
+        <ul>
+            <li>Voer nooit onvertrouwde data in, behalve op toegestaande locaties</li>
+            <li>Voordat de data wordt ingevoerd moet de HTML Escaped worden</li>
+        </ul>',
 
 
 ];
