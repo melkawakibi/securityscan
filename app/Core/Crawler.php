@@ -71,7 +71,7 @@ class Crawler
 								$type = $fieldObj->getType();
 
 								if($type === 'text' || $type === 'password'){
-									array_push($this->paramPOST, ['id' => $link[0]->id, 'param' => $field->getName()]);
+									array_push($this->paramPOST, ['id' => $link[0]->id, 'param' => $field->getName(), 'method' => 'POST']);
 								}
 							}
 						}
@@ -89,6 +89,8 @@ class Crawler
 
 		$params = Utils::filterGetUrl($url);
 
+		$url = Utils::getBaseUrl($url);
+
 		if(!empty($params)){
 
 			$link = Link::findOneByLinkUrl($url);
@@ -100,13 +102,11 @@ class Crawler
 					$param = (object) $param;
 
 					if(!empty($param)){
-						array_push($this->paramGET, ['id' => $link[0]->id, 'param' => $param->scalar]);
+						array_push($this->paramGET, ['id' => $link[0]->id , 'param' => $param->scalar, 'method' => 'GET']);
 					}
 				}
 			}
 		}
-
-		//print_r($this->paramGET);
 
 		return $this->paramGET;
 

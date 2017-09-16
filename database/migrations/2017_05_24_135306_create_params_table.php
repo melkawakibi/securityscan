@@ -16,6 +16,7 @@ class CreateParamsTable extends Migration
         Schema::create('params', function (Blueprint $table) {
             $table->increments('id');
             $table->string('params');
+            $table->string('method');
             $table->integer('link_id')->unsigned();
             $table->foreign('link_id')->references('id')->on('links');
             $table->timestamps();

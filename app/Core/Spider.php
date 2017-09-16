@@ -134,28 +134,34 @@ class Spider extends PHPCrawler
 		$website->follow_robot = $this->follow_robot;	
 		$website->customer_id = $this->customer_id;	
 
-		if(!is_null($website)){
-			$website = Website::store($website);
+		try{
 			if(!is_null($website)){
-				$this->setWebsite($website->id);
-			}
-		}
-
-		if($this->url === $pageInfo->url){
-
-			if(!is_null($website)){
-
-				$header = new Object;
-				$header->headers = $this->headers;
-				$header->website_id = $this->website_id;
-
-				Header::store($header);
+				
+				$website = Website::store($website);
+				
+				if(!is_null($website)){
+					$this->setWebsite($website->id);
+				}
 			}
 
-		}else{
+			if($this->url === $pageInfo->url){
 
-			$this->handleLinks($this->links);
+				if(!is_null($website)){
 
+					$header = new Object;
+					$header->headers = $this->headers;
+					$header->website_id = $this->website_id;
+
+					Header::store($header);
+				}
+
+			}else{
+
+				$this->handleLinks($this->links);
+
+			}
+		} catch (\Exception $e){
+			echo $e->getMessage();
 		}
 	}
 
@@ -167,21 +173,32 @@ class Spider extends PHPCrawler
 
 				$link = (object) $link;
 
-				if(!Link::numRow($link->url_rebuild)){
+				$linkCode = $link->linkcode;			
+
+				$isPost = Utils::searchCriteria($linkCode, array('form', 'method', 'post'));
+
+			if(($method = $isPost ? 'POST' : 'GET')){
 
 					$object = new Object;
 					$object->link = $link;
+					$object->method = $method;
 					$object->website_id = $this->website_id;
 
-					$link = Link::store($object);
+					$url = Utils::getBaseUrl($link->url_rebuild);
 
-					if(!is_null($link)){
+					if(!Link::numRowByLinkAndMethod($url, $method)){
 
-						$headerLink = new Object;
-						$headerLink->headers = $this->headers;
-						$headerLink->link_id = $link->id;
+						$link = Link::store($object);
 
-						HeaderLink::store($headerLink);
+
+						if(!is_null($link)){
+
+							$headerLink = new Object;
+							$headerLink->headers = $this->headers;
+							$headerLink->link_id = $link->id;
+
+							HeaderLink::store($headerLink);
+						}
 					}
 				}
 			}
@@ -191,16 +208,23 @@ class Spider extends PHPCrawler
 	public function handelParams($pageInfo)
 	{
 
-		$paramPOST = $this->crawler->getFormsParams($pageInfo->url);
+		$POSTParam = $this->crawler->getFormsParams($pageInfo->url);
 
-		$paramGET = $this->crawler->getURIParams($pageInfo->url);
+		$GETParam = $this->crawler->getURIParams($pageInfo->url);
 
-		if(!empty($paramGET)){
-			foreach ($paramGET as $param) {
-
+		if(!empty($GETParam)){
+			foreach ($GETParam as $param) {
 				if(!Param::numRow($param)){
 					Param::store($param);
 				}			
+			}
+		}
+
+		if(!empty($POSTParam)){
+			foreach ($POSTParam as $param) {
+				if(!Param::numRow($param)){
+					Param::store($param);
+				}	
 			}
 		}
 	}

@@ -31,7 +31,7 @@ class SQLMOdule extends Module
 
 		if(!empty($links)){
 
-			$this->linkList($links, Lang::get('string.payload_sql'));
+			$this->buildGETURI($links, Lang::get('string.payload_sql'));
 
 			echo 'SQLI attack'.PHP_EOL.PHP_EOL;
 
@@ -102,6 +102,11 @@ class SQLMOdule extends Module
 					Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
 			}		
 		}
+	}
+
+	protected function attackPost($scan)
+	{
+
 	}
 
 

@@ -4,6 +4,7 @@ namespace App\Core\Modules;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ServerException;
 use App\Services\WebsiteService as Website;
 use App\Services\ScanService as Scan;
 use App\Services\LinkService as Link;
@@ -39,20 +40,20 @@ abstract class Module
 
 	abstract protected function attackGet($scan);
 
+	abstract protected function attackPost($scan);
+
 	protected function getBaseContent($url)
 	{
 		$res = $this->client->request('GET', $this->url);
 		return $res->getBody();
 	}
 
-	protected function linkList($links, $payload)
+	protected function buildGETURI($links, $payload)
 	{
 
 		foreach ($links as $key => $link) {
 
-			$baseUrl = Utils::getBaseUrl($link->url);
-
-			$params = Param::findAllByLinkId($link->id);
+			$params = Param::findAllByMethod('GET');
 
 			$params = Utils::getParamArray($params);
 
@@ -64,23 +65,27 @@ abstract class Module
 
 			$lines = Utils::replace_string_array($lines, $replace_str[0], $replace_str[1]);
 
-			if ($link->methode === 'GET') {
+			$query_array = Utils::create_comined_array($params, $lines);
 
-				$query_array = Utils::create_comined_array($params, $lines);
+			array_filter($query_array);
 
-				array_filter($query_array);
+				if($link->method === 'GET'){
 
-			}
+					foreach ($query_array as $key => $query) {
+					$query = http_build_query($query);
+					$url = $link->url . '?' . $query;
+					array_push($this->urlArray, $url);
 
-			foreach ($query_array as $key => $query) {
-				$query = http_build_query($query);
-				$url = $baseUrl . '?' . $query;
-				array_push($this->urlArray, $url);
-
+				}
 			}
 
 		}
 	}
+
+	protected function buildPostFormParams()
+	{
+		
+	}	
 
 	protected function responseAnalyse($res, $str)
 	{

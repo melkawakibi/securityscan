@@ -31,7 +31,7 @@ class XSSModule extends Module
 
 		if(!empty($links)){
 
-			$this->linkList($links, Lang::get('string.payload_xss'));
+			$this->buildGETURI($links, Lang::get('string.payload_xss'));
 
 			echo 'XSS attack'.PHP_EOL.PHP_EOL;
 
@@ -101,6 +101,11 @@ class XSSModule extends Module
 
 			}		
 		}
+	}
+
+	protected function attackPost($scan)
+	{
+		
 	}
 
 	protected function find_xss($res, $str)

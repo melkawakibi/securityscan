@@ -31,7 +31,7 @@ class BlindSQLModule extends Module
 
 		if(!empty($links)){
 
-			$this->linkList($links, Lang::get('string.payload_blind_sql'));
+			$this->buildGETURI($links, Lang::get('string.payload_blind_sql'));
 
 			echo 'Blind SQLI attack'.PHP_EOL.PHP_EOL;
 
@@ -87,15 +87,20 @@ class BlindSQLModule extends Module
 					$scanDetail->properties = $this->properties;
 					ScanDetail::store($scanDetail);
 				}
-			}
-
-			Log::info('Time: ' . $seconds);
-			Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-			Log::info('Request url: ' . $value);
-			Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-			Log::info('----------------- Content -------------------------' . PHP_EOL);
-			Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);		
+			}	
 		}
 	}
+
+	protected function attackPost($scan)
+	{
+		
+		
+		if (filter_var($value, FILTER_VALIDATE_URL) !== false){
+				
+				$res = $this->client->request('POST', $value);
+			}
+	}
+
+
 
 }
