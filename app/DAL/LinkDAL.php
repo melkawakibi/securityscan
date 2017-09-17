@@ -60,9 +60,9 @@ class LinkDAL
 		return Link::Where(['url' => $url])->get();
 	}
 
-	public static function numRowByLinkAndMethod($url, $method)
+	public static function numRowByLinkAndMethod($id, $method)
 	{
-		return Link::Where(['url' => $url, 'method' => $method])->get()->count();
+		return Link::Where(['id' => $id, 'method' => $method])->get()->count();
 	}
 
 }

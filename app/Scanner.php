@@ -185,11 +185,11 @@ class Scanner
 
 		$this->storeScanTime($scan);
 
-		echo PHP_EOL . 'Generating report...' . PHP_EOL;
+		// echo PHP_EOL . 'Generating report...' . PHP_EOL;
 
-		$this->generateReport($website[0], $scan, $isShortReport);
+		// $this->generateReport($website[0], $scan, $isShortReport);
 
-		echo PHP_EOL . 'Report is generated.' . PHP_EOL . 'It is stored in the folder: public/resources/reports' . PHP_EOL;
+		// echo PHP_EOL . 'Report is generated.' . PHP_EOL . 'It is stored in the folder: public/resources/reports' . PHP_EOL;
 	}
 
 	/**

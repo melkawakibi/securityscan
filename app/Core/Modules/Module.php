@@ -30,7 +30,8 @@ abstract class Module
 	{
 		$this->url = $url;
 		$this->client = new GuzzleClient;
-		$this->urlArray = array();
+		$this->arrayLinksGET = array();
+		$this->arrayFormParams = array();
 		$this->defaultlinks = array();
 		$this->properties = array();
 		$this->timeout = 10;
@@ -59,13 +60,9 @@ abstract class Module
 
 			$query_array = array();
 
-			$lines = file(public_path() . $payload);
+			$lines = $this->getLines($payload);
 
-			$replace_str = $this->getReplaceString($payload);
-
-			$lines = Utils::replace_string_array($lines, $replace_str[0], $replace_str[1]);
-
-			$query_array = Utils::create_comined_array($params, $lines);
+			$query_array = Utils::create_comined_array($params, $lines, $link->id);
 
 			array_filter($query_array);
 
@@ -74,7 +71,7 @@ abstract class Module
 					foreach ($query_array as $key => $query) {
 					$query = http_build_query($query);
 					$url = $link->url . '?' . $query;
-					array_push($this->urlArray, $url);
+					array_push($this->arrayLinksGET, $url);
 
 				}
 			}
@@ -82,20 +79,34 @@ abstract class Module
 		}
 	}
 
-	protected function buildPostFormParams()
+	protected function buildPostFormParams($links, $payload)
 	{
-		
-	}	
 
-	protected function responseAnalyse($res, $str)
-	{
-		$response = $res->getBody();
+		foreach ($links as $key => $link) {
 
-		if (strpos($response, $str)) {
-			return true;
-		} else if( $response) {
-			return false;
+			$params = Param::findAllParamByLinkAndMethod($link->id, 'POST');
+
+			$params = Utils::getParamArray($params);
+
+			$lines = $this->getLines($payload);
+
+			$query_array = Utils::create_comined_array($params, $lines, $link->id);
+
+			if(!empty($query_array)){
+				array_push($this->arrayFormParams, $query_array);
+			}		
 		}
+	}
+
+	public function getLines($payload)
+	{
+		$lines = file(public_path() . $payload);
+
+		$replace_str = $this->getReplaceString($payload);
+
+		$lines = Utils::replace_string_array($lines, $replace_str[0], $replace_str[1]);
+
+		return $lines;
 	}
 
 	public function setTimeOut($timeout)

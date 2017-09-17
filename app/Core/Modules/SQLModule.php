@@ -35,7 +35,7 @@ class SQLMOdule extends Module
 
 			echo 'SQLI attack'.PHP_EOL.PHP_EOL;
 
-			$this->attackGet($scan);
+			//$this->attackGet($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
@@ -45,7 +45,7 @@ class SQLMOdule extends Module
 	protected function attackGet($scan)
 	{
 
-		foreach ($this->urlArray as $key => $value) {
+		foreach ($this->arrayLinksGET as $key => $value) {
 
 			$time_start = microtime(true);
 			
@@ -108,7 +108,6 @@ class SQLMOdule extends Module
 	{
 
 	}
-
 
 	protected function find_sql($res, $str)
 	{

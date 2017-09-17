@@ -152,13 +152,14 @@ class Utils
 		return $array;
 	}
 
-	public static function create_comined_array($array1, $array2)
+	public static function create_comined_array($array1, $array2, $id)
 	{
 		$newArray = array();
 
 		foreach ($array1 as $key){
         	foreach ($array2 as $i => $value) {
             	$newArray[$i][$key] = $value;
+            	array_push($newArray[$i], $id);
          	}
     }
 

@@ -57,4 +57,8 @@ class ParamDAL
 		return Param::Where(['params' => $param])->get()->count();	
 	}
 
+	public static function findAllParamByLinkAndMethod($id, $method)
+	{
+		return Param::Where(['link_id' => $id, 'method' => $method])->get();
+	}
 }

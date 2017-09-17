@@ -33,9 +33,13 @@ class BlindSQLModule extends Module
 
 			$this->buildGETURI($links, Lang::get('string.payload_blind_sql'));
 
+			$this->buildPostFormParams($links, Lang::get('string.payload_blind_sql'));
+
 			echo 'Blind SQLI attack'.PHP_EOL.PHP_EOL;
 
-			$this->attackGet($scan);
+			$this->attackPost($scan);
+
+			//$this->attackGet($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
@@ -45,15 +49,13 @@ class BlindSQLModule extends Module
 	protected function attackGet($scan)
 	{
 
-		foreach ($this->urlArray as $key => $value) {
+		foreach ($this->arrayLinksGET as $key => $link) {
 
 			$time_start = microtime(true);
-			
-			$res = 'default';
 
-			if (filter_var($value, FILTER_VALIDATE_URL) !== false){
+			if (filter_var($link, FILTER_VALIDATE_URL) !== false){
 				
-				$res = $this->client->request('GET', $value);
+				$this->client->request('GET', $link);
 			}
 
 			$time_end = microtime(true);
@@ -63,7 +65,7 @@ class BlindSQLModule extends Module
 			$minutes = (int)($duration/60)-$hours*60;
 			$seconds = (int)$duration-$hours*60*60-$minutes*60;
 
-			$params = Utils::filterGetUrl($value);
+			$params = Utils::filterGetUrl($link);
 
 			$this->properties['parameter'] = $params[0];
 			$this->properties['execution_time'] = $seconds;
@@ -71,14 +73,14 @@ class BlindSQLModule extends Module
 			$this->properties['risk'] = Lang::get('string.BlindSQL.risk');
 			$this->properties['wasc_id'] = Lang::get('string.BlindSQL.wasc_id');
 
-			$sql_array = explode("=", $value);
+			$sql_array = explode("=", $link);
 			$sql_url = explode("?", $sql_array[0]);
 			$sql_attack = urldecode($sql_array[1]);
 
 			$this->properties['target'] =  $sql_url[0];
 			$this->properties['attack'] = $sql_attack;
 
-			$this->properties['error'] = $value;
+			$this->properties['error'] = $link;
 
 			if($seconds >= $this->timeout){
 				if(!is_null($scan)){
@@ -93,14 +95,24 @@ class BlindSQLModule extends Module
 
 	protected function attackPost($scan)
 	{
-		
-		
-		if (filter_var($value, FILTER_VALIDATE_URL) !== false){
+
+		foreach ($this->arrayFormParams as $key => $formParam) {
+
+			$id = $formParam[0][0];
+
+			$link = Link::findOneById($id);
+
+			if (filter_var($link->first()->url, FILTER_VALIDATE_URL) !== false){		
 				
-				$res = $this->client->request('POST', $value);
-			}
+				$res = $this->client->request('POST', $link->first()->url, [
+					'form_params' => [
+							$formParam,
+						]
+					]);
+
+				echo $res->getStatusCode();
+			}	
+		}
 	}
-
-
 
 }

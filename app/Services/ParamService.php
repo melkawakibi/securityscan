@@ -48,4 +48,8 @@ class ParamService implements Service
 		return Param::findAllByMethod($method);
 	}
 
+	public static function findAllParamByLinkAndMethod($id, $method)
+	{
+		return Param::findAllParamByLinkAndMethod($id, $method);
+	}
 }
