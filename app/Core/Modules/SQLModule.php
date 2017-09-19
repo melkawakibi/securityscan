@@ -123,9 +123,11 @@ class SQLMOdule extends Module
 
 			foreach ($formArray as $key => $values) {
 
-				$res = '';
+				$response = '';
 
 					if(is_array($values)){
+
+						$attack = $this->getAttack($values);
 
 						$values[$submitParam] = $submitValue;
 
@@ -146,7 +148,7 @@ class SQLMOdule extends Module
 						$minutes = (int)($duration/60)-$hours*60;
 						$seconds = (int)$duration-$hours*60*60-$minutes*60;
 
-					if($res !== 'default'){
+					if($response !== 'default'){
 						if(strcmp($this->getBaseContent($this->url), $response->content)){
 
 							$this->properties['parameter'] = 'form-params';
@@ -156,7 +158,7 @@ class SQLMOdule extends Module
 							$this->properties['wasc_id'] = Lang::get('string.SQL.wasc_id');
 							$this->properties['method'] = 'POST';
 							$this->properties['target'] =  $url;
-							$this->properties['attack'] = 'attack';
+							$this->properties['attack'] = $attack;
 
 							foreach (Lang::get('error_sql') as $key => $value) {
 
@@ -180,6 +182,15 @@ class SQLMOdule extends Module
 			}
 		}
 	}
+
+	protected function getAttack($values)
+	{
+		foreach ($values as $key => $value) {
+			
+			return $value;
+
+		}
+	}	
 
 	protected function find_sql($content, $str)
 	{

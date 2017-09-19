@@ -237,6 +237,9 @@
 				<td><b>WASC ID: </b> {{$scandetail->wasc_id}}</td>
 			</tr>
 			<tr>
+				<td><b>Methode: </b> {{$scandetail->method}}</td>
+			</tr>
+			<tr>
 				<td><b>Datum: </b> {{$scandetail->created_at}}</td>
 			</tr>
 
