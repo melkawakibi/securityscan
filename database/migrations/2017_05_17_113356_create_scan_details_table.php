@@ -24,6 +24,7 @@ class CreateScanDetailsTable extends Migration
             $table->text('attack');
             $table->string('error');
             $table->string('wasc_id');
+            $table->string('method');
             $table->string('execution_time');
             $table->timestamps();
         });

@@ -24,6 +24,7 @@ class ScanDetailDAL
 			$scanDetail->error = $properties['error'];
 			$scanDetail->wasc_id = $properties['wasc_id'];
 			$scanDetail->execution_time = $properties['execution_time'];
+			$scanDetail->method = $properties['method'];
 
 			$scanDetail->save();
 

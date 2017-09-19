@@ -140,30 +140,44 @@ class Utils
 
 	}
 
-
 	public static function getParamArray($param_array)
 	{	
 		$array = array();
 
 		foreach ($param_array as $key => $value) {
-			array_push($array, $value->params);
+			if($value->type !== 'submit'){
+				array_push($array, $value->params);
+			}
 		}
 
 		return $array;
 	}
 
-	public static function create_comined_array($array1, $array2, $id)
+	public static function create_comined_array_get($array1, $array2)
 	{
 		$newArray = array();
 
 		foreach ($array1 as $key){
         	foreach ($array2 as $i => $value) {
             	$newArray[$i][$key] = $value;
-            	array_push($newArray[$i], $id);
          	}
     }
 
 		return $newArray;
+	}
+
+	public static function create_comined_array_post($array1, $array2, $submitParam, $submitValue, $id)
+	{	
+		$paramArray = array();
+		$paramArray = ['id' => $id, 'param' => $submitParam, 'value' => $submitValue];
+		
+		foreach ($array1 as $key){
+        	foreach ($array2 as $i => $value) {
+            	$paramArray[$i][$key] = $value;
+         	}
+    	}
+
+    	return $paramArray;
 	}
 
 	public static function replace_string_array($array, $str, $strToReplace)

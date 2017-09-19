@@ -15,6 +15,8 @@ class ParamDAL
 			$param->link_id = $array['id'];
 			$param->params = $array['param'];
 			$param->method = $array['method'];
+			$param->type = $array['type'];
+			$param->value = $array['value'];
 			$param->save();
 
 			return $param;
@@ -60,5 +62,10 @@ class ParamDAL
 	public static function findAllParamByLinkAndMethod($id, $method)
 	{
 		return Param::Where(['link_id' => $id, 'method' => $method])->get();
+	}
+
+	public static function findOneByLinkIdAndType($id)
+	{
+		return Param::Where(['link_id' => $id, 'type' => 'submit'])->get();
 	}
 }

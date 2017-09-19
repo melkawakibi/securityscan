@@ -30,8 +30,8 @@ abstract class Module
 	{
 		$this->url = $url;
 		$this->client = new GuzzleClient;
-		$this->arrayLinksGET = array();
-		$this->arrayFormParams = array();
+		$this->queryArray = array();
+		$this->formArray = array();
 		$this->defaultlinks = array();
 		$this->properties = array();
 		$this->timeout = 10;
@@ -56,24 +56,28 @@ abstract class Module
 
 			$params = Param::findAllByMethod('GET');
 
-			$params = Utils::getParamArray($params);
+			if($params->isNotEmpty()){
 
-			$query_array = array();
+				$params = Utils::getParamArray($params);
 
-			$lines = $this->getLines($payload);
+				$query_array = array();
 
-			$query_array = Utils::create_comined_array($params, $lines, $link->id);
+				$lines = $this->getLines($payload);
 
-			array_filter($query_array);
+				$query_array = Utils::create_comined_array_get($params, $lines);
 
-				if($link->method === 'GET'){
+				array_filter($query_array);
 
-					foreach ($query_array as $key => $query) {
-					$query = http_build_query($query);
-					$url = $link->url . '?' . $query;
-					array_push($this->arrayLinksGET, $url);
+					if($link->method === 'GET'){
 
+						foreach ($query_array as $key => $query) {
+						$query = http_build_query($query);
+						$url = $link->url . '?' . $query;
+						array_push($this->queryArray, $url);
+
+					}
 				}
+
 			}
 
 		}
@@ -86,15 +90,27 @@ abstract class Module
 
 			$params = Param::findAllParamByLinkAndMethod($link->id, 'POST');
 
-			$params = Utils::getParamArray($params);
+			$param = Param::findOneByLinkIdAndType($link->id);
 
-			$lines = $this->getLines($payload);
+			if($param->isNotEmpty()){
 
-			$query_array = Utils::create_comined_array($params, $lines, $link->id);
+				$submit = $param->first();
+				
+				$submitParam = $submit->params;
+				$submitValue = $submit->value;
 
-			if(!empty($query_array)){
-				array_push($this->arrayFormParams, $query_array);
-			}		
+			}
+
+			if($params->isNotEmpty()){
+
+				$paramArray = Utils::getParamArray($params);
+
+				$lines = $this->getLines($payload);
+
+				$paramCombine = Utils::create_comined_array_post($paramArray, $lines, $submitParam, $submitValue, $link->id);
+
+				array_push($this->formArray, $paramCombine);
+			}
 		}
 	}
 

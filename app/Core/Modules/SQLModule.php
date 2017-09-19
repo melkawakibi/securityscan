@@ -9,6 +9,7 @@ use App\Services\LinkService as Link;
 use App\Services\ScanDetailService as ScanDetail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
+use Curl;
 use \stdClass as Object;
 use App\Core\Utils;
 
@@ -33,9 +34,13 @@ class SQLMOdule extends Module
 
 			$this->buildGETURI($links, Lang::get('string.payload_sql'));
 
+			$this->buildPostFormParams($links, Lang::get('string.payload_sql'));
+
 			echo 'SQLI attack'.PHP_EOL.PHP_EOL;
 
-			//$this->attackGet($scan);
+			$this->attackGet($scan);
+
+			$this->attackPost($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
@@ -45,7 +50,7 @@ class SQLMOdule extends Module
 	protected function attackGet($scan)
 	{
 
-		foreach ($this->arrayLinksGET as $key => $value) {
+		foreach ($this->queryArray as $key => $value) {
 
 			$time_start = microtime(true);
 			
@@ -58,7 +63,11 @@ class SQLMOdule extends Module
 
 			$time_end = microtime(true);
 
-			$execution_time = ($time_end - $time_start)/60;
+			$duration = $time_end-$time_start;
+			$hours = (int)($duration/60/60);
+			$minutes = (int)($duration/60)-$hours*60;
+			$seconds = (int)$duration-$hours*60*60-$minutes*60;
+
 
 			if($res !== 'default'){
 				if(strcmp($this->getBaseContent($this->url), $res->getBody())){
@@ -66,10 +75,11 @@ class SQLMOdule extends Module
 					$params = Utils::filterGetUrl($value);
 
 					$this->properties['parameter'] = $params[0];
-					$this->properties['execution_time'] = $execution_time;
+					$this->properties['execution_time'] = $seconds;
 					$this->properties['module_name'] = Lang::get('string.SQL.module');
 					$this->properties['risk'] = Lang::get('string.SQL.risk');
-					$this->properties['wasc_id'] = Lang::get('string.SQL.wasc_id');
+					$this->properties['wasc_id'] = Lang::get('string.SQL.wasc_id');	
+					$this->properties['method'] = 'GET';				
 
 					$sql_array = explode("=", $value);
 					$sql_url = explode("?", $sql_array[0]);
@@ -79,8 +89,10 @@ class SQLMOdule extends Module
 					$this->properties['attack'] = $sql_attack;
 
 					foreach (Lang::get('error_sql') as $key => $value) {
+
+						$content = $res->getBody();
 						
-						if($this->find_sql($res, $value)){
+						if($this->find_sql($content, $value)){
 
 							$this->properties['error'] = $value;
 
@@ -93,27 +105,86 @@ class SQLMOdule extends Module
 						}
 					}
 				}
-
-					Log::info('Time: ' . $execution_time);
-					Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-					Log::info('Request url: ' . $value);
-					Log::info('response: ' . $res->getStatusCode() . PHP_EOL);
-					Log::info('----------------- Content -------------------------' . PHP_EOL);
-					Log::info('Content: ' .PHP_EOL. $res->getBody() . PHP_EOL);
 			}		
 		}
 	}
 
 	protected function attackPost($scan)
 	{
+		foreach ($this->formArray as $key => $formArray) {
+			
+			$id = $formArray['id'];
+			$submitParam = $formArray['param'];
+			$submitValue = $formArray['value'];
 
+			$link = Link::findOneById($id);
+
+			$url = $link->first()->url;
+
+			foreach ($formArray as $key => $values) {
+
+				$res = '';
+
+					if(is_array($values)){
+
+						$values[$submitParam] = $submitValue;
+
+						$time_start = microtime(true);
+
+						$path = storage_path('logs');
+
+						$response = Curl::to($url)
+						        ->withData( $values )
+						        ->enableDebug($path . "/logDebug.txt")
+						        ->returnResponseObject()
+						        ->post();
+
+						$time_end = microtime(true);
+
+						$duration = $time_end-$time_start;
+						$hours = (int)($duration/60/60);
+						$minutes = (int)($duration/60)-$hours*60;
+						$seconds = (int)$duration-$hours*60*60-$minutes*60;
+
+					if($res !== 'default'){
+						if(strcmp($this->getBaseContent($this->url), $response->content)){
+
+							$this->properties['parameter'] = 'form-params';
+							$this->properties['execution_time'] = $seconds;
+							$this->properties['module_name'] = Lang::get('string.SQL.module');
+							$this->properties['risk'] = Lang::get('string.SQL.risk');
+							$this->properties['wasc_id'] = Lang::get('string.SQL.wasc_id');
+							$this->properties['method'] = 'POST';
+							$this->properties['target'] =  $url;
+							$this->properties['attack'] = 'attack';
+
+							foreach (Lang::get('error_sql') as $key => $value) {
+
+								$content = $response->content; 					
+								
+								if($this->find_sql($content, $value)){
+
+									$this->properties['error'] = 'error';
+
+									if(!is_null($scan)){
+										$scanDetail = new Object;
+										$scanDetail->scan_id = $scan[0]->id;
+										$scanDetail->properties = $this->properties;
+										ScanDetail::store($scanDetail);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
-	protected function find_sql($res, $str)
+	protected function find_sql($content, $str)
 	{
-		$response = $res->getBody();
 
-		if(strpos($response, $str)){
+		if(strpos($content, $str)){
 			return true;
 		}else{
 			return false;

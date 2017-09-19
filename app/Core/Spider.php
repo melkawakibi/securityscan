@@ -141,6 +141,9 @@ class Spider extends PHPCrawler
 				
 				if(!is_null($website)){
 					$this->setWebsite($website->id);
+				}else{
+					$website = Website::findOneByUrl($this->url);
+					$this->setWebsite($website->first()->id);
 				}
 			}
 
@@ -183,13 +186,11 @@ class Spider extends PHPCrawler
 					$object->link = $link;
 					$object->method = $method;
 					$object->website_id = $this->website_id;
-
 					$url = Utils::getBaseUrl($link->url_rebuild);
 
 					if(!Link::numRowByLinkAndMethod($url, $method)){
 
 						$link = Link::store($object);
-
 
 						if(!is_null($link)){
 

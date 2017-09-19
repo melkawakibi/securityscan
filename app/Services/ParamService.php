@@ -52,4 +52,9 @@ class ParamService implements Service
 	{
 		return Param::findAllParamByLinkAndMethod($id, $method);
 	}
+
+	public static function findOneByLinkIdAndType($id)
+	{
+		return Param::findOneByLinkIdAndType($id);
+	}
 }

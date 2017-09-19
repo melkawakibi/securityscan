@@ -33,6 +33,8 @@ class XSSModule extends Module
 
 			$this->buildGETURI($links, Lang::get('string.payload_xss'));
 
+			$this->buildPostFormParams($links, Lang::get('string.payload_blind_sql'));
+
 			echo 'XSS attack'.PHP_EOL.PHP_EOL;
 
 			//$this->attackGet($scan);
@@ -46,7 +48,7 @@ class XSSModule extends Module
 	protected function attackGet($scan)
 	{
 
-		foreach ($this->arrayLinksGET as $key => $value) {
+		foreach ($this->queryArray as $key => $value) {
 
 			$time_start = microtime(true); 
 								
