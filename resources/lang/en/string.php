@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Descriptions of attacks
+    | General Information
     |--------------------------------------------------------------------------
     |
     |
@@ -22,6 +22,10 @@ return [
     'XSS_Attack' => '<script>',
     'payload_xss' => '/resources/payload/xss.txt',
     'XSS_Replace' => '__XSS__',
+
+    'report_path' => 'resources/reports/',
+
+    'report_path_test' => 'public/resources/reports/',
 
     /* 
     | -------------------------------------------------------------------------

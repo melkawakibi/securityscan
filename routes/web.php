@@ -26,3 +26,5 @@ Route::post('auth', 'ScanController@authenticate');
 Route::get('admin', 'AdminController@customerList');
 
 Route::get('active/{id}', 'AdminController@updateActiveState');
+
+Route::get('report', 'PDFController@getReport');

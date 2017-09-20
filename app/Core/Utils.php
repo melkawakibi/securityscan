@@ -234,4 +234,11 @@ class Utils
 		}
 	}
 
+	public static function pdfFilenameFormat($file)
+	{
+		$fileArray = explode(' ', $file);
+
+		return $fileArray[0] . '-' . $fileArray[1] . '.pdf';
+	}
+
 }

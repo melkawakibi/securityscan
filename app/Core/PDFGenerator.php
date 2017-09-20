@@ -9,10 +9,12 @@ use App\Services\WebsiteService as Website;
 use App\Services\ScanService as Scan;
 use App\Services\ScanDetailService as ScanDetail;
 use App\Services\CustomerService as Customer;
-use \stdClass as Object;
+use App\Services\ReportService as Report;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
+use \stdClass as Object;
+use App\Core\Utils;
 
 class PDFGenerator
 {
@@ -44,20 +46,31 @@ class PDFGenerator
 		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scandetails' => $scanDetail, 'isScanDetailEmpty' => $isScanDetailEmpty, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0], 'isShortReport' => $isShortReport, 'level' => $level])->render();
 
 		if($customer[0]->cms_id === '145'){
-			$reportPath =  'public/resources/reports/report.pdf';
+			$reportPath =  Lang::get('string.report_path_test');
 		}else{
-			$reportPath =  'resources/reports/report.pdf';
+			$reportPath =  Lang::get('string.report_path');
 		}
+
+		$file = 'report-' . $scan->created_at;
+
+		$file = Utils::pdfFilenameFormat($file);
 
 		try {
 		    $html2pdf = new Html2Pdf('P', 'A4', 'en');
 		    $html2pdf->pdf->SetDisplayMode('fullpage');
 		    $html2pdf->writeHTML($html);
-		    $html2pdf->output($reportPath, 'F');
+		    $html2pdf->output($reportPath.$file, 'F');
 		} catch (Html2PdfException $e) {
 		    $formatter = new ExceptionFormatter($e);
 		    echo $formatter->getHtmlMessage();
 		}
+
+		$report = new Object;
+		$report->scan_id = $scan->id;
+		$report->file = Lang::get('string.report_path') . $file;
+
+		PDFGenerator::handleReport($report);
+
 	}
 
 	/**
@@ -134,6 +147,11 @@ class PDFGenerator
 
 		return $moduleObject;
 
+	}
+
+	public static function handleReport($object)
+	{
+		return Report::store($object);
 	}
 
 }

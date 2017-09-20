@@ -42,8 +42,8 @@ class DropTableCommand extends Command
         Schema::dropIfExists('params');
         Schema::dropIfExists('header_links');
         Schema::dropIfExists('headers');
-        Schema::dropIfExists('rapports');
         Schema::dropIfExists('links');
+        Schema::dropIfExists('reports');
         Schema::dropIfExists('scans');
         Schema::dropIfExists('websites');
         Schema::dropIfExists('customers');

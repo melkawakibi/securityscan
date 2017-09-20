@@ -45,6 +45,7 @@ class ClearTablesCommand extends Command
         DB::table('header_links')->delete();
         DB::table('links')->delete();
         DB::table('scan_details')->delete();
+        DB::table('reports')->delete();
         DB::table('scans')->delete();
         DB::table('websites')->delete();
         DB::table('customers')->delete();

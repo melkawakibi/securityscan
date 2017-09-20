@@ -18,7 +18,8 @@ class Customer extends Model
         'name', 'email', 'companyname',    
     ];
 
-    public function websites(){
+    public function website()
+    {
     	return $this->hasMany('App\Model\Website');
     }
 
