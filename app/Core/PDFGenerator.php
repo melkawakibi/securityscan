@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use \stdClass as Object;
 use App\Core\Utils;
+use App\Core\MailService as Mail;
 
 class PDFGenerator
 {
@@ -70,6 +71,8 @@ class PDFGenerator
 		$report->file = Lang::get('string.report_path') . $file;
 
 		PDFGenerator::handleReport($report);
+
+		Mail::sendRegisterMail();
 
 	}
 

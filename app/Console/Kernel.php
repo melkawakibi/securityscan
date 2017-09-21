@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\PDFCommand',
         'App\Console\Commands\TestCommand',
         'App\Console\Commands\DropTableCommand',
+        'App\Console\Commands\SendMail',
     ];
 
     /**

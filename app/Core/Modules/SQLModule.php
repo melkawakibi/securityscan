@@ -38,9 +38,9 @@ class SQLMOdule extends Module
 
 			echo 'SQLI attack'.PHP_EOL.PHP_EOL;
 
-			$this->attackGet($scan);
+			//$this->attackGet($scan);
 
-			$this->attackPost($scan);
+			//$this->attackPost($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
