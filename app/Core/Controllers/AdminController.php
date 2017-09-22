@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\CustomerService as Customer;
 use Illuminate\Support\Facades\Redirect;
 use View;
+use App\Core\MailService as Mail;
 
 class AdminController extends Controller
 {
@@ -28,6 +29,10 @@ class AdminController extends Controller
 		}
 
 		$customer[0]->save();
+
+		if($customer[0]->active){
+			Mail::sendActivationMail($customer);
+		}
 	}
 
 }

@@ -52,7 +52,7 @@ class PDFGenerator
 			$reportPath =  Lang::get('string.report_path');
 		}
 
-		$file = 'report-' . $scan->created_at;
+		$file = 'report-' . $customer[0]->id . '-'  . $scan->created_at;
 
 		$file = Utils::pdfFilenameFormat($file);
 
@@ -72,7 +72,7 @@ class PDFGenerator
 
 		PDFGenerator::handleReport($report);
 
-		Mail::sendRegisterMail();
+		Mail::sendReportMail($report, $customer);
 
 	}
 

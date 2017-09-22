@@ -13,8 +13,8 @@ $(document).ready(function(){
 		      modal: true,
 		      buttons: {
 		        "Deactiveer account": function() {
-		        $.get('http://localhost:8888/active/' + id, function(){
-		        	window.location.href = 'http://localhost:8888/admin';
+		        $.get('http://localhost:8000/active/' + id, function(){
+		        	window.location.href = 'http://localhost:8000/admin';
 				})
 				.fail(function(jqXHR){
 					alert('error, probeer het opnieuw' + jqXHR.responseText);
@@ -36,11 +36,11 @@ $(document).ready(function(){
 		      modal: true,
 		      buttons: {
 		        "Activeer account": function() {
-		        $.get('http://localhost:8888/active/' + id, function(){
-		        	window.location.href = 'http://localhost:8888/admin';
+		        $.get('http://localhost:8000/active/' + id, function(){
+		        	window.location.href = 'http://localhost:8000/admin';
 				})
 				.fail(function(jqXHR){
-					alert('error, probeer opnieuw');
+					alert('error, probeer opnieuw' + jqXHR.responseText);
 					$('#error').html(jqXHR.responseText);
 				})
 		          $( this ).dialog( "close" );

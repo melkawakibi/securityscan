@@ -10,6 +10,7 @@ use App\Services\CustomerService as Customer;
 use App\Scanner;
 use \stdClass as Object;
 use \Artisan;
+use App\Core\MailService as Mail;
 
 class ScanController extends Controller
 {
@@ -27,7 +28,10 @@ class ScanController extends Controller
       $customer->cms_register_date = $request->input('cms_register_date');
       $customer->active = 0;
 
-      Customer::store($customer);
+      $customer = Customer::store($customer);
+
+      Mail::sendRegisterMail($customer);
+
 	}
 
   public function authenticate(Request $request)

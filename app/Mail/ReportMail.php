@@ -11,14 +11,18 @@ class ReportMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    private $report;    
+    private $customer;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($report, $customer)
     {
-        //
+        $this->report = $report;        
+        $this->customer = $customer;
     }
 
     /**
@@ -28,6 +32,11 @@ class ReportMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        $email = $this->view('email.report')->with('customer', $this->customer);
+
+        $email->attach($this->report->file);
+
+        return $email;
+
     }
 }
