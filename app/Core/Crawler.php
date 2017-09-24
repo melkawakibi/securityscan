@@ -60,10 +60,10 @@ class Crawler
 				if(!empty($fields)){
 
 					if($form->getUri() === $url){
-
+						
 						$link = Link::findOneByLinkUrl($url);
 
-						if(!is_null($link)){
+						if($link->isNotEmpty()){
 							foreach ($fields as $field) {
 
 								$value = null;

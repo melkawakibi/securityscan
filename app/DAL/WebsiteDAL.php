@@ -27,7 +27,7 @@ class WebsiteDAL
 		return Website::all();
 	}
 
-	public static function findByOneId($id)
+	public static function findOneById($id)
 	{
 		return Website::Where(['id' => $id])->get();
 	}

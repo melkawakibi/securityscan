@@ -47,7 +47,7 @@ class PDFGenerator
 		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scandetails' => $scanDetail, 'isScanDetailEmpty' => $isScanDetailEmpty, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0], 'isShortReport' => $isShortReport, 'level' => $level])->render();
 
 		if($customer[0]->cms_id === '145'){
-			$reportPath =  Lang::get('string.report_path_test');
+			$reportPath =  Lang::get('string.public_report_path');
 		}else{
 			$reportPath =  Lang::get('string.report_path');
 		}
@@ -68,7 +68,7 @@ class PDFGenerator
 
 		$report = new Object;
 		$report->scan_id = $scan->id;
-		$report->file = Lang::get('string.report_path') . $file;
+		$report->file = Lang::get('string.public_report_path') . $file;
 
 		PDFGenerator::handleReport($report);
 

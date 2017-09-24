@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Core\Controllers;
+namespace App\Core\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Services\ReportService as Report;
 use Illuminate\Support\Facades\Response;
 use File;

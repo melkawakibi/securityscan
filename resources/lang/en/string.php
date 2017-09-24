@@ -25,7 +25,7 @@ return [
 
     'report_path' => 'resources/reports/',
 
-    'report_path_test' => 'public/resources/reports/',
+    'public_report_path' => 'public/resources/reports/',
 
     /* 
     | -------------------------------------------------------------------------

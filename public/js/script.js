@@ -14,7 +14,7 @@ $(document).ready(function(){
 		      buttons: {
 		        "Deactiveer account": function() {
 		        $.get('http://localhost:8000/active/' + id, function(){
-		        	window.location.href = 'http://localhost:8000/admin';
+		        	window.location.href = 'http://localhost:8000/customers';
 				})
 				.fail(function(jqXHR){
 					alert('error, probeer het opnieuw' + jqXHR.responseText);
@@ -37,7 +37,7 @@ $(document).ready(function(){
 		      buttons: {
 		        "Activeer account": function() {
 		        $.get('http://localhost:8000/active/' + id, function(){
-		        	window.location.href = 'http://localhost:8000/admin';
+		        	window.location.href = 'http://localhost:8000/customers';
 				})
 				.fail(function(jqXHR){
 					alert('error, probeer opnieuw' + jqXHR.responseText);

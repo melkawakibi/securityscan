@@ -11,11 +11,7 @@
 |
 */
 
-Route::get('/', function(){
-
-	return 'Security webserver';
-
-});
+Route::get('/');
 
 Route::post('request_scan', 'ScanController@setupScan');
 
@@ -23,8 +19,14 @@ Route::post('register', 'ScanController@store');
 
 Route::post('auth', 'ScanController@authenticate');
 
-Route::get('admin', 'AdminController@customerList');
+Route::get('report', 'PDFController@getReport');
+
+Auth::routes();
+
+Route::get('/admin', 'AdminController@index');
+
+Route::get('customers', ['as' => 'customers', 'uses' => 'AdminController@showCustomers']);
+
+Route::get('reports', ['as' => 'reports', 'uses' => 'AdminController@showReports']);
 
 Route::get('active/{id}', 'AdminController@updateActiveState');
-
-Route::get('report', 'PDFController@getReport');
