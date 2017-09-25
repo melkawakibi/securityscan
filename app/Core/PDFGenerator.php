@@ -70,7 +70,7 @@ class PDFGenerator
 		$report->scan_id = $scan->id;
 		$report->file = Lang::get('string.public_report_path') . $file;
 
-		PDFGenerator::handleReport($report);
+		$report = PDFGenerator::handleReport($report);
 
 		Mail::sendReportMail($report, $customer);
 

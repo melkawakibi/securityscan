@@ -3,6 +3,11 @@
 <head>
 	<title>Report</title>
 	<style>
+
+		.image{
+			float: right;
+		}
+
 		table {
 		    float: left;
 		    clear: left;
@@ -50,6 +55,8 @@
 	</style>
 </head>
 <body>
+
+	<img src="@lang('string.image_url')" class="image">
 
 	<h1>Scan Rapport</h1>
 

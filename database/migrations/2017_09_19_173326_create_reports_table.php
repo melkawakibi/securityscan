@@ -18,7 +18,7 @@ class CreateReportsTable extends Migration
             $table->integer('scan_id')->unsigned();
             $table->foreign('scan_id')->references('id')->on('scans');
             $table->string('file');
-            $table->boolean('status');
+            $table->boolean('status')->nullable();
             $table->timestamps();
         });
     }

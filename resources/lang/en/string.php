@@ -27,6 +27,8 @@ return [
 
     'public_report_path' => 'public/resources/reports/',
 
+    'image_url' => 'http://localhost:8000/images/logo-securityreport-small.png',
+
     /* 
     | -------------------------------------------------------------------------
     | Report messages

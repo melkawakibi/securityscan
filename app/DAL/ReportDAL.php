@@ -14,6 +14,8 @@ class ReportDAL
 		$report->file = $object->file;
 		$report->save();
 
+		return $report;
+
 	}
 
 	public static function findAll()
