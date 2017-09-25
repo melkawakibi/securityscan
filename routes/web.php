@@ -11,8 +11,6 @@
 |
 */
 
-Route::get('/');
-
 Route::post('request_scan', 'ScanController@setupScan');
 
 Route::post('register', 'ScanController@store');
@@ -22,6 +20,8 @@ Route::post('auth', 'ScanController@authenticate');
 Route::get('report', 'PDFController@getReport');
 
 Auth::routes();
+
+Route::get('/', 'AdminController@index');
 
 Route::get('/admin', 'AdminController@index');
 

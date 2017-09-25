@@ -49,6 +49,7 @@ class ClearTablesCommand extends Command
         DB::table('scans')->delete();
         DB::table('websites')->delete();
         DB::table('customers')->delete();
+        DB::table('users')->delete();
 
         echo 'All data cleared' . PHP_EOL;
     }

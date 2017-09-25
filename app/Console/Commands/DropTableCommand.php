@@ -47,6 +47,7 @@ class DropTableCommand extends Command
         Schema::dropIfExists('scans');
         Schema::dropIfExists('websites');
         Schema::dropIfExists('customers');
+        Schema::dropIfExists('users');
         Schema::dropIfExists('migrations');
 
         echo 'All tables have been droped' . PHP_EOL; 

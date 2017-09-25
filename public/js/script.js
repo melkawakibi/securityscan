@@ -1,9 +1,10 @@
 $(document).ready(function(){
-	var active = $('#active')
-		var p = active.parent().find('p');
-		var id = p.text();
 
-		active.click(function(){
+	var active = $('#active');
+	var p = active.parent().find('p');
+	var id = p.text();
+
+	active.click(function(){
 		if(active.val() == 'Active'){
 			$('#dialogtext').text("Weet u zeker dat u deze account (" + id + ") wilt deactiveren?");
 			$( "#dialog-confirm" ).dialog({
@@ -25,8 +26,8 @@ $(document).ready(function(){
 		          $( this ).dialog( "close" );
 		         }
 		      }
-    		});
-		
+			});
+	
 		}else{
 			$('#dialogtext').text("Weet u zeker dat u deze account (" + id + ") wilt activeren?");
 			$( "#dialog-confirm" ).dialog({
@@ -49,8 +50,18 @@ $(document).ready(function(){
 		          $( this ).dialog( "close" );
 		         }
 		      }
-    		});
+			});
 		}
 	});
+
+	var verzend = $('#verzend');
+
+	verzend.click(function(){
+
+		
+
+
+	});
+
 
 });
