@@ -10,7 +10,7 @@ class LinkService implements Service
 
 	public static function store($object)
 	{
-		return Link::create($object->link, $object->website_id);
+		return Link::create($object, $object->website_id);
 	}
 
 	public static function findAll()
@@ -28,6 +28,11 @@ class LinkService implements Service
 		return Link::numRow($url);
 	}
 
+	public static function update($object)
+	{
+		return Link::update($object);
+	}
+
 	public static function findAllByWebsiteId($id)
 	{
 		return Link::findAllByWebsiteId($id);
@@ -36,6 +41,11 @@ class LinkService implements Service
 	public static function findOneByLinkUrl($url)
 	{
 		return Link::findOneByLinkUrl($url);
+	}
+
+	public static function numRowByLinkAndMethod($url, $method)
+	{
+		return Link::numRowByLinkAndMethod($url, $method);
 	}
 
 }

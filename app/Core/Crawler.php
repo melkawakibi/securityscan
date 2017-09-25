@@ -43,8 +43,8 @@ class Crawler
 		$this->crawler->filter('input[type=submit]')->each(function(DomCrawler $node){
 
 			if(!in_array($node->attr('value'), $this->submits)){
-				
-				array_push($this->submits, $node->attr('value'));
+
+				$this->submits[] = [$node->attr('name') . ':' . $node->attr('value')];
 
 				$this->forms[] = $this->crawler->selectButton($node->attr('value'))->form();
 			}
@@ -57,21 +57,33 @@ class Crawler
 
 				$fields = $form->all();
 
-					if(!empty($fields)){
+				if(!empty($fields)){
 
 					if($form->getUri() === $url){
-
+						
 						$link = Link::findOneByLinkUrl($url);
 
-						if(!is_null($link)){
+						if($link->isNotEmpty()){
 							foreach ($fields as $field) {
+
+								$value = null;
+
+								foreach ($this->submits as $key => $submit) {
+									$submitArray = explode(':', $submit[0]);
+
+									if($submitArray[0] === $field->getName()){
+										$value = $submitArray[1];
+									}
+								}
 
 								$fieldObj = new Field($field);
 
 								$type = $fieldObj->getType();
 
-								if($type === 'text' || $type === 'password'){
-									array_push($this->paramPOST, ['id' => $link[0]->id, 'param' => $field->getName()]);
+								$value = (!is_null($value)) ? $value : 'n/a';
+								
+								if($type === 'text' || $type === 'password' || $type === 'submit'){
+										array_push($this->paramPOST, ['id' => $link[0]->id, 'param' => $field->getName(), 'method' => 'POST', 'type' => $type, 'value' => $value]);
 								}
 							}
 						}
@@ -89,6 +101,8 @@ class Crawler
 
 		$params = Utils::filterGetUrl($url);
 
+		$url = Utils::getBaseUrl($url);
+
 		if(!empty($params)){
 
 			$link = Link::findOneByLinkUrl($url);
@@ -100,13 +114,11 @@ class Crawler
 					$param = (object) $param;
 
 					if(!empty($param)){
-						array_push($this->paramGET, ['id' => $link[0]->id, 'param' => $param->scalar]);
+						array_push($this->paramGET, ['id' => $link[0]->id , 'param' => $param->scalar, 'method' => 'GET', 'type' => 'n/a', 'value' => 'n/a']);
 					}
 				}
 			}
 		}
-
-		//print_r($this->paramGET);
 
 		return $this->paramGET;
 

@@ -11,6 +11,8 @@ interface Service
 
 	public static function findOneById($id);
 
-	public static function numRow($var);	
+	public static function numRow($var);
+
+	public static function update($object);	
 
 }

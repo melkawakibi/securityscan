@@ -14,7 +14,9 @@ class ParamDAL
 			$param = new Param;
 			$param->link_id = $array['id'];
 			$param->params = $array['param'];
-
+			$param->method = $array['method'];
+			$param->type = $array['type'];
+			$param->value = $array['value'];
 			$param->save();
 
 			return $param;
@@ -37,9 +39,19 @@ class ParamDAL
 		return Param::Where(['link_id' => $param['id'], 'params' => $param['param']])->get()->count();
 	}
 
+	public static function update($object)
+	{
+		return $object->save();
+	}
+
 	public static function findAllByLinkId($id)
 	{
 		return Param::Where(['link_id' => $id])->get();
+	}
+
+	public static function findAllByMethod($method)
+	{
+		return Param::Where(['method' => $method])->get();
 	}
 
 	public static function numRowByName($param)
@@ -47,4 +59,13 @@ class ParamDAL
 		return Param::Where(['params' => $param])->get()->count();	
 	}
 
+	public static function findAllParamByLinkAndMethod($id, $method)
+	{
+		return Param::Where(['link_id' => $id, 'method' => $method])->get();
+	}
+
+	public static function findOneByLinkIdAndType($id)
+	{
+		return Param::Where(['link_id' => $id, 'type' => 'submit'])->get();
+	}
 }

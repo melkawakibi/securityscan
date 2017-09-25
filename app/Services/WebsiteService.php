@@ -29,7 +29,12 @@ class WebsiteService implements Service
 
 	public static function numRow($url)
 	{
-		return Website::numRowByUrl($url);
+		return Website::numRow($url);
+	}
+
+	public static function update($object)
+	{
+		return Website::update($object);
 	}
 
 	public static function findOneByUrl($url)
@@ -37,4 +42,8 @@ class WebsiteService implements Service
 		return Website::findOneByUrl($url);
 	}
 
+	public static function numRowByUrl($url)
+	{
+		return Website::numRowByUrl($url);
+	}
 }

@@ -3,7 +3,6 @@
 namespace App\DAL;
 
 use App\Model\Header;
-use App\Core\Utils;
 
 class HeaderDAL
 {
@@ -20,7 +19,7 @@ class HeaderDAL
 			$header->save();
 
 			return $header;
-		}
+		} 
 	}
 
 	public static function findAll()
@@ -36,6 +35,11 @@ class HeaderDAL
 	public static function numRow($id)
 	{
 		return Header::Where(['website_id' => $id])->get()->count();
+	}
+
+	public static function update($object)
+	{
+		return $object->save();
 	}
 
 	public static function findAllByWebsiteId($id)

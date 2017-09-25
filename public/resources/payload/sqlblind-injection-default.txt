@@ -1,2 +1,0 @@
-query='
-query=' or 1=1

@@ -4,6 +4,7 @@ namespace App\Core\Modules;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ServerException;
 use App\Services\WebsiteService as Website;
 use App\Services\ScanService as Scan;
 use App\Services\LinkService as Link;
@@ -29,15 +30,18 @@ abstract class Module
 	{
 		$this->url = $url;
 		$this->client = new GuzzleClient;
-		$this->urlArray = array();
+		$this->queryArray = array();
+		$this->formArray = array();
 		$this->defaultlinks = array();
 		$this->properties = array();
-		$this->timeout = 1;
+		$this->timeout = 10;
 	}
 
 	abstract public function start();
 
 	abstract protected function attackGet($scan);
+
+	abstract protected function attackPost($scan);
 
 	protected function getBaseContent($url)
 	{
@@ -45,52 +49,80 @@ abstract class Module
 		return $res->getBody();
 	}
 
-	protected function linkList($links, $payload)
+	protected function buildGETURI($links, $payload)
 	{
 
 		foreach ($links as $key => $link) {
 
-			$baseUrl = Utils::getBaseUrl($link->url);
+			$params = Param::findAllByMethod('GET');
 
-			$params = Param::findAllByLinkId($link->id);
+			if($params->isNotEmpty()){
 
-			$params = Utils::getParamArray($params);
+				$params = Utils::getParamArray($params);
 
-			$query_array = array();
+				$query_array = array();
 
-			$lines = file(public_path() . $payload);
+				$lines = $this->getLines($payload);
 
-			$replace_str = $this->getReplaceString($payload);
-
-			$lines = Utils::replace_string_array($lines, $replace_str[0], $replace_str[1]);
-
-			if ($link->methode === 'GET') {
-
-				$query_array = Utils::create_comined_array($params, $lines);
+				$query_array = Utils::create_comined_array_get($params, $lines);
 
 				array_filter($query_array);
 
-			}
+					if($link->method === 'GET'){
 
-			foreach ($query_array as $key => $query) {
-				$query = http_build_query($query);
-				$url = $baseUrl . '?' . $query;
-				array_push($this->urlArray, $url);
+						foreach ($query_array as $key => $query) {
+						$query = http_build_query($query);
+						$url = $link->url . '?' . $query;
+						array_push($this->queryArray, $url);
+
+					}
+				}
 
 			}
 
 		}
 	}
 
-	protected function responseAnalyse($res, $str)
+	protected function buildPostFormParams($links, $payload)
 	{
-		$response = $res->getBody();
 
-		if (strpos($response, $str)) {
-			return true;
-		} else if( $response) {
-			return false;
+		foreach ($links as $key => $link) {
+
+			$params = Param::findAllParamByLinkAndMethod($link->id, 'POST');
+
+			$param = Param::findOneByLinkIdAndType($link->id);
+
+			if($param->isNotEmpty()){
+
+				$submit = $param->first();
+				
+				$submitParam = $submit->params;
+				$submitValue = $submit->value;
+
+			}
+
+			if($params->isNotEmpty()){
+
+				$paramArray = Utils::getParamArray($params);
+
+				$lines = $this->getLines($payload);
+
+				$paramCombine = Utils::create_comined_array_post($paramArray, $lines, $submitParam, $submitValue, $link->id);
+
+				array_push($this->formArray, $paramCombine);
+			}
 		}
+	}
+
+	public function getLines($payload)
+	{
+		$lines = file(public_path() . $payload);
+
+		$replace_str = $this->getReplaceString($payload);
+
+		$lines = Utils::replace_string_array($lines, $replace_str[0], $replace_str[1]);
+
+		return $lines;
 	}
 
 	public function setTimeOut($timeout)
@@ -103,7 +135,7 @@ abstract class Module
 	public function getReplaceString($payload)
 	{
 		if(strpos($payload, 'sqlblind') !== false){
-			return array("0" => (string) $this->timeout, "1" => Lang::get('string.SQL_Replace'));
+			return array("0" => (string) $this->timeout, "1" => Lang::get('string.BlindSQL_Replace'));
 		}else{
 			return array("0" => Utils::generateRandomString(), "1" => Lang::get('string.XSS_Replace'));
 		}

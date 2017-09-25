@@ -19,10 +19,12 @@ class CreateScanDetailsTable extends Migration
             $table->foreign('scan_id')->references('id')->on('scans');
             $table->string('module_name');
             $table->string('risk');
+            $table->string('target');
             $table->string('parameter');
             $table->text('attack');
             $table->string('error');
             $table->string('wasc_id');
+            $table->string('method');
             $table->string('execution_time');
             $table->timestamps();
         });

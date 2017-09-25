@@ -28,6 +28,11 @@ class ParamService implements Service
 		return Param::numRow($id);
 	}
 
+	public static function update($object)
+	{
+		return Param::update($object);
+	}
+
 	public static function numRowByName($param)
 	{
 		return Param::numRowByName($name);
@@ -38,4 +43,18 @@ class ParamService implements Service
 		return Param::findAllByLinkId($id);
 	}
 
+	public static function findAllByMethod($method)
+	{
+		return Param::findAllByMethod($method);
+	}
+
+	public static function findAllParamByLinkAndMethod($id, $method)
+	{
+		return Param::findAllParamByLinkAndMethod($id, $method);
+	}
+
+	public static function findOneByLinkIdAndType($id)
+	{
+		return Param::findOneByLinkIdAndType($id);
+	}
 }

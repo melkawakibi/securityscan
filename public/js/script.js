@@ -1,9 +1,12 @@
 $(document).ready(function(){
-	var active = $('#active')
-		var p = active.parent().find('p');
+
+	var active = $('.active');
+
+	active.click(function(e){
+
+		var p = $(e.target).parent().find('p');
 		var id = p.text();
 
-		active.click(function(){
 		if(active.val() == 'Active'){
 			$('#dialogtext').text("Weet u zeker dat u deze account (" + id + ") wilt deactiveren?");
 			$( "#dialog-confirm" ).dialog({
@@ -13,8 +16,8 @@ $(document).ready(function(){
 		      modal: true,
 		      buttons: {
 		        "Deactiveer account": function() {
-		        $.get('http://localhost:8888/active/' + id, function(){
-		        	window.location.href = 'http://localhost:8888/admin';
+		        $.get('http://localhost:8000/active/' + id, function(){
+		        	window.location.href = 'http://localhost:8000/customers';
 				})
 				.fail(function(jqXHR){
 					alert('error, probeer het opnieuw' + jqXHR.responseText);
@@ -25,8 +28,8 @@ $(document).ready(function(){
 		          $( this ).dialog( "close" );
 		         }
 		      }
-    		});
-		
+			});
+	
 		}else{
 			$('#dialogtext').text("Weet u zeker dat u deze account (" + id + ") wilt activeren?");
 			$( "#dialog-confirm" ).dialog({
@@ -36,11 +39,11 @@ $(document).ready(function(){
 		      modal: true,
 		      buttons: {
 		        "Activeer account": function() {
-		        $.get('http://localhost:8888/active/' + id, function(){
-		        	window.location.href = 'http://localhost:8888/admin';
+		        $.get('http://localhost:8000/active/' + id, function(){
+		        	window.location.href = 'http://localhost:8000/customers';
 				})
 				.fail(function(jqXHR){
-					alert('error, probeer opnieuw');
+					alert('error, probeer opnieuw' + jqXHR.responseText);
 					$('#error').html(jqXHR.responseText);
 				})
 		          $( this ).dialog( "close" );
@@ -49,8 +52,23 @@ $(document).ready(function(){
 		          $( this ).dialog( "close" );
 		         }
 		      }
-    		});
+			});
 		}
 	});
 
+	var verzend = $('.verzend');
+
+	verzend.click(function(e){
+
+		var p = $(e.target).parent().find('p');
+		var reportId = p.text();
+
+		$.get('http://localhost:8000/send/' + reportId, function(){
+		        	window.location.href = 'http://localhost:8000/reports';
+				})
+		.fail(function(jqXHR){
+			alert('error, probeer opnieuw' + jqXHR.responseText);
+			$('#error').html(jqXHR.responseText);
+		})		
+	});
 });

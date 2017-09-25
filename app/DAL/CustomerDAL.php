@@ -18,7 +18,9 @@ class CustomerDAL
 			$customer->cms_id = $object->cms_id;
 			$customer->cms_name = $object->cms_name;
 			$customer->cms_url = $object->cms_url;
-			$customer->cms_email = $object->cms_email;
+			if(!empty($object->cms_email)){
+				$customer->cms_email = $object->cms_email;
+			}
 			$customer->cms_register_date = $object->cms_register_date;
 			$customer->active = $object->active;
 
@@ -44,9 +46,19 @@ class CustomerDAL
 		return Customer::Where(['cms_id' => $id])->get()->count();
 	}
 
-	public static function findCustomberByUrl($url)
+	public static function update($object)
+	{
+		return $object->save();
+	}
+
+	public static function findOneByUrl($url)
 	{
 		return Customer::Where(['cms_url' => $url])->get();
+	}
+
+	public static function numRowByUrl($url)
+	{
+		return Customer::Where(['cms_url' => $url])->get()->count();
 	}
 
 }

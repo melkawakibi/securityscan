@@ -119,7 +119,7 @@ class Utils
 	{
   		$result = parse_url($url);
   		if(!empty($result['path']) && !empty($result['port'])){
-  			return $result['scheme']."://".$result['host'].":".$result['port']."/".$result['path'];
+  			return $result['scheme']."://".$result['host'].":".$result['port'].$result['path'];
 		}else{
 			if(!empty($result['port'])){
 			return $result['scheme']."://".$result['host'].":".$result['port'];
@@ -140,19 +140,20 @@ class Utils
 
 	}
 
-
 	public static function getParamArray($param_array)
 	{	
 		$array = array();
 
 		foreach ($param_array as $key => $value) {
-			array_push($array, $value->params);
+			if($value->type !== 'submit'){
+				array_push($array, $value->params);
+			}
 		}
 
 		return $array;
 	}
 
-	public static function create_comined_array($array1, $array2)
+	public static function create_comined_array_get($array1, $array2)
 	{
 		$newArray = array();
 
@@ -163,6 +164,20 @@ class Utils
     }
 
 		return $newArray;
+	}
+
+	public static function create_comined_array_post($array1, $array2, $submitParam, $submitValue, $id)
+	{	
+		$paramArray = array();
+		$paramArray = ['id' => $id, 'param' => $submitParam, 'value' => $submitValue];
+		
+		foreach ($array1 as $key){
+        	foreach ($array2 as $i => $value) {
+            	$paramArray[$i][$key] = $value;
+         	}
+    	}
+
+    	return $paramArray;
 	}
 
 	public static function replace_string_array($array, $str, $strToReplace)
@@ -197,7 +212,7 @@ class Utils
 			foreach ($array as $key => $value) {
 
 				if($array[0] === 'Server' || $array[0] === 'server'){
-					return $array[1];
+					return 'Apache';
 				}
 			}
 		}
@@ -217,6 +232,13 @@ class Utils
 		}else{
 			echo PHP_EOL . 'Variables: ' .PHP_EOL. $var1 . PHP_EOL . $var2; 
 		}
+	}
+
+	public static function pdfFilenameFormat($file)
+	{
+		$fileArray = explode(' ', $file);
+
+		return $fileArray[0] . '-' . $fileArray[1] . '.pdf';
 	}
 
 }

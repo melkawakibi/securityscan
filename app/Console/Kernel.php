@@ -14,9 +14,11 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\ScanCommand',
-        'App\Console\Commands\ClearTables',
+        'App\Console\Commands\ClearTablesCommand',
         'App\Console\Commands\PDFCommand',
         'App\Console\Commands\TestCommand',
+        'App\Console\Commands\DropTableCommand',
+        'App\Console\Commands\SendMail',
     ];
 
     /**
