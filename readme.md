@@ -1,3 +1,5 @@
+![alt text](https://github.com/melkawakibi/securityscan/blob/ontwikkel/public/images/logo-mo.png) "SecurityReport"
+
 # SecurityReport
 
 ## Description
