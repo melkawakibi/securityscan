@@ -1,4 +1,4 @@
-![SecurityReport](https://github.com/melkawakibi/securityscan/blob/ontwikkel/public/images/logo-securityreport-small.png)
+![SecurityReport](https://github.com/melkawakibi/securityscan/blob/ontwikkel/public/images/logo-securityreport.png)
 
 ## Description
 SecurityReport is a web application scanner that scans web applications on (Blind)SQLi and XSS vulnerabilities and automatically produces a report with the found weaknesses in the web application system.

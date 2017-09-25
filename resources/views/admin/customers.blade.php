@@ -17,7 +17,7 @@
 			<table class="table">
 	             	<thead>
 						<tr>
-							<th>id</th>
+							<th>Id</th>
 							<th>naam</th>
 							<th>bedrijf</th>
 							<th>url</th>
@@ -37,9 +37,10 @@
 								<td>{{ $customer->cms_email }}</td>
 								<td>{{ $customer->second_email }}</td>
 								<td>
-									<input type="button" id="active" name="active" value="{{ $customer->active ? 'Active' : 'Inactive' }}">
+									<input type="button" class="active" name="active" value="{{ $customer->active ? 'Active' : 'Inactive' }}">
 
 									<p hidden>{{ $customer->id }}</p>
+
 								</td>
 							</tr>
 

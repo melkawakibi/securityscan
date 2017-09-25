@@ -1,10 +1,12 @@
 $(document).ready(function(){
 
-	var active = $('#active');
-	var p = active.parent().find('p');
-	var id = p.text();
+	var active = $('.active');
 
-	active.click(function(){
+	active.click(function(e){
+
+		var p = $(e.target).parent().find('p');
+		var id = p.text();
+
 		if(active.val() == 'Active'){
 			$('#dialogtext').text("Weet u zeker dat u deze account (" + id + ") wilt deactiveren?");
 			$( "#dialog-confirm" ).dialog({
@@ -54,14 +56,19 @@ $(document).ready(function(){
 		}
 	});
 
-	var verzend = $('#verzend');
+	var verzend = $('.verzend');
 
-	verzend.click(function(){
+	verzend.click(function(e){
 
-		
+		var p = $(e.target).parent().find('p');
+		var reportId = p.text();
 
-
+		$.get('http://localhost:8000/send/' + reportId, function(){
+		        	window.location.href = 'http://localhost:8000/reports';
+				})
+		.fail(function(jqXHR){
+			alert('error, probeer opnieuw' + jqXHR.responseText);
+			$('#error').html(jqXHR.responseText);
+		})		
 	});
-
-
 });

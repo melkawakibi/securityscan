@@ -10,12 +10,14 @@ use App\Scanner;
 use \stdClass as Object;
 use \Artisan;
 use App\Core\MailService as Mail;
+use Log;
 
 class ScanController extends Controller
 {
 
 	public function store(Request $request)
 	{
+
   		$customer = new Object;
       $customer->name = $request->input('register_name');
       $customer->company = $request->input('register_company');
@@ -29,7 +31,11 @@ class ScanController extends Controller
 
       $customer = Customer::store($customer);
 
+      Mail::setEmail($customer);
+
       Mail::sendRegisterMail($customer);
+
+      return $request;
 
 	}
 

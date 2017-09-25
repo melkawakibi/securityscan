@@ -39,7 +39,7 @@ class AdminController extends Controller
 			
 			$customer = Customer::findCustomerByScanId($report->first()->scan_id);
 
-			$array[] = ['name' => $customer->name, 'company' => $customer->company, 'report' => $report->file];
+			$array[] = ['name' => $customer->name, 'company' => $customer->company, 'id' => $report->id, 'report' => $report->file, 'status' => $report->status];
 		
 		}	
 
@@ -60,8 +60,21 @@ class AdminController extends Controller
 		$customer[0]->save();
 
 		if($customer[0]->active){
-			Mail::sendActivationMail($customer);
+		 	Mail::setEmail($customer[0]);	
+			Mail::sendActivationMail($customer[0]);
 		}
+	}
+
+	public function sendReport($id)
+	{
+
+		$report = Report::findOneById($id)->first();
+
+		$customer = Customer::findCustomerByScanId($report->scan_id);
+
+		Mail::setEmail($customer);
+
+		Mail::sendReportMail($report, $customer);
 	}
 
 }

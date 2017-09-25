@@ -54,7 +54,6 @@ class CustomerService implements Service
 		$website = Website::findOneById($scan->website_id)->first();
 		$customer = Customer::findOneById($website->customer_id)->first();
 
-
 		return $customer;
 	}
 

@@ -4,8 +4,8 @@
 	<title>Report</title>
 	<style>
 
-		.image{
-			float: right;
+		h2{
+			text-align: right;
 		}
 
 		table {
@@ -56,7 +56,7 @@
 </head>
 <body>
 
-	<img src="@lang('string.image_url')" class="image">
+	<h2>SecurityReport</h2>
 
 	<h1>Scan Rapport</h1>
 

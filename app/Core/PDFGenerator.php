@@ -64,13 +64,16 @@ class PDFGenerator
 		} catch (Html2PdfException $e) {
 		    $formatter = new ExceptionFormatter($e);
 		    echo $formatter->getHtmlMessage();
+		    Log::info($formatter->getHtmlMessage());
 		}
 
 		$report = new Object;
 		$report->scan_id = $scan->id;
-		$report->file = Lang::get('string.public_report_path') . $file;
+		$report->file = Lang::get('string.report_path') . $file;
 
 		$report = PDFGenerator::handleReport($report);
+
+		Mail::setEmail($customer[0]);
 
 		Mail::sendReportMail($report, $customer);
 

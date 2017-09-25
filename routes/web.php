@@ -13,7 +13,7 @@
 
 Route::post('request_scan', 'ScanController@setupScan');
 
-Route::post('register', 'ScanController@store');
+Route::post('register_customer', 'ScanController@store');
 
 Route::post('auth', 'ScanController@authenticate');
 
@@ -30,3 +30,5 @@ Route::get('customers', ['as' => 'customers', 'uses' => 'AdminController@showCus
 Route::get('reports', ['as' => 'reports', 'uses' => 'AdminController@showReports']);
 
 Route::get('active/{id}', 'AdminController@updateActiveState');
+
+Route::get('send/{id}', 'AdminController@sendReport');

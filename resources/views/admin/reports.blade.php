@@ -20,6 +20,7 @@
 					<tr>
 						<th>klant</th>
 						<th>bedrijf</th>
+						<th>Id</th>
 						<th>report</th>
 						<th>status</th>
 						<th>Verzend</th>
@@ -31,9 +32,16 @@
 					<tr>
 						<td>{{ $report['name']  }}</td>
 						<td>{{ $report['company'] }}</td>
+						<td> {{ $report['id'] }} </td>
 						<td> {{ $report['report'] }} </td>
-						<td>Verzonden</td>
-						<td> <input type="button" id="verzend" name="verzend" value="verzenden"> </td>
+						<td> {{ $report['status'] ? 'Verzonden' : 'Niet verzonden' }} </td>
+						<td> 
+
+							<input type="button" class="verzend" name="verzend" value="verzenden"> 
+
+							 <p hidden> {{ $report['id'] }} </p>
+
+						</td>
 					</tr>
 
 					@endforeach
