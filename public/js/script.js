@@ -60,15 +60,31 @@ $(document).ready(function(){
 
 	verzend.click(function(e){
 
-		var p = $(e.target).parent().find('p');
-		var reportId = p.text();
+		$('#dialogtext').text("Weet u zeker dat u deze rapport wilt verzenden?");
+			$( "#dialog-confirm" ).dialog({
+		      resizable: false,
+		      height: "auto",
+		      width: 400,
+		      modal: true,
+		      buttons: {
+		        "Verzend rapport": function() {
 
-		$.get('http://localhost:8000/send/' + reportId, function(){
-		        	window.location.href = 'http://localhost:8000/reports';
+				var p = $(e.target).parent().find('p');
+				var reportId = p.text();
+
+				$.get('http://localhost:8000/send/' + reportId, function(){
+				        	window.location.href = 'http://localhost:8000/reports';
+						})
+				.fail(function(jqXHR){
+					alert('error, probeer opnieuw' + jqXHR.responseText);
+					$('#error').html(jqXHR.responseText);
 				})
-		.fail(function(jqXHR){
-			alert('error, probeer opnieuw' + jqXHR.responseText);
-			$('#error').html(jqXHR.responseText);
-		})		
+				  $( this ).dialog( "close" );
+		       },	
+		        Annuleer: function() {
+		         $( this ).dialog( "close" );
+		       }
+		     }
+		});	
 	});
 });

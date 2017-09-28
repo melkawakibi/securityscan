@@ -33,7 +33,7 @@
 						<td>{{ $report['name']  }}</td>
 						<td>{{ $report['company'] }}</td>
 						<td> {{ $report['id'] }} </td>
-						<td> {{ $report['report'] }} </td>
+						<td> {!! Html::image('images/pdf-icon.png') !!} <a href="{{ $report['report'] }}"> {{ $report['file'] }} </a></td>
 						<td> {{ $report['status'] ? 'Verzonden' : 'Niet verzonden' }} </td>
 						<td> 
 
@@ -48,6 +48,9 @@
 				</tbody>
 
 			</table>
+			<div id="dialog-confirm" title="Account beheer">
+				<p id="dialogtext"></p>
+			</div>
 
        	</div>
     </div>

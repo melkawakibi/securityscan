@@ -39,7 +39,9 @@ class AdminController extends Controller
 			
 			$customer = Customer::findCustomerByScanId($report->first()->scan_id);
 
-			$array[] = ['name' => $customer->name, 'company' => $customer->company, 'id' => $report->id, 'report' => $report->file, 'status' => $report->status];
+			$file = basename($report->file);
+
+			$array[] = ['name' => $customer->name, 'company' => $customer->company, 'id' => $report->id, 'file' => $file, 'report' => $report->file, 'status' => $report->status];
 		
 		}	
 

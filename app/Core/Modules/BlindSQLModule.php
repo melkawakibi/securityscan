@@ -41,9 +41,9 @@ class BlindSQLModule extends Module
 
 			echo 'Blind SQLI attack'.PHP_EOL.PHP_EOL;
 
-			//$this->attackPost($scan);
+			$this->attackPost($scan);
 
-			//$this->attackGet($scan);
+			$this->attackGet($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;

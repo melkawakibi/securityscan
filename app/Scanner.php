@@ -29,7 +29,7 @@ class Scanner
 	protected $blindSql;
 
 	/**
-	 * [$sql description]
+	 * [$sql description]	
 	 * @var SQLModule
 	 */
 	protected $sql;
@@ -132,14 +132,17 @@ class Scanner
 	{
 
 		if ($options['bs']) {
+			echo $options['bs'];
 			$this->blindSql = new BlindSQL($this->url);
 		}
 
 		if($options['s']){
+			echo $options['s'];
 			$this->sql = new SQL($this->url);
 		}
 
 		if ($options['x']) {
+			echo $options['x'];
 			$this->xss = new XSS($this->url);
 		}
 	}
@@ -163,16 +166,19 @@ class Scanner
 		$type->xss = false;
 
 		if($this->blindSql instanceof BlindSQL){
+			echo 'scan: BlindSQL';
 			$type->blindSql = true;
 			$this->blindSql->start();
 		}		
 
 		if ($this->sql instanceof SQL) {
+			echo 'scan: SQL';
 			$type->sql = true;
 			$this->sql->start();
 		}
 
 		if ($this->xss instanceof XSS) {
+			echo 'scan: XSS';
 			$type->xss = true;
 			$this->xss->start();
 		}
@@ -202,6 +208,7 @@ class Scanner
 	{
 		$type = '';
 		if($object->blindSql === true && $object->sql === true && $object->xss === true){
+			echo 'storeType: Full Scan';
 			$type = 'Full Scan';
 		}elseif($object->blindSql === true && $object->sql === false  && $object->xss === false){
 			$type = 'BlindSQL';
