@@ -57,4 +57,9 @@ class ScanDetailDAL
 		return ScanDetail::Where(['scan_id' => $id])->get();
 	}
 
+	public static function numRowByScanIdAndModuleAndLinkAndMethod($object)
+	{
+		return ScanDetail::Where('scan_id', $object->scan_id)->Where('module_name', $object->module)->Where('target', $object->link)->Where('method', $object->method)->get()->count();
+	}
+
 }

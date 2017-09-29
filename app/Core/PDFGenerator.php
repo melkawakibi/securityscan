@@ -111,11 +111,11 @@ class PDFGenerator
 	{
 		$level = 0;
 
-		if($risk->low > 10 && $risk->low < 10){
+		if($risk->low >= 10 && $risk->low <= 10){
 			$level = 1;
-		}elseif ($risk->low >= 10 && $risk->average <= 10  && $risk->high <= 5) {
+		}elseif ($risk->low > 10 && $risk->average <= 20) {
 			$level = 2;
-		}elseif ($risk->average >= 10 && $risk->high >= 5) {
+		}elseif ($risk->average > 20 && $risk->high > 0) {
 			$level = 3;
 		}elseif ($risk->high >= 10) {
 			$level = 4;
@@ -136,19 +136,25 @@ class PDFGenerator
 		$moduleObject->blindSql = array('module' => 'BlindSQLi', 'risk' => 'hoog', 'count' => 0); 
 		$moduleObject->sql = array('module' => 'SQLi', 'risk' => 'hoog', 'count' => 0);
 		$moduleObject->xss = array('module' => 'XSS', 'risk' => 'hoog', 'count' => 0);
+		$moduleObject->headerAverage = array('module' => 'Security Headers Gemiddeld', 'risk' => 'gemiddeld', 'count' => 0);
+		$moduleObject->headerLow = array('module' => 'Security Headers Laag', 'risk' => 'laag', 'count' => 0);
 
 		foreach ($object as $value) {
 			
 			$module = $value->module_name;
+			$risk = $value->risk;
 
 			if($module === 'blindsql'){
 				$moduleObject->blindSql['count'] += 1;
 			}elseif($module === 'sql'){
 				$moduleObject->sql['count'] += 1;
-			}else{
-				$moduleObject->xss['count'] +=1;
+			}elseif($module === 'xss'){
+				$moduleObject->xss['count'] += 1;
+			}elseif($risk === 'average'){
+				$moduleObject->headerAverage['count'] += 1;
+			}elseif($risk === 'low'){
+				$moduleObject->headerLow['count'] += 1;
 			}
-
 		}
 
 		return $moduleObject;

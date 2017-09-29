@@ -29,7 +29,7 @@ class BlindSQLModule extends Module
 
 		$website = Website::findOneByUrl($this->url);
 
-		$scan = Scan::findLastByScanIdOrderDesc($website[0]->id);
+		$scan = Scan::findLastByScanIdOrderDesc($website->id);
 
 		$links = Link::findAllByWebsiteId($website[0]->id);
 

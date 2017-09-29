@@ -14,7 +14,7 @@ class HeaderLinkDAL
 
 			$headerLink = new HeaderLink;
 			$headerLink->name = $array[0];
-			$headerLink->value = $array[0];
+			$headerLink->value = $array[1];
 			$headerLink->link_id = $id;
 
 			$headerLink->save();
@@ -43,7 +43,7 @@ class HeaderLinkDAL
 		return $object->save();
 	}
 
-	public static function findAllByWebsiteId($id)
+	public static function findAllByLinkId($id)
 	{
 		return HeaderLink::Where(['link_id' => $id])->get();
 	}

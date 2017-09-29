@@ -37,6 +37,9 @@
 			height: 30px;
 		}
 		.level{
+			background-color: lightgreen;
+		}
+		.level1{
 			background-color: green;
 		}
 		.level2{
@@ -51,6 +54,9 @@
 		.thread{
 			width: 50px;
 			height: 100px;
+		}
+		.table_advies{
+			margin-top: 100px;
 		}
 	</style>
 </head>
@@ -115,7 +121,7 @@
 				<td style="font-size: 20px;text-align: center;">0</td>
 				<td>@lang('string.thread_level_0')</td>
 			@elseif($level === 1) 
-				<td class="thread-level level"></td>
+				<td class="thread-level level1"></td>
 				<td style="font-size: 20px;text-align: center;">1</td>
 				<td>@lang('string.thread_level_1')</td>
 			@elseif($level === 2)
@@ -153,7 +159,7 @@
 
 	</table>
 
-	@if($modules->sql['count'] > 0 || $modules->xss['count'] > 0)
+	@if($modules->blindSql['count'] > 0 || $modules->sql['count'] > 0 || $modules->xss['count'] > 0 || $modules->headerAverage['count'] > 0 || $modules->headerLow['count'] > 0)
 	<table>
 
 		<tr>
@@ -176,8 +182,12 @@
 					<td>@lang('string.BlindSQLi_description')</td>
 				@elseif($module['module'] === 'SQLi')
 					<td>@lang('string.SQLi_description')</td>
-				@else
+				@elseif($module['module'] === 'XSS')
 					<td>@lang('string.XSS_description')</td>
+				@elseif($module['module'] === 'Security Headers Gemiddeld')
+					<td>@lang('string.Secuirty_Headers_description_Average')</td>
+				@elseif($module['module'] === 'Security Headers Laag')
+					<td>@lang('string.Secuirty_Headers_description_Low')</td>
 				@endif
 			@endif
 		</tr>
@@ -185,22 +195,30 @@
 
 	</table>
 
-	<table>
+	<table class="table_advies">
 		@foreach($modules as $module)
-			@if($module['count'] > 0 AND $module['module'] !== 'BlindSQLi')					
+			@if($module['count'] > 0 AND $module['module'] !== 'BlindSQLi' || $module['count'] > 0 AND $module['module'] !== 'Security Headers Laag')
+
 				<tr>
 					@if($module['module'] === 'SQLi')
 						<th>Advies: SQLi en Blind SQLi </th>
-					@else
+					@elseif($module['module'] === 'XSS')
 						<th>Advies: {{ $module['module'] }} </th>
+					@elseif($module['module'] === 'Security Headers Gemiddeld')
+						<th>Advies: Security Headers </th>
 					@endif
 				</tr>
 
 				<tr>
-					@if($module['module'] === 'SQLi')
+					@if($module['module'] === 'SQLi' || $module['module'] === 'BlindSQLi' )
 						<td>@lang('string.SQL_advies')</td>
-					@else
+					@elseif($module['module'] === 'XSS')
 						<td>@lang('string.XSS_advies')</td>
+					@elseif($module['module'] === 'Security Headers Gemiddeld')
+						<td>
+							@lang('string.Security_Headers_advies')
+							
+						</td>
 					@endif
 				</tr>
 			@endif

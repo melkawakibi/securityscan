@@ -5,6 +5,7 @@ namespace App;
 use App\Core\Modules\BlindSQLModule as BlindSQL;
 use App\Core\Modules\SQLModule as SQL;
 use App\Core\Modules\XSSModule as XSS;
+use App\Core\Modules\HeaderModule as Header;
 use App\Services\WebsiteService as Website;
 use App\Services\ScanService as Scan;
 use App\Core\PDFGenerator as PDF;
@@ -39,6 +40,13 @@ class Scanner
 	 * @var XSSModule
 	 */
 	protected $xss;
+
+	/**
+	 *
+	 * [header description]
+	 * @var HeaderModule
+	 */
+	protected $header;
 
 	/**
 	 * [$credentials description]
@@ -100,8 +108,7 @@ class Scanner
 
 			$this->checkUrl();
 			$this->spider->setSpiderConfig($this->url, $this->customer);
-			$this->prepare($this->options);
-			$this->spider->setup($this->options);
+			$this->spider->setup($this->options);		
 
 		} catch (Exception $e) {
 			Log::Exception($e);
@@ -132,18 +139,19 @@ class Scanner
 	{
 
 		if ($options['bs']) {
-			echo $options['bs'];
 			$this->blindSql = new BlindSQL($this->url);
 		}
 
 		if($options['s']){
-			echo $options['s'];
 			$this->sql = new SQL($this->url);
 		}
 
 		if ($options['x']) {
-			echo $options['x'];
 			$this->xss = new XSS($this->url);
+		}
+
+		if($options['h']) {
+			$this->header = new Header($this->url);
 		}
 	}
 
@@ -152,6 +160,8 @@ class Scanner
 	 */
 	public function scan()
 	{
+
+		$this->prepare($this->options);			
 
 		$website = Website::findOneByUrl($this->url);
 
@@ -181,6 +191,12 @@ class Scanner
 			echo 'scan: XSS';
 			$type->xss = true;
 			$this->xss->start();
+		}
+
+		if ($this->header instanceof Header) {
+			echo 'scan: Header';
+			$type->header = true;
+			$this->header->start();
 		}
 
 		$isShortReport = (!empty($this->options['rt']) ? 1 : 0);
@@ -216,6 +232,8 @@ class Scanner
 			$type = 'SQL';
 		}elseif($object->blindSql === false && $object->sql === false  && $object->xss === true){
 			$type = 'XSS';
+		}elseif($object->blindSql === false && $object->sql === false  && $object->xss === false && $object->header === true){
+			$type = 'Quick scan';
 		}
 
 		$scan->type = $type;

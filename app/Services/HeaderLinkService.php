@@ -38,5 +38,10 @@ class HeaderLinkService implements Service
 		return HeaderLink::update($object);
 	}
 
+	public static function findAllByLinkId($id)
+	{
+		return HeaderLink::findAllByLinkId($id);
+	}
+
 
 }

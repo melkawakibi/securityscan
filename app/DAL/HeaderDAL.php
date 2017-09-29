@@ -11,14 +11,17 @@ class HeaderDAL
 	{
 
 		if(!is_null($headers)){
-			$header = new Header;
-			$header->name = $headers[0];
-			$header->value = $headers[1];
-			$header->website_id = $id;
 
-			$header->save();
+			if(!HeaderDAL::numRowByName($headers[0])){
+				$header = new Header;
+				$header->name = $headers[0];
+				$header->value = $headers[1];
+				$header->website_id = $id;
 
-			return $header;
+				$header->save();
+
+				return $header;
+			}
 		} 
 	}
 
@@ -34,7 +37,7 @@ class HeaderDAL
 
 	public static function numRow($id)
 	{
-		return Header::Where(['website_id' => $id])->get()->count();
+		return Header::Where(['id' => $id])->get()->count();
 	}
 
 	public static function update($object)
@@ -47,5 +50,8 @@ class HeaderDAL
 		return Header::Where(['website_id' => $id])->get();
 	}
 
-
+	public static function numRowByName($name)
+	{
+		return Header::Where('name', $name)->get()->count();
+	}
 }

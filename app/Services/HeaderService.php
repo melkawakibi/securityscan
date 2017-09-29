@@ -35,7 +35,11 @@ class HeaderService implements Service
 	public static function update($object)
 	{
 		return Header::update($object);
-	}	
+	}
 
+	public static function numRowByWebsiteId($id)
+	{
+		return Header::numRowByWebsiteId($id);
+	}
 
 }

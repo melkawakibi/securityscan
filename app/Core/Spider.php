@@ -149,7 +149,7 @@ class Spider extends PHPCrawler
 
 			if($this->url === $pageInfo->url){
 
-				if(!is_null($website)){
+				if(!is_null($website)){	
 
 					$header = new Object;
 					$header->headers = $this->headers;

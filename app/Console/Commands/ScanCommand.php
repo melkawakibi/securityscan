@@ -26,6 +26,7 @@ class ScanCommand extends Command
                             {--bs : Blind SQL module}
                             {--s : SQL module} 
                             {--x : XSS module}
+                            {--h : Header module}
                             {--rt : handles report type}';
 
     /**
@@ -51,7 +52,7 @@ class ScanCommand extends Command
      */
     public function defaultOptions()
     {
-        return array( "r" => "y", "fm" => "0", "bs" => 1, "s" => 1, "x" => 1, "rt" => 0 );
+        return array( "r" => "y", "fm" => "0", "bs" => 1, "s" => 1, "x" => 1, "h" => 1, "rt" => 0 );
     }
 
     public function logController()

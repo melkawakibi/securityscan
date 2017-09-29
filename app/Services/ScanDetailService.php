@@ -36,4 +36,9 @@ class ScanDetailService implements Service
 	{
 		return ScanDetail::findAllScanDetailsByScanId($id);
 	}
+
+	public static function numRowByScanIdAndModuleAndLinkAndMethod($object)
+	{
+		return ScanDetail::numRowByScanIdAndModuleAndLinkAndMethod($object);
+	}
 }
