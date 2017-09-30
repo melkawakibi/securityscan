@@ -32,8 +32,12 @@ class ReportMail extends Mailable
      */
     public function build()
     {
-        $email = $this->view('email.report')->with('customer', $this->customer);
+        $file = basename($this->report->file);
+        $subject = 'Rapport: ' . $file;
 
+        $email = $this->view('email.report')->with(['customer' => $this->customer, 'report' => $this->report, 'file' => $file]);
+
+        $email->subject($subject);
         $email->attach($this->report->file);
 
         return $email;

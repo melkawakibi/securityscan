@@ -20,6 +20,8 @@
 					<tr>
 						<th>klant</th>
 						<th>bedrijf</th>
+						<th>Type</th>
+						<th>Report Type</th>
 						<th>Id</th>
 						<th>report</th>
 						<th>status</th>
@@ -32,6 +34,8 @@
 					<tr>
 						<td>{{ $report['name']  }}</td>
 						<td>{{ $report['company'] }}</td>
+						<td> {{ $report['scanType'] }} </td>
+						<td> {{ $report['reportType'] }} </td>
 						<td> {{ $report['id'] }} </td>
 						<td> {!! Html::image('images/pdf-icon.png') !!} <a href="{{ $report['report'] }}"> {{ $report['file'] }} </a></td>
 						<td> {{ $report['status'] ? 'Verzonden' : 'Niet verzonden' }} </td>

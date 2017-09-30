@@ -51,7 +51,7 @@ class ScanCommand extends Command
      * @return Array
      */
     public function defaultOptions()
-    {
+    {   
         return array( "r" => "y", "fm" => "0", "bs" => 1, "s" => 1, "x" => 1, "h" => 1, "rt" => 0 );
     }
 
@@ -93,16 +93,10 @@ class ScanCommand extends Command
 
         $hasValues = Utils::arrayHasValues($this->options());
 
-        $options = $this->checkOptionValue($this->options());
+        Log::info($this->options());
 
         if($hasValues){
-            if(count($options) === 1){
-                if($options['rt']){
-                    $options = array( "r" => "y", "fm" => "0", "bs" => 1, "s" => 1, "x" => 1, "h" => 1, "rt" => 1 );
-                }
-            }else{
-                $options = $this->options();
-            }
+            $options = $this->options();
         }else{
             $options = $this->defaultOptions();
         }

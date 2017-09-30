@@ -236,7 +236,7 @@
 						</tr>
 
 						@foreach($scandetails as $scandetail)
-							@if($count <= 70)
+							@if($count <= 100)
 								<tr>
 									<td><b>ID: </b> {{$scandetail->id}}</td>
 								</tr>

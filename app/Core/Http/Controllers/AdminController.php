@@ -4,6 +4,7 @@ namespace App\Core\Http\Controllers;
 
 use App\Services\CustomerService as Customer;
 use App\Services\ReportService as Report;
+use App\Services\ScanService as Scan;
 use Illuminate\Support\Facades\Redirect;
 use View;
 use App\Core\MailService as Mail;
@@ -37,11 +38,16 @@ class AdminController extends Controller
 
 		foreach ($reports as $report) {
 			
-			$customer = Customer::findCustomerByScanId($report->first()->scan_id);
+			$customer = Customer::findCustomerByScanId($report->scan_id);
+
+			$scan = Scan::findOneById($report->scan_id)->first();
+
+			$scanType = $scan->type;
+			$reportType = $scan->report_type;
 
 			$file = basename($report->file);
 
-			$array[] = ['name' => $customer->name, 'company' => $customer->company, 'id' => $report->id, 'file' => $file, 'report' => $report->file, 'status' => $report->status];
+			$array[] = ['name' => $customer->name, 'company' => $customer->company, 'id' => $report->id, 'file' => $file, 'report' => $report->file, 'status' => $report->status, 'scanType' => $scanType, 'reportType' => $reportType];
 		
 		}	
 
