@@ -101,9 +101,7 @@ class Crawler
 
 		$params = Utils::filterGetUrl($url);
 
-		$url = Utils::getBaseUrl($url);
-
-		if(!empty($params)){
+		if(!empty($params) && strlen($url) < 200){
 
 			$link = Link::findOneByLinkUrl($url);
 

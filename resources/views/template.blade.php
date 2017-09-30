@@ -229,51 +229,53 @@
 
 	@if(!$isShortReport)
 		@if(!$isScanDetailEmpty)
-		<table>
+					<table>
 
-			<tr>
-				<th>Detials van gevonden kwetsbaarheden</th>
-			</tr>
+						<tr>
+							<th>Detials van gevonden kwetsbaarheden</th>
+						</tr>
 
-			@foreach($scandetails as $scandetail)
+						@foreach($scandetails as $scandetail)
+							@if($count <= 70)
+								<tr>
+									<td><b>ID: </b> {{$scandetail->id}}</td>
+								</tr>
+								<tr>
+									<td><b>Module: </b> {{$scandetail->module_name}}</td>
+								</tr>
+								<tr>
+									<td><b>Risico: </b> {{$scandetail->risk}}</td>
+								</tr>
+								<tr>
+									<td><b>Target URL: </b> {{ $scandetail->target }} </td>
+								</tr>
+								<tr>
+									<td><b>Parameter: </b> {{$scandetail->parameter}}</td>
+								</tr>
+								<tr>
+									<td><b>Aanval: </b> {{$scandetail->attack}}</td>
+								</tr>
+								<tr>
+									<td><b>Error: </b> {{$scandetail->error}}</td>
+								</tr>
+								<tr>
+									<td><b>WASC ID: </b> {{$scandetail->wasc_id}}</td>
+								</tr>
+								<tr>
+									<td><b>Methode: </b> {{$scandetail->method}}</td>
+								</tr>
+								<tr>
+									<td><b>Datum: </b> {{$scandetail->created_at}}</td>
+								</tr>
 
-			<tr>
-				<td><b>ID: </b> {{$scandetail->id}}</td>
-			</tr>
-			<tr>
-				<td><b>Module: </b> {{$scandetail->module_name}}</td>
-			</tr>
-			<tr>
-				<td><b>Risico: </b> {{$scandetail->risk}}</td>
-			</tr>
-			<tr>
-				<td><b>Target URL: </b> {{ $scandetail->target }} </td>
-			</tr>
-			<tr>
-				<td><b>Parameter: </b> {{$scandetail->parameter}}</td>
-			</tr>
-			<tr>
-				<td><b>Aanval: </b> {{$scandetail->attack}}</td>
-			</tr>
-			<tr>
-				<td><b>Error: </b> {{$scandetail->error}}</td>
-			</tr>
-			<tr>
-				<td><b>WASC ID: </b> {{$scandetail->wasc_id}}</td>
-			</tr>
-			<tr>
-				<td><b>Methode: </b> {{$scandetail->method}}</td>
-			</tr>
-			<tr>
-				<td><b>Datum: </b> {{$scandetail->created_at}}</td>
-			</tr>
+								<tr>
+									<th></th>
+								</tr>
+							@endif
+							<?php $count++; ?>	
+					@endforeach
 
-			<tr>
-				<th></th>
-			</tr>
-			@endforeach
-
-		</table>
+				</table>		
 		@endif
 	@endif
 </body>

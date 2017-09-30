@@ -98,14 +98,18 @@ class Utils
 					
 					if(strpos($query, "=") !== false){
 						$param = explode("=", $query);
-						array_push($params, $param[0]);
+						if($param[0] !== 'rest_route'){
+							array_push($params, $param[0]);
+						}
 					}	
 				}
 			} else {
 
 				if (strpos($queryLine[1], "=") !== false) {
 					$param = explode("=", $queryLine[1]);
-					array_push($params, $param[0]);
+					if($param[0] !== 'rest_route'){
+						array_push($params, $param[0]);
+					}
 				}
 			}
 		} else {
@@ -122,7 +126,9 @@ class Utils
   			return $result['scheme']."://".$result['host'].":".$result['port'].$result['path'];
 		}else{
 			if(!empty($result['port'])){
-			return $result['scheme']."://".$result['host'].":".$result['port'];
+				return $result['scheme']."://".$result['host'].":".$result['port'];
+			}else{
+				return $result['scheme']."://".$result['host'];
 			}
 		}
 	}

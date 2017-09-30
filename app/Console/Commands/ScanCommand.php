@@ -55,6 +55,18 @@ class ScanCommand extends Command
         return array( "r" => "y", "fm" => "0", "bs" => 1, "s" => 1, "x" => 1, "h" => 1, "rt" => 0 );
     }
 
+    public function checkOptionValue($options)
+    {
+        $array = array();
+        foreach ($options as $key => $value) {
+           if(!empty($value)){
+                $array[$key] = $value;
+           }
+        }
+
+        return $array;
+    }
+
     public function logController()
     {
         $path = storage_path('logs');
@@ -80,8 +92,20 @@ class ScanCommand extends Command
         $url = $this->argument('url');
 
         $hasValues = Utils::arrayHasValues($this->options());
-        
-        $options = ($hasValues) ? $this->options() : $this->defaultOptions();
+
+        $options = $this->checkOptionValue($this->options());
+
+        if($hasValues){
+            if(count($options) === 1){
+                if($options['rt']){
+                    $options = array( "r" => "y", "fm" => "0", "bs" => 1, "s" => 1, "x" => 1, "h" => 1, "rt" => 1 );
+                }
+            }else{
+                $options = $this->options();
+            }
+        }else{
+            $options = $this->defaultOptions();
+        }
 
         $scanner = new Scanner($url, $options, new Spider($url));
 

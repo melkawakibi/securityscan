@@ -44,9 +44,9 @@ class PDFGenerator
 			$isScanDetailEmpty = true;
 		}
 
-		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scandetails' => $scanDetail, 'isScanDetailEmpty' => $isScanDetailEmpty, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0], 'isShortReport' => $isShortReport, 'level' => $level])->render();
+		$html = View::make('template', ['website' => $website, 'scan' => $scan, 'scandetails' => $scanDetail, 'isScanDetailEmpty' => $isScanDetailEmpty, 'risk' => $risk, 'modules' => $modules, 'customer' => $customer[0], 'isShortReport' => $isShortReport, 'level' => $level, 'count' => 0])->render();
 
-		if($customer[0]->cms_id === '145'){
+		if($customer[0]->company === 'console'){
 			$reportPath =  Lang::get('string.public_report_path');
 		}else{
 			$reportPath =  Lang::get('string.report_path');
@@ -115,9 +115,9 @@ class PDFGenerator
 			$level = 1;
 		}elseif ($risk->low > 10 && $risk->average <= 20) {
 			$level = 2;
-		}elseif ($risk->average > 20 && $risk->high > 0) {
+		}elseif ($risk->average > 20 && $risk->high >= 0 && $risk->high <=10) {
 			$level = 3;
-		}elseif ($risk->high >= 10) {
+		}elseif ($risk->high > 10) {
 			$level = 4;
 		}
 

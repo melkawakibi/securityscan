@@ -36,7 +36,7 @@ class XSSModule extends Module
 
 			$this->buildPostFormParams($links, Lang::get('string.payload_xss'));
 
-			echo 'XSS attack'.PHP_EOL.PHP_EOL;
+			echo 'XSS attack' . PHP_EOL . PHP_EOL;
 
 			$this->attackGet($scan);
 
@@ -58,8 +58,11 @@ class XSSModule extends Module
 			$res = 'default';
 
 			if (filter_var($value, FILTER_VALIDATE_URL) !== false){
-				
-				$res = $this->client->request('GET', $value);
+				try{	
+					$res = $this->client->request('GET', $value);
+				}catch(\GuzzleHttp\Exception\ClientException $e){
+					echo 'Caught response: ' . $e->getResponse()->getStatusCode() . PHP_EOL;
+				}
 			}
 
 			$time_end = microtime(true);

@@ -186,7 +186,7 @@ class Spider extends PHPCrawler
 					$object->link = $link;
 					$object->method = $method;
 					$object->website_id = $this->website_id;
-					$url = Utils::getBaseUrl($link->url_rebuild);
+					$url = $link->url_rebuild;
 
 					if(!Link::numRowByLinkAndMethod($url, $method)){
 

@@ -67,12 +67,13 @@ abstract class Module
 				$query_array = Utils::create_comined_array_get($params, $lines);
 
 				array_filter($query_array);
-
+				
 					if($link->method === 'GET'){
-
+						
 						foreach ($query_array as $key => $query) {
 						$query = http_build_query($query);
 						$url = $link->url . '?' . $query;
+						if(strlen($url) < 200)
 						array_push($this->queryArray, $url);
 
 					}

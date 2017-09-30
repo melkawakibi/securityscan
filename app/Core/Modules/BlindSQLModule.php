@@ -29,7 +29,7 @@ class BlindSQLModule extends Module
 
 		$website = Website::findOneByUrl($this->url);
 
-		$scan = Scan::findLastByScanIdOrderDesc($website->id);
+		$scan = Scan::findLastByScanIdOrderDesc($website[0]->id);
 
 		$links = Link::findAllByWebsiteId($website[0]->id);
 
@@ -39,11 +39,11 @@ class BlindSQLModule extends Module
 
 			$this->buildPostFormParams($links, Lang::get('string.payload_blind_sql'));
 
-			echo 'Blind SQLI attack'.PHP_EOL.PHP_EOL;
+			echo 'Blind SQLI attack' . PHP_EOL . PHP_EOL;
 
-			$this->attackPost($scan);
+			//$this->attackPost($scan);
 
-			$this->attackGet($scan);
+			//$this->attackGet($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
@@ -53,13 +53,16 @@ class BlindSQLModule extends Module
 	protected function attackGet($scan)
 	{
 
-		foreach ($this->queryArray as $key => $link) {
+		foreach ($this->queryArray as $key => $value) {
 
 			$time_start = microtime(true);
 
-			if (filter_var($link, FILTER_VALIDATE_URL) !== false){
-				
-				$this->client->request('GET', $link);
+			if (filter_var($value, FILTER_VALIDATE_URL) !== false){
+				try{	
+					$res = $this->client->request('GET', $value);
+				}catch(\GuzzleHttp\Exception\ClientException $e){
+					echo 'Caught response: ' . $e->getResponse()->getStatusCode() . PHP_EOL;
+				}
 			}
 
 			$time_end = microtime(true);
@@ -69,7 +72,7 @@ class BlindSQLModule extends Module
 			$minutes = (int)($duration/60)-$hours*60;
 			$seconds = (int)$duration-$hours*60*60-$minutes*60;
 
-			$params = Utils::filterGetUrl($link);
+			$params = Utils::filterGetUrl($value);
 
 			$this->properties['parameter'] = $params[0];
 			$this->properties['execution_time'] = $seconds;
@@ -78,14 +81,14 @@ class BlindSQLModule extends Module
 			$this->properties['wasc_id'] = Lang::get('string.BlindSQL.wasc_id');
 			$this->properties['method'] = 'GET';
 
-			$sql_array = explode("=", $link);
+			$sql_array = explode("=", $value);
 			$sql_url = explode("?", $sql_array[0]);
 			$sql_attack = urldecode($sql_array[1]);
 
 			$this->properties['target'] =  $sql_url[0];
 			$this->properties['attack'] = $sql_attack;
 
-			$this->properties['error'] = $link;
+			$this->properties['error'] = $value;
 
 			if($seconds >= $this->timeout){
 				if(!is_null($scan)){

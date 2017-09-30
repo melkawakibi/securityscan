@@ -174,34 +174,29 @@ class Scanner
 		$type->blindSql = false;
 		$type->sql = false;
 		$type->xss = false;
+		$type->header = false;
 
 		if($this->blindSql instanceof BlindSQL){
-			echo 'scan: BlindSQL';
 			$type->blindSql = true;
 			$this->blindSql->start();
 		}		
 
 		if ($this->sql instanceof SQL) {
-			echo 'scan: SQL';
 			$type->sql = true;
 			$this->sql->start();
 		}
 
 		if ($this->xss instanceof XSS) {
-			echo 'scan: XSS';
 			$type->xss = true;
 			$this->xss->start();
 		}
 
 		if ($this->header instanceof Header) {
-			echo 'scan: Header';
 			$type->header = true;
 			$this->header->start();
 		}
 
-		$isShortReport = (!empty($this->options['rt']) ? 1 : 0);
-
-		$scan->report_type = ($isShortReport) ? 'Short Report' : 'Full Report';
+		$scan->report_type = ($this->options['rt']) ? 'Short Report' : 'Full Report';
 
 		$this->storeType($type, $scan);
 
@@ -209,7 +204,7 @@ class Scanner
 
 		echo PHP_EOL . 'Generating report...' . PHP_EOL;
 
-		$this->generateReport($website[0], $scan, $isShortReport);
+		$this->generateReport($website[0], $scan, $this->options['rt']);
 
 		echo PHP_EOL . 'Report is generated.' . PHP_EOL . 'It is stored in the folder: public/resources/reports' . PHP_EOL;
 	}
@@ -223,14 +218,13 @@ class Scanner
 	public function storeType($object, $scan)
 	{
 		$type = '';
-		if($object->blindSql === true && $object->sql === true && $object->xss === true){
-			echo 'storeType: Full Scan';
+		if($object->blindSql === true && $object->sql === true && $object->xss === true  && $object->header === true){
 			$type = 'Full Scan';
-		}elseif($object->blindSql === true && $object->sql === false  && $object->xss === false){
+		}elseif($object->blindSql === true && $object->sql === false  && $object->xss === false  && $object->header === false){
 			$type = 'BlindSQL';
-		}elseif($object->blindSql === false && $object->sql === true  && $object->xss === false) {
+		}elseif($object->blindSql === false && $object->sql === true  && $object->xss === false && $object->header === false) {
 			$type = 'SQL';
-		}elseif($object->blindSql === false && $object->sql === false  && $object->xss === true){
+		}elseif($object->blindSql === false && $object->sql === false  && $object->xss === true && $object->header === false){
 			$type = 'XSS';
 		}elseif($object->blindSql === false && $object->sql === false  && $object->xss === false && $object->header === true){
 			$type = 'Quick scan';

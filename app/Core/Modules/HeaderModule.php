@@ -21,8 +21,7 @@ class HeaderModule
 
 	public function start()
 	{
-
-		echo 'Security Headers'.PHP_EOL.PHP_EOL;
+		echo 'Security Headers' . PHP_EOL . PHP_EOL;
 
 		$this->scan = Scan::findLastByScanIdOrderDesc($this->website[0]->id);	
 		$this->links = Link::findAllByWebsiteId($this->website[0]->id);
@@ -68,9 +67,8 @@ class HeaderModule
 							}
 						}
 
-
 					}else{
-						echo 'security header found';
+
 					}
 
 				}

@@ -97,11 +97,11 @@ class TestCommand extends Command
 
         }
 
-        if($argument === 'create-test-customer'){
+        if($argument === 'customer'){
 
             $customer = new Object;
             $customer->name = 'example';
-            $customer->company = 'example-company';
+            $customer->company = 'console';
             $customer->second_email = 'webapplicatietest@gmail.com';
             $customer->cms_id = '145';
             $customer->cms_name = 'example';
@@ -114,15 +114,15 @@ class TestCommand extends Command
 
         }
 
-        if($argument === 'create-test-customer-wp'){
+        if($argument === 'customer-wp'){
 
             $customer = new Object;
             $customer->name = 'wp-example';
-            $customer->company = 'wp-example-company';
+            $customer->company = 'console';
             $customer->second_email = 'webapplicatietest@gmail.com';
             $customer->cms_id = '147';
             $customer->cms_name = 'wp-example';
-            $customer->cms_url = 'http://cms.local/wordpress/';
+            $customer->cms_url = 'http://cms.local';
             $customer->cms_email = 'webapplicatietest@gmail.com';
             $customer->cms_register_date = '2017-09-04 17:00:00';
             $customer->active = 1;

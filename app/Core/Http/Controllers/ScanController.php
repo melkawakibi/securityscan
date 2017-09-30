@@ -90,18 +90,17 @@ class ScanController extends Controller
 
     $collection = Customer::findOneByUrl($request->input('cms_url'));
     $customer = $collection[0];
-    echo $customer->cms_url; 
 
-    if(!empty($request->input('request_name'))){
-      $request_name = $request->input('request_name');
+    // if(!empty($request->input('request_name'))){
+    //   $request_name = $request->input('request_name');
 
-      $this->caching($request_name, 'name');
+    //   $this->caching($request_name, 'name');
 
-    }else if(!empty($request->input('request_email'))){
-      $request_email = $request->input('request_email');
+    // }else if(!empty($request->input('request_email'))){
+    //   $request_email = $request->input('request_email');
 
-      $this->caching($request_email, 'email');
-    }
+    //   $this->caching($request_email, 'email');
+    // }
 
       $selectType = $request->input('type');
 
@@ -113,34 +112,36 @@ class ScanController extends Controller
 
   public function scan($request, $selectReport, $selectType, $customer)
   {
-
+    
     if($selectReport === 'full-report'){
       switch ($selectType) {
         case 'full':
           
-          \Artisan::call('scan', ['url' => $customer->cms_url, '--rt' => 0]);
-          return $request;
+          \Artisan::call('scan', ['url' => $customer->cms_url]);
 
           break;
 
         case 'BlindSQL':
           
-          \Artisan::call('scan', ['url' => $customer->cms_url, '--bs' => 1, '--rt' => 0]);
-          return $request;
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--bs' => 1]);
 
           break;
 
         case 'SQL':
           
-          \Artisan::call('scan', ['url' => $customer->cms_url, '--s' => 1, '--rt' => 0]);
-          return $request;
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--s' => 1]);
 
           break;
 
         case 'XSS':
 
-          \Artisan::call('scan', ['url' => $customer->cms_url, '--x' => 1, '--rt' => 0]);
-          return $request;
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--x' => 1]);
+
+          break;
+
+        case 'Quickscan':
+
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--h' => 1]);
 
           break;
       }
@@ -150,28 +151,30 @@ class ScanController extends Controller
         case 'full':
           
           \Artisan::call('scan', ['url' => $customer->cms_url, '--rt' => 1]);
-          return $request;
 
           break;
 
         case 'BlindSQL':
           
           \Artisan::call('scan', ['url' => $customer->cms_url, '--bs' => 1, '--rt' => 1]);
-          return $request;
 
           break;        
 
         case 'SQL':
           
           \Artisan::call('scan', ['url' => $customer->cms_url, '--s' => 1, '--rt' => 1]);
-          return $request;
 
           break;
 
         case 'XSS':
 
           \Artisan::call('scan', ['url' => $customer->cms_url, '--x' => 1, '--rt' => 1]);
-          return $request;
+
+          break;
+
+        case 'Quickscan':
+
+          \Artisan::call('scan', ['url' => $customer->cms_url, '--h' => 1, '--rt' => 1]);
 
           break;
 

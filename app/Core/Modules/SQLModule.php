@@ -36,11 +36,11 @@ class SQLMOdule extends Module
 
 			$this->buildPostFormParams($links, Lang::get('string.payload_sql'));
 
-			echo 'SQLI attack'.PHP_EOL.PHP_EOL;
+			echo 'SQLI attack' . PHP_EOL . PHP_EOL;
 
-			$this->attackGet($scan);
+			//$this->attackGet($scan);
 
-			$this->attackPost($scan);
+			//$this->attackPost($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
@@ -57,8 +57,11 @@ class SQLMOdule extends Module
 			$res = 'default';
 
 			if (filter_var($value, FILTER_VALIDATE_URL) !== false){
-				
-				$res = $this->client->request('GET', $value);
+				try{	
+					$res = $this->client->request('GET', $value);
+				}catch(\GuzzleHttp\Exception\ClientException $e){
+					echo 'Caught response: ' . $e->getResponse()->getStatusCode() . PHP_EOL;
+				}
 			}
 
 			$time_end = microtime(true);
