@@ -30,6 +30,7 @@ class ActivationMail extends Mailable
      */
     public function build()
     {
-        return $this->view('email.activation')->with('customer', $this->customer);
+        return $this->view('email.activation')->with('customer', $this->customer)
+        ->subject('Activation');
     }
 }

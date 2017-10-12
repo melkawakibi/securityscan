@@ -71,24 +71,6 @@ class TestCommand extends Command
 
         $argument = $this->argument('option');
 
-        if($argument === 'website'){
-
-            $website = new Object;
-            $website->url = 'http://localhost:80';
-            $website->server = 'apache 2.4';
-            $website->follow_robot = 1;
-            
-            Website::store($website);
-        }
-
-        if($argument === 'customer-list'){
-
-            $customer = Customer::findOneById(15);
-
-            print_r($customer[0]);
-
-        }
-
         if($argument === 'customers'){
 
             $customers = Customer::findAll();
