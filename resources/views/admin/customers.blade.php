@@ -22,8 +22,8 @@
 							<th>bedrijf</th>
 							<th>url</th>
 							<th>email</th>
-							<th>tweede email</th>
-							<th>active</th>
+							<th>alternatieve email</th>
+							<th>Premium</th>
 						</tr>
 					</thead>
 

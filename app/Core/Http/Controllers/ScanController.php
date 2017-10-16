@@ -21,7 +21,8 @@ class ScanController extends Controller
   		$customer = new Object;
       $customer->name = $request->input('register_name');
       $customer->company = $request->input('register_company');
-      $customer->second_email = $request->input('register_email');
+      $customer->second_email = $request->input('alt_email');
+      $customer->token = $request->input('token');
       $customer->cms_id = $request->input('cms_id');
       $customer->cms_name = $request->input('cms_username');
       $customer->cms_email = $request->input('cms_email');
@@ -41,12 +42,13 @@ class ScanController extends Controller
 
   public function authenticate(Request $request)
   {
-      $hash = md5( 
+      $hash = md5(
         $request->input('cms_id').
         $request->input('cms_username').
         $request->input('cms_email').
         $request->input('cms_url').
-        $request->input('cms_register_date'));
+        $request->input('cms_register_date').
+        $request->input('token'));
 
       $customers = Customer::findAll();
 
@@ -62,7 +64,7 @@ class ScanController extends Controller
       foreach ($customers as $customer) {
         
         $stored_hash = substr($customer->cms_id, 4);
-
+        
         if($stored_hash === $hash){
           $active = $customer->active;
           

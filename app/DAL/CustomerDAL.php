@@ -15,6 +15,7 @@ class CustomerDAL
 			$customer->name = $object->name;
 			$customer->company = $object->company;
 			$customer->second_email = $object->second_email;
+			$customer->token = $object->token;
 			$customer->cms_id = $object->cms_id;
 			$customer->cms_name = $object->cms_name;
 			$customer->cms_url = $object->cms_url;
