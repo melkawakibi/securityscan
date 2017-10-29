@@ -19,12 +19,10 @@ abstract class Module
 
 	protected $url;
 	protected $client;
-	protected $baseUrl;
-	protected $links;
-	protected $formLinks;
-	protected $urlWithQuery;
-	protected $urlArray;
 	protected $timeout;
+	protected $queryArray;
+	protected $formArray;
+	protected $properties;
 
 	public function __construct($url)
 	{
@@ -32,7 +30,6 @@ abstract class Module
 		$this->client = new GuzzleClient;
 		$this->queryArray = array();
 		$this->formArray = array();
-		$this->defaultlinks = array();
 		$this->properties = array();
 		$this->timeout = 10;
 	}
@@ -45,11 +42,11 @@ abstract class Module
 
 	protected function getBaseContent($url)
 	{
-		$res = $this->client->request('GET', $this->url);
+		$res = $this->client->request('GET', $url);
 		return $res->getBody();
 	}
 
-	protected function buildGETURI($links, $payload)
+	protected function buildGetUri($links, $payload)
 	{
 
 		foreach ($links as $key => $link) {
@@ -115,7 +112,7 @@ abstract class Module
 		}
 	}
 
-	public function getLines($payload)
+	protected function getLines($payload)
 	{
 		$lines = file(public_path() . $payload);
 
@@ -126,19 +123,28 @@ abstract class Module
 		return $lines;
 	}
 
-	public function setTimeOut($timeout)
+	protected function setTimeOut($timeout)
 	{
 
 		$this->timeout = $timeout;
 
 	}
 
-	public function getReplaceString($payload)
+	protected function getReplaceString($payload)
 	{
 		if(strpos($payload, 'sqlblind') !== false){
 			return array("0" => (string) $this->timeout, "1" => Lang::get('string.BlindSQL_Replace'));
 		}else{
 			return array("0" => Utils::generateRandomString(), "1" => Lang::get('string.XSS_Replace'));
+		}
+	}
+
+	protected function getAttack($values)
+	{
+		foreach ($values as $key => $value) {
+			
+			return $value;
+
 		}
 	}
 

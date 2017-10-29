@@ -32,15 +32,15 @@ class SQLMOdule extends Module
 
 		if(!empty($links)){
 
-			$this->buildGETURI($links, Lang::get('string.payload_sql'));
+			$this->buildGetUri($links, Lang::get('string.payload_sql'));
 
 			$this->buildPostFormParams($links, Lang::get('string.payload_sql'));
 
 			echo 'SQLI attack' . PHP_EOL . PHP_EOL;
 
-			//$this->attackGet($scan);
+			$this->attackGet($scan);
 
-			//$this->attackPost($scan);
+			$this->attackPost($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
@@ -95,7 +95,7 @@ class SQLMOdule extends Module
 
 						$content = $res->getBody();
 						
-						if($this->find_sql($content, $value)){
+						if($this->findSql($content, $value)){
 
 							$this->properties['error'] = $value;
 
@@ -167,7 +167,7 @@ class SQLMOdule extends Module
 
 								$content = $response->content; 					
 								
-								if($this->find_sql($content, $value)){
+								if($this->findSql($content, $value)){
 
 									$this->properties['error'] = 'error';
 
@@ -186,16 +186,7 @@ class SQLMOdule extends Module
 		}
 	}
 
-	protected function getAttack($values)
-	{
-		foreach ($values as $key => $value) {
-			
-			return $value;
-
-		}
-	}	
-
-	protected function find_sql($content, $str)
+	private function findSql($content, $str)
 	{
 
 		if(strpos($content, $str)){

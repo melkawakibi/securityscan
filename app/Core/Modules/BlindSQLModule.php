@@ -35,15 +35,15 @@ class BlindSQLModule extends Module
 
 		if(!empty($links)){
 
-			$this->buildGETURI($links, Lang::get('string.payload_blind_sql'));
+			$this->buildGetUri($links, Lang::get('string.payload_blind_sql'));
 
 			$this->buildPostFormParams($links, Lang::get('string.payload_blind_sql'));
 
 			echo 'Blind SQLI attack' . PHP_EOL . PHP_EOL;
 
-			//$this->attackPost($scan);
+			$this->attackPost($scan);
 
-			//$this->attackGet($scan);
+			$this->attackGet($scan);
 
 		}else{
 			echo 'No links to scan'.PHP_EOL;
@@ -135,12 +135,6 @@ class BlindSQLModule extends Module
 					$time_end = microtime(true);
 
 				    $content = $response->content; 
-
-					Log::info('----------------- Response Code -------------------------' . PHP_EOL);
-					Log::info('Request url: ' . $url);
-					Log::info('response: ' . $response->status . PHP_EOL);
-					Log::info('----------------- Content -------------------------' . PHP_EOL);
-					Log::info('Content: ' . PHP_EOL . $response->content . PHP_EOL);				
 
 					$duration = $time_end-$time_start;
 					$hours = (int)($duration/60/60);

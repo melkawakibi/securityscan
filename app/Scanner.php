@@ -49,33 +49,10 @@ class Scanner
 	protected $header;
 
 	/**
-	 * [$credentials description]
-	 * @var Array
-	 */
-	protected $credentials;
-
-	/**
 	 * [$spider description]
 	 * @var Spider
 	 */
 	protected $spider;
-
-	/**
-	 * [$websiteDB description]
-	 * @var WebsiteDB
-	 */
-	protected $websiteDB;
-
-	/**
-	 * [$service description]
-	 * @var DBService
-	 */
-	protected $service;
-
-	/**
-	 * @var Customer
-	 */
-	protected $customer;
 
 	/**
 	 * @param string $url
@@ -93,7 +70,7 @@ class Scanner
 		$this->spider = $spider;
 		$this->options = $options;
 
-		$this->setup($spider);
+		$this->setup();
 
 		$this->spider->start();
 
@@ -107,7 +84,7 @@ class Scanner
 		try {
 
 			$this->checkUrl();
-			$this->spider->setSpiderConfig($this->url, $this->customer);
+			$this->spider->setSpiderConfig($this->url);
 			$this->spider->setup($this->options);		
 
 		} catch (Exception $e) {
@@ -135,7 +112,7 @@ class Scanner
 	 * @param  Array $options 
 	 * @return void
 	 */
-	public function prepare($options)
+	private function prepare($options)
 	{
 
 		if ($options['bs']) {
@@ -215,7 +192,7 @@ class Scanner
 	 *@param Scan $scan
 	 *return void
 	 */
-	public function storeType($object, $scan)
+	private function storeType($object, $scan)
 	{
 		$type = '';
 		if($object->blindSql === true && $object->sql === true && $object->xss === true  && $object->header === true){
@@ -240,7 +217,7 @@ class Scanner
 	 * @param Scan $scan
 	 * @return void
 	 */
-	public function storeScanTime($scan)
+	private function storeScanTime($scan)
 	{
 		$collection = Scan::findOneById($scan->id);
 
@@ -274,7 +251,7 @@ class Scanner
 	 * @param  Website $website
 	 * @return void
 	 */
-	public function generateReport($website, $scan, $isShortReport)
+	private function generateReport($website, $scan, $isShortReport)
 	{
 		PDF::generatePDF($website, $scan, $isShortReport);
 	}

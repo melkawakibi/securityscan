@@ -32,7 +32,7 @@ class XSSModule extends Module
 
 		if(!empty($links)){
 
-			$this->buildGETURI($links, Lang::get('string.payload_xss'));
+			$this->buildGetUri($links, Lang::get('string.payload_xss'));
 
 			$this->buildPostFormParams($links, Lang::get('string.payload_xss'));
 
@@ -93,7 +93,7 @@ class XSSModule extends Module
 
 					$content = $res->getBody();
 
-					if($this->find_xss($content, $xss_attack)) {
+					if($this->findXss($content, $xss_attack)) {
 						
 						$this->properties['error'] = 'This webpage is vulnerable for Cross site scripting';
 
@@ -162,7 +162,7 @@ class XSSModule extends Module
 
 								$content = $response->content;
 
-							if($this->find_xss($content, $attack)) {
+							if($this->findXss($content, $attack)) {
 								
 								$this->properties['error'] = 'This webpage is vulnerable for Cross site scripting';
 
@@ -186,16 +186,7 @@ class XSSModule extends Module
 		}
 	}
 
-	protected function getAttack($values)
-	{
-		foreach ($values as $key => $value) {
-			
-			return $value;
-
-		}
-	}
-
-	protected function find_xss($content, $str)
+	private function findXss($content, $str)
 	{
 
 		$html = (string) $content;

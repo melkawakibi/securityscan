@@ -146,6 +146,44 @@ class Utils
 
 	}
 
+	public static function isShortReport($array)
+	{
+		$count = 0;
+		foreach ($array as $key => $value) {
+
+			if($key === 'bs'){
+				if($value === false){
+					$count++;
+				}
+			}elseif($key === 's'){
+				if($value === false){
+					$count++;
+				}
+			}elseif($key === 'x'){
+				if($value === false){
+					$count++;
+				}	
+			}elseif($key === 'h'){
+				if($value === false){
+					$count++;
+				}
+			}
+
+			if($key === 'rt'){
+				if($count === 4){
+					if($value === 1 || $value === true){
+						return true;
+					}else{
+						return false;
+					}
+				}else{
+					return false;
+				}
+			}
+
+		}
+	}
+
 	public static function getParamArray($param_array)
 	{	
 		$array = array();

@@ -13,6 +13,9 @@ use Lang;
 class HeaderModule
 {
 
+	private $website;
+	private $properties;
+
 	public function __construct($url)
 	{
 		$this->website = Website::findOneByUrl($url);
@@ -78,7 +81,7 @@ class HeaderModule
 		}
 	}
 
-	public function check($object, $array)
+	private function check($object, $array)
 	{
 		
 		foreach ($array as $key => $value) {

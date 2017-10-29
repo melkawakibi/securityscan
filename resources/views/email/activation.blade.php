@@ -5,10 +5,30 @@
 </head>
 <body>
 
-	<h1>Uw Account is geactiveerd</h1>
 
-	<p>Uw Account is geactiveerd, dit betkent dat u webapplicatie scans kunt aanvragen in de cms extensie. Voor meer informatie kunt u contact opnemen met de helpdesk van S5.</p>
+	<h1>Uw Premiumaccount is geactiveerd</h1>
 
+	<p>Bedankt voor het aanschaffen van een van een premiumaccount. Uw kunt nu gebruik maken van alle opties die SecurityRaport aanbiedt.</p>
+
+	<h2>Premium opties</h2>
+	<ul>
+		<li>Full Scan</li>
+		<li>SQL Injectie</li>
+		<li>XSS</li>
+		<li>Quick Scan</li>
+	</ul>
+
+	<ul>
+		<li>Full Report</li>
+		<li>Short Report</li>
+	</ul>
+
+	<p>Contact informatie</p>
+	<ul>
+		<li>[telefoonnummer]</li>
+		<li>[E-mail]</li>
+		<li>[adres]</li>
+	</ul>
 
 </body>
 </html>

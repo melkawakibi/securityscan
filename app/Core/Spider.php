@@ -23,7 +23,7 @@ class Spider extends PHPCrawler
 	private $crawler;
 	private $follow_robot;
 	private $follow_mode;
-	private $is_enabled_robot;
+	private $isEnabledRobot;
 	private $headers = array();
 	private $links;
 	private $website_id;
@@ -46,19 +46,19 @@ class Spider extends PHPCrawler
 		if (!empty($options['r'])) {
 			if ($options['r'] === 'y') {
 					$this->follow_robot = $this->obeyRobotsTxt(TRUE);
-					$this->is_enabled_robot = "On";
+					$this->isEnabledRobot = "On";
 				} else if ($options['r'] === 'n') {
 					$this->follow_robot = $this->obeyRobotsTxt(FALSE);
-					$this->is_enabled_robot = "Off";
+					$this->isEnabledRobot = "Off";
 				} else {
 					//default, if user fill somthing else then y or n
 					$this->follow_robot = FALSE;
-					$this->is_enabled_robot = "Off";
+					$this->isEnabledRobot = "Off";
 				}
 		} else {
 			//default
 			$this->follow_robot = FALSE;
-			$this->is_enabled_robot = "Off";
+			$this->isEnabledRobot = "Off";
 		}
 
 		//TODO add option to tabel website database, make swtich case
@@ -94,13 +94,12 @@ class Spider extends PHPCrawler
 	{
 
 		echo 'Starting spider' . PHP_EOL;
-		echo 'Follow Robot.txt: ' . $this->is_enabled_robot.PHP_EOL;
+		echo 'Follow Robot.txt: ' . $this->isEnabledRobot.PHP_EOL;
 		echo 'Follow Mode: ' . $this->follow_mode.PHP_EOL.PHP_EOL;
 
 		//Start crawling
 		$this->go();
 
-		//TODO make table for report information
 		$report = $this->getProcessReport();
 
 		echo "Summary:". PHP_EOL; 
@@ -125,7 +124,7 @@ class Spider extends PHPCrawler
 		$this->handelParams($pageInfo);
 	}
 
-	public function handleWebsite($pageInfo)
+	private function handleWebsite($pageInfo)
 	{
 
 		$website = new Object;
@@ -168,7 +167,7 @@ class Spider extends PHPCrawler
 		}
 	}
 
-	public function handleLinks($links)
+	private function handleLinks($links)
 	{
 		if(!empty($links)){
 			
@@ -206,7 +205,7 @@ class Spider extends PHPCrawler
 		}
 	}
 
-	public function handelParams($pageInfo)
+	private function handelParams($pageInfo)
 	{
 
 		$POSTParam = $this->crawler->getFormsParams($pageInfo->url);
@@ -230,19 +229,19 @@ class Spider extends PHPCrawler
 		}
 	}
 
-	public function getCustomerId($url)
+	private function getCustomerId($url)
 	{
 		return Customer::findIdByUrl($this->url);
+	}
+
+	private function setWebsite($id)
+	{
+		$this->website_id = $id;
 	}
 
 	public function setSpiderConfig($url)
 	{
 		$this->url = $url;
-	}
-
-	public function setWebsite($id)
-	{
-		$this->website_id = $id;
-	}
+	}	
 
 }

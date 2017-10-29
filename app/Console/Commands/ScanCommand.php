@@ -50,12 +50,20 @@ class ScanCommand extends Command
     /**
      * @return Array
      */
-    public function defaultOptions()
+    private function optionsStandard()
     {   
         return array( "r" => "y", "fm" => "0", "bs" => 1, "s" => 1, "x" => 1, "h" => 1, "rt" => 0 );
     }
 
-    public function checkOptionValue($options)
+    /**
+     * @return Array
+     */
+    private function optionsWithShortReport()
+    {   
+        return array( "r" => "y", "fm" => "0", "bs" => 1, "s" => 1, "x" => 1, "h" => 1, "rt" => 1 );
+    }
+
+    private function checkOptionValue($options)
     {
         $array = array();
         foreach ($options as $key => $value) {
@@ -67,7 +75,7 @@ class ScanCommand extends Command
         return $array;
     }
 
-    public function logController()
+    private function logController()
     {
         $path = storage_path('logs');
         
@@ -96,10 +104,17 @@ class ScanCommand extends Command
         Log::info($this->options());
 
         if($hasValues){
-            $options = $this->options();
+            if(Utils::isShortReport($this->options())){
+                $options = $this->optionsWithShortReport();
+            }else{
+                $options = $this->options();
+            }
         }else{
-            $options = $this->defaultOptions();
+
+            $options = $this->optionsStandard();
         }
+
+        Log::info($options);
 
         $scanner = new Scanner($url, $options, new Spider($url));
 

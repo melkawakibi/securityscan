@@ -7,11 +7,16 @@
 
 	<h1>Bedankt voor het registreren {{ $customer->name }} </h1>
 
-	<p>U krijgt binnen een aantal dagen te weten of uw aanmelding geaccepteerd wordt voor het gebruik maken van SecurityReport.</p>
+	<p>Uw kunt nu gebruik van de standaardaccount.</p>
+	<p>Met de standaard kunt u een Snelle Scan aanvragen.
+	Voor meerdere scan opties kunt u contact opnemen met S5 voor een Premiumaccount.</p>
 
-	<p>Wanneer wordt de account geactiveerd?</p>
-	<p>Account activatie gebeurt wanneer uw bedrijf aan één eis voldoet: Uw bedrijf staat als klant geregistreerd bij S5.</p>
-	<p>Bent u geen klant bij S5 en wilt u toch gebruik maken van onze service stuur dan een email naar: [email]</p>
+	<p>Contact informatie</p>
+	<ul>
+		<li>[telefoonnummer]</li>
+		<li>[E-mail]</li>
+		<li>[adres]</li>
+	</ul>
 
 </body>
 </html>
